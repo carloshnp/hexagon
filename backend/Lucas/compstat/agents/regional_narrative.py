@@ -10,17 +10,21 @@ from __future__ import annotations
 import pandas as pd
 
 from .. import config, data_source, region_scoring, region_view
-from . import occurrence_group, provider
+from . import camera as camera_agent
+from . import factor as factor_agent
+from . import occurrence_group, orchestrator, provider
 
 _SYSTEM = (
-    "Você é um analista de segurança pública apoiando a reunião semanal CompStat "
-    "do Rio de Janeiro. Escreva em português, de forma objetiva e acionável, para "
-    "gestores municipais. Baseie-se SOMENTE nos dados fornecidos. Nunca invente "
-    "números nem o score (o score é calculado por fórmula). Toda recomendação deve "
-    "indicar órgão competente e ser proporcional. PROIBIDO sugerir reconhecimento "
-    "facial, biometria, leitura de placa, perfilamento individual ou ações "
-    "criminalizantes contra população em situação de rua (nesse caso, recomende "
-    "articulação social). Aponte incertezas quando os dados forem esparsos."
+    "Você é um analista de segurança pública MUNICIPAL apoiando a reunião semanal "
+    "CompStat do Rio (com prefeito/Casa Civil). Enquadre pelos 4 pilares do CompStat: "
+    "(1) inteligência precisa, (2) deployment rápido, (3) táticas eficazes, (4) follow-up. "
+    "Escreva em português, objetivo e acionável. Baseie-se SOMENTE nos dados fornecidos. "
+    "Nunca invente números nem o score (calculado por fórmula). Respeite o casamento "
+    "TEMPORAL: só trate um fator urbano como causa quando ele coincide no horário com o "
+    "crime (campo overlap_temporal/relevancia=driver). Cada recomendação indica o órgão "
+    "MUNICIPAL competente (a FM é a força de emprego; PM-RJ é estadual = articulação). "
+    "PROIBIDO reconhecimento facial, biometria, placa, perfilamento; população em situação "
+    "de rua → articulação SMAS/saúde, nunca repressão. Aponte incertezas."
 )
 
 _SCHEMA = {
@@ -56,6 +60,28 @@ def _relint_factors(reg: dict) -> list[dict]:
     return out
 
 
+def _bingo_summary(region_id, days) -> dict:
+    from .. import diagnosis  # import tardio (evita ciclo)
+    diag = diagnosis.region_diagnosis(region_id, days)
+    bz = diag["bingo"]
+    return {
+        "n_hotspots": bz["n_hotspots"],
+        "hotspots": [{
+            "centroid": h["centroid"],
+            "n_crimes": h["n_crimes"],
+            "dominant_modality": h["dominant_modality"],
+            "critical_hours": h["critical_hours_label"],
+            "temporal_profile": h["temporal_profile"],
+            "driver_factors": [{"tipo": f["tipo"], "orgao": f["orgao"],
+                                "overlap_temporal": f["overlap_temporal"]}
+                               for f in h["driver_factors"]],
+            "camera_gap": h["camera"].get("gap"),
+        } for h in bz["hotspots"]],
+        "signals": bz["signals"],
+        "recommended_actions": diag["recommended_actions"],
+    }
+
+
 def _build_context(reg, sc, groups, days) -> dict:
     return {
         "region_name": reg["region_name"],
@@ -70,6 +96,7 @@ def _build_context(reg, sc, groups, days) -> dict:
         "occurrence_types": region_view.occurrence_types(reg, days),
         "hourly_peaks": [h for h in region_view.hourly_histogram(reg, days) if h["count"] > 0][-6:],
         "relint_factors": _relint_factors(reg),
+        "bingo": _bingo_summary(reg["region_id"], days),
         "occurrence_groups": [
             {
                 "group_id": g["group_id"],
@@ -166,6 +193,14 @@ def build_region_report(region_id: str, days: int | None) -> dict:
             "provenance": g["provenance"],
         })
 
+    # Agentes especializados (1 chamada cada — ou fallback determinístico).
+    from .. import diagnosis  # tardio: evita ciclo
+    diag = diagnosis.region_diagnosis(region_id, days)
+    bz = diag["bingo"]
+    decision_trace = orchestrator.narrate(reg["region_name"], sc, bz, diag["decision_trace"])
+    recommended_actions = factor_agent.narrate(diag["recommended_actions"], bz["hotspots"])
+    camera_coverage = camera_agent.narrate(bz["hotspots"])
+
     return {
         "region_id": region_id,
         "region_name": reg["region_name"],
@@ -175,6 +210,10 @@ def build_region_report(region_id: str, days: int | None) -> dict:
                   "components": sc["components"]},
         "occurrences": occurrences,
         "uncertainties": enriched.get("uncertainties") or det["uncertainties"],
+        "recommended_actions": recommended_actions,
+        "camera_coverage": camera_coverage,
+        "decision_trace": decision_trace,
+        "bingo": bz,
         "provenance": region_view.provenance(reg, sc, days),
         "generated_by": "RegionalRiskNarrativeAgent",
         "llm_mode": prov.mode,
