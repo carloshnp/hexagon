@@ -13,7 +13,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy application code
 COPY research/ research/
-COPY .env.example .env 2>/dev/null || true
+COPY .env.example .env
 
 # Expose port
 EXPOSE 8000
