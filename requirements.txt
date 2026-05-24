@@ -19,7 +19,7 @@ networkx>=3.0
 pyvis>=0.3.0
 
 # Computer Vision (Vision module)
-opencv-python>=4.8.0
+opencv-python-headless>=4.8.0
 Pillow>=10.0.0
 
 # Optional: better face detection
