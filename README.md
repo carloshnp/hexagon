@@ -114,3 +114,7 @@ Crie um arquivo `.env` na raiz com base em `.env.example` e adicione sua `ANTHRO
 ## Dados
 
 https://github.com/CompStat-Rio/claude_impact_lab_compstat_rio
+## Imagens
+<img width="1600" height="825" alt="image" src="https://github.com/user-attachments/assets/fa032086-ca4f-44fb-b384-27a2f4e0f5a4" />
+<img width="1600" height="825" alt="image" src="https://github.com/user-attachments/assets/379402d3-29f8-4037-9e34-51fdc9af6014" />
+<img width="1600" height="825" alt="image" src="https://github.com/user-attachments/assets/166dc1b4-4813-49c4-954c-ec8f32107de7" />
