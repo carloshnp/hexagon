@@ -24,6 +24,9 @@ def _region_context(region_id: str, days: int | None) -> tuple[dict, dict, dict]
     reg = data_source.region_by_id(region_id)
     sc = region_scoring.compute_region_scores(days)[reg["fid"]]
     groups = occurrence_group.build_groups(region_id, days)
+    from .. import diagnosis  # import tardio (evita ciclo)
+    diag = diagnosis.region_diagnosis(region_id, days)
+    bz = diag["bingo"]
     ctx = {
         "region_name": reg["region_name"],
         "risk_score": sc["risk_score"],
@@ -34,6 +37,16 @@ def _region_context(region_id: str, days: int | None) -> tuple[dict, dict, dict]
         "data_quality": sc["data_quality"],
         "occurrence_types": region_view.occurrence_types(reg, days),
         "hourly_peaks": [h for h in region_view.hourly_histogram(reg, days) if h["count"] > 0],
+        "bingo_hotspots": [{
+            "critical_hours": h["critical_hours_label"],
+            "temporal_profile": h["temporal_profile"],
+            "dominant_modality": h["dominant_modality"],
+            "driver_factors": [{"tipo": f["tipo"], "orgao": f["orgao"]} for f in h["driver_factors"]],
+            "camera_gap": h["camera"].get("gap"),
+            "camera_distance_m": h["camera"].get("distance_m"),
+        } for h in bz["hotspots"]],
+        "bingo_signals": bz["signals"],
+        "recommended_actions": diag["recommended_actions"],
         "occurrence_groups": [
             {"classe": g["classe"], "count": g["count"],
              "critical_hours": g["map_data"]["critical_hours"],

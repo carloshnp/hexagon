@@ -148,24 +148,39 @@ def denuncias(days: int | None = None, fid: int | None = None) -> gpd.GeoDataFra
 
 
 # ── Ocorrências (ISP-RJ) — só no modo live ───────────────────────────────────
-@lru_cache(maxsize=4)
-def _occurrences_all(days: int | None) -> gpd.GeoDataFrame | None:
+# Loader próprio (o do Perri não traz `hora`/`dia_semana`, essenciais p/ o bingo).
+# A coluna `hora` vem como "HH:MM:SS"; `data` tem outliers, mas serve p/ a janela.
+@lru_cache(maxsize=1)
+def _occurrences_full() -> gpd.GeoDataFrame | None:
     if config.DATA_MODE != "live":
         return None
     try:
-        loaders = perri_bridge.get_loaders()
-        gdf = loaders.load_ocorrencias(days=days)
-        if "data" in gdf.columns:
-            gdf["hora"] = pd.to_datetime(gdf["data"], errors="coerce").dt.hour
+        path = next(config.DADOS_DIR.glob("df_ocorrencias_tratado*.csv"))
+        df = pd.read_csv(
+            path, low_memory=False,
+            usecols=["data", "hora", "dia_semana", "delito", "desc_delito",
+                     "longitude", "latitude"],
+        )
+        df = df.dropna(subset=["latitude", "longitude"])
+        df["data"] = pd.to_datetime(df["data"], dayfirst=True, errors="coerce")
+        df["hora"] = pd.to_numeric(
+            df["hora"].astype(str).str.slice(0, 2), errors="coerce"
+        )
+        df = df.rename(columns={"desc_delito": "modalidade"})
+        gdf = gpd.GeoDataFrame(
+            df, geometry=gpd.points_from_xy(df["longitude"], df["latitude"]), crs=CRS
+        )
         return _assign_region(gdf)
     except Exception:
         return None
 
 
 def occurrences(days: int | None = None, fid: int | None = None) -> gpd.GeoDataFrame | None:
-    gdf = _occurrences_all(days)
+    gdf = _occurrences_full()
     if gdf is None:
         return None
+    if days:
+        gdf = _apply_days(gdf, "data", days)
     if fid is not None:
         gdf = gdf[gdf["fid"] == fid]
     return gdf
@@ -177,10 +192,10 @@ def _cameras_all() -> gpd.GeoDataFrame | None:
     if config.DATA_MODE != "live":
         return None
     try:
-        gdf = perri_bridge.get_loaders().load_cameras()
-        # câmeras podem vir como polígonos/áreas → usa centróide para o join
-        gdf = gdf.copy()
-        gdf["geometry"] = gdf.geometry.centroid
+        gdf = perri_bridge.get_loaders().load_cameras().copy()
+        # se vierem como polígonos/áreas, usa centróide (projetando p/ evitar erro de CRS)
+        if not (gdf.geom_type == "Point").all():
+            gdf["geometry"] = gdf.to_crs("EPSG:31983").geometry.centroid.to_crs(CRS)
         return _assign_region(gdf)
     except Exception:
         return None
