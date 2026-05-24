@@ -98,10 +98,10 @@ function Sidebar({ occurrences, areasByFid, loading, reports, selectedFid, hover
         padding: '6px 14px', display: 'flex', justifyContent: 'space-between',
         borderBottom: '1px solid var(--border)', background: 'var(--bg-2)', flexShrink: 0,
       }}>
-        <span className="mono uc" style={{ fontSize: 9, color: 'var(--text-2)', fontWeight: 700 }}>
+        <span className="mono uc" style={{ fontSize: 10, color: 'var(--text-2)', fontWeight: 700 }}>
           {loading ? 'Carregando…' : selectedArea ? 'Filtrado por polígono' : 'Ordenar: Urgência ↓'}
         </span>
-        <span className="mono" style={{ fontSize: 9, color: 'var(--text-2)' }}>
+        <span className="mono" style={{ fontSize: 10, color: 'var(--text-2)' }}>
           {loading ? '' : `${visible.filter(i => i.status === 'PENDENTE').length} pendentes`}
         </span>
       </div>
@@ -512,28 +512,28 @@ function IssueCard({ issue, expanded, onExpand, report, selected, hovered, flyin
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, minWidth: 0, flex: 1 }}>
             {reportLoading
               ? <span style={{ width: 14, display: 'inline-flex', justifyContent: 'center' }}><Spinner size={11} color="var(--brand-2)" /></span>
-              : <span className="mono" style={{ fontSize: 10, color: 'var(--text-2)', fontWeight: 700 }}>#{String(issue.rank).padStart(2,'00')}</span>
+              : <span className="mono" style={{ fontSize: 11, color: 'var(--text-2)', fontWeight: 700 }}>#{String(issue.rank).padStart(2,'00')}</span>
             }
-            <span className="h-cond" style={{ fontSize: 13.5, color: 'var(--text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            <span className="h-cond" style={{ fontSize: 15, color: 'var(--text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
               {issue.type}
             </span>
             {flying && <FlyIcon />}
           </div>
           <span className="mono uc" style={{
-            fontSize: 8.5, fontWeight: 800, letterSpacing: 0.12,
-            padding: '2px 5px', background: u.color, color: '#fff', flexShrink: 0,
+            fontSize: 10, fontWeight: 800, letterSpacing: 0.12,
+            padding: '3px 6px', background: u.color, color: '#fff', flexShrink: 0,
           }}>{u.label}</span>
         </div>
 
-        <div style={{ marginTop: 8, fontSize: 12, color: 'var(--text-2)', lineHeight: 1.45, textWrap: 'pretty' }}>
+        <div style={{ marginTop: 8, fontSize: 13, color: 'var(--text-2)', lineHeight: 1.5, textWrap: 'pretty' }}>
           {issue.summary}
         </div>
 
         <div style={{ marginTop: 10, display: 'flex', gap: 5, flexWrap: 'wrap', alignItems: 'center' }}>
-          <span className="mono uc" style={{ fontSize: 8.5, color: 'var(--text-2)', letterSpacing: 0.1, fontWeight: 700, marginRight: 2 }}>FIDS</span>
+          <span className="mono uc" style={{ fontSize: 10, color: 'var(--text-2)', letterSpacing: 0.1, fontWeight: 700, marginRight: 2 }}>FIDS</span>
           {(issue.affected_fids || []).map(fid => (
             <span key={fid} className="mono" style={{
-              fontSize: 9.5, fontWeight: 700, padding: '1px 5px',
+              fontSize: 11, fontWeight: 700, padding: '2px 6px',
               border: '1px solid var(--border-2)', background: 'var(--brand-tint)', color: 'var(--brand)', letterSpacing: 0.04,
             }}>R{String(fid).padStart(2,'0')}</span>
           ))}
@@ -542,12 +542,12 @@ function IssueCard({ issue, expanded, onExpand, report, selected, hovered, flyin
         <div style={{ marginTop: 10, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <span style={{ display: 'inline-flex', alignItems: 'baseline', gap: 4 }}>
-              <span className="h-cond-x" style={{ fontSize: 16, color: 'var(--text)' }}>{issue.occurrence_count}</span>
-              <span className="mono uc" style={{ fontSize: 8.5, color: 'var(--text-2)', fontWeight: 700 }}>ocor</span>
+              <span className="h-cond-x" style={{ fontSize: 19, color: 'var(--text)' }}>{issue.occurrence_count}</span>
+              <span className="mono uc" style={{ fontSize: 10, color: 'var(--text-2)', fontWeight: 700 }}>ocor</span>
             </span>
-            <span style={{ width: 1, height: 12, background: 'var(--border)' }} />
+            <span style={{ width: 1, height: 14, background: 'var(--border)' }} />
             <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
-              <span className="mono uc" style={{ fontSize: 8.5, color: 'var(--text-2)', fontWeight: 700 }}>Δ24H</span>
+              <span className="mono uc" style={{ fontSize: 10, color: 'var(--text-2)', fontWeight: 700 }}>Δ24H</span>
               <Delta value={issue.score_delta_24h} />
             </span>
           </div>
@@ -562,7 +562,7 @@ function IssueCard({ issue, expanded, onExpand, report, selected, hovered, flyin
         borderTop: expanded ? '1px solid var(--border)' : 'none',
         padding: '8px 14px 12px 20px',
         display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: 6,
-        fontSize: 9.5, fontWeight: 800, letterSpacing: 0.12,
+        fontSize: 11, fontWeight: 800, letterSpacing: 0.12,
         color: expanded ? 'var(--brand-2)' : 'var(--text-2)', cursor: 'pointer',
       }}>
         {expanded ? '▴ RECOLHER'
@@ -584,8 +584,8 @@ function ExpandedBody({ issue, detail, report, expanded }) {
         {status === 'error' && (
           <div style={{ padding: '10px 12px', background: '#FDECEE', border: '1px solid #F2B5BC', display: 'flex', gap: 10, alignItems: 'flex-start' }}>
             <span style={{ width: 6, height: 6, background: '#D0021B', marginTop: 6 }} />
-            <div style={{ fontSize: 11.5, color: '#7A0411', lineHeight: 1.45 }}>
-              <div className="mono uc" style={{ fontSize: 9, fontWeight: 800, marginBottom: 2 }}>ERRO AO CARREGAR</div>
+            <div style={{ fontSize: 13, color: '#7A0411', lineHeight: 1.45 }}>
+              <div className="mono uc" style={{ fontSize: 10.5, fontWeight: 800, marginBottom: 2 }}>ERRO AO CARREGAR</div>
               Não foi possível obter o relatório do polígono. Verifique a conexão e tente novamente.
             </div>
           </div>
@@ -593,40 +593,40 @@ function ExpandedBody({ issue, detail, report, expanded }) {
         {status === 'ready' && detail && (
           <>
             <div>
-              <div className="mono uc" style={{ fontSize: 9, color: 'var(--brand)', fontWeight: 800, letterSpacing: 0.14, marginBottom: 4 }}>Análise Operacional</div>
-              <div style={{ fontSize: 11.5, color: 'var(--text)', lineHeight: 1.5, textWrap: 'pretty' }}>{detail.detail}</div>
+              <div className="mono uc" style={{ fontSize: 10.5, color: 'var(--brand)', fontWeight: 800, letterSpacing: 0.12, marginBottom: 6 }}>Análise Operacional</div>
+              <div style={{ fontSize: 13, color: 'var(--text)', lineHeight: 1.6, textWrap: 'pretty' }}>{detail.detail}</div>
             </div>
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
-                <div className="mono uc" style={{ fontSize: 9, color: 'var(--brand)', fontWeight: 800, letterSpacing: 0.14 }}>Distribuição · 24h</div>
+                <div className="mono uc" style={{ fontSize: 10.5, color: 'var(--brand)', fontWeight: 800, letterSpacing: 0.12 }}>Distribuição · 24h</div>
                 <SimuladoBadge />
               </div>
               <HourlyBars seed={issue.rank * 7 + 13} accent={CIVITAS.URGENCY[issue.urgency].color} />
             </div>
             {detail.affected_subareas?.length > 0 && (
               <div>
-                <div className="mono uc" style={{ fontSize: 9, color: 'var(--brand)', fontWeight: 800, letterSpacing: 0.14, marginBottom: 6 }}>Subáreas afetadas</div>
+                <div className="mono uc" style={{ fontSize: 10.5, color: 'var(--brand)', fontWeight: 800, letterSpacing: 0.12, marginBottom: 6 }}>Subáreas afetadas</div>
                 <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap' }}>
                   {detail.affected_subareas.map(s => (
-                    <span key={s} className="mono" style={{ fontSize: 10, padding: '2px 6px', border: '1px solid var(--border)', background: 'var(--bg-2)', color: 'var(--text-2)', fontWeight: 600 }}>{s}</span>
+                    <span key={s} className="mono" style={{ fontSize: 11.5, padding: '3px 7px', border: '1px solid var(--border)', background: 'var(--bg-2)', color: 'var(--text-2)', fontWeight: 600 }}>{s}</span>
                   ))}
                 </div>
               </div>
             )}
             {detail.fatores_acionados?.length > 0 && (
               <div>
-                <div className="mono uc" style={{ fontSize: 9, color: 'var(--brand)', fontWeight: 800, letterSpacing: 0.14, marginBottom: 6 }}>Fatores acionados</div>
+                <div className="mono uc" style={{ fontSize: 10.5, color: 'var(--brand)', fontWeight: 800, letterSpacing: 0.12, marginBottom: 6 }}>Fatores acionados</div>
                 <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap' }}>
                   {detail.fatores_acionados.map(f => (
-                    <span key={f} className="mono uc" style={{ fontSize: 9, fontWeight: 700, letterSpacing: 0.06, padding: '2px 6px', border: '1px solid #F5A62355', background: '#FFF4DC', color: '#8A5400' }}>{f.replace(/_/g, ' ')}</span>
+                    <span key={f} className="mono uc" style={{ fontSize: 11, fontWeight: 700, letterSpacing: 0.06, padding: '3px 7px', border: '1px solid #F5A62355', background: '#FFF4DC', color: '#8A5400' }}>{f.replace(/_/g, ' ')}</span>
                   ))}
                 </div>
               </div>
             )}
             {detail.action_plan?.length > 0 && (
               <div style={{ padding: '10px 12px', background: 'var(--brand)', color: '#fff' }}>
-                <div className="mono uc" style={{ fontSize: 9, color: '#BFD4EA', fontWeight: 800, letterSpacing: 0.14, marginBottom: 6 }}>Plano de ação</div>
-                <ul style={{ margin: 0, paddingLeft: 16, fontSize: 11.5, lineHeight: 1.5 }}>
+                <div className="mono uc" style={{ fontSize: 10.5, color: '#BFD4EA', fontWeight: 800, letterSpacing: 0.12, marginBottom: 8 }}>Plano de ação</div>
+                <ul style={{ margin: 0, paddingLeft: 18, fontSize: 13, lineHeight: 1.6 }}>
                   {detail.action_plan.map((a, i) => <li key={i}>{a}</li>)}
                 </ul>
               </div>
@@ -709,7 +709,7 @@ function ActionPill({ status }) {
   if (!s) return null;
   return (
     <button onClick={(e) => e.stopPropagation()} className="mono uc" style={{
-      fontSize: 9, fontWeight: 800, letterSpacing: 0.1, padding: '3px 7px',
+      fontSize: 10.5, fontWeight: 800, letterSpacing: 0.1, padding: '4px 8px',
       background: s.bg, color: s.color, border: `1px solid ${s.border}`,
       display: 'inline-flex', alignItems: 'center', gap: 5, cursor: 'pointer',
     }}>
@@ -725,10 +725,10 @@ function ActionPill({ status }) {
 
 function FootStat({ label, value, delta, tone }) {
   return (
-    <div style={{ padding: '10px 12px', borderRight: '1px solid var(--border)', display: 'flex', flexDirection: 'column', gap: 2 }}>
-      <span className="mono uc" style={{ fontSize: 9, color: 'var(--text-2)', fontWeight: 700 }}>{label}</span>
-      <span className="h-cond-x" style={{ fontSize: 16, color: tone || 'var(--text)' }}>{value}</span>
-      <span className="mono" style={{ fontSize: 9, color: 'var(--text-2)' }}>{delta}</span>
+    <div style={{ padding: '11px 12px', borderRight: '1px solid var(--border)', display: 'flex', flexDirection: 'column', gap: 3 }}>
+      <span className="mono uc" style={{ fontSize: 10, color: 'var(--text-2)', fontWeight: 700 }}>{label}</span>
+      <span className="h-cond-x" style={{ fontSize: 20, color: tone || 'var(--text)' }}>{value}</span>
+      <span className="mono" style={{ fontSize: 10, color: 'var(--text-2)' }}>{delta}</span>
     </div>
   );
 }
