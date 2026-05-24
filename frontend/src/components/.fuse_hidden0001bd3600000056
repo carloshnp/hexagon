@@ -60,11 +60,18 @@ function HeaderBar({ now, periods, currentPeriod, periodLoading, periodOpen, set
 
 function PrefeituraMark() {
   return (
-    <img
-      src="assets/farolrio-logo.png"
-      alt="Farol Rio"
-      style={{ height: 38, width: 'auto', flexShrink: 0, objectFit: 'contain' }}
-    />
+    <div title="Logo Prefeitura do Rio (placeholder)" style={{
+      width: 36, height: 36, border: '1.5px solid rgba(255,255,255,0.55)',
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      position: 'relative', flexShrink: 0,
+    }}>
+      <svg width="22" height="22" viewBox="0 0 24 24">
+        <path d="M12 2 L21 5 L21 12 Q21 19 12 22 Q3 19 3 12 L3 5 Z"
+              fill="none" stroke="#fff" strokeWidth="1.4" />
+        <path d="M12 7 L12 17 M7 12 L17 12" stroke="#fff" strokeWidth="1.2" />
+        <circle cx="12" cy="12" r="2" fill="#fff" />
+      </svg>
+    </div>
   );
 }
 

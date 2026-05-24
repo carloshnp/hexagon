@@ -62,32 +62,20 @@ function computeCentroid(geometry) {
   return { lat: sumLat / n, lon: sumLon / n };
 }
 
-/* ==================== Time-window presets — 3-month rolling weeks ==================== */
+/* ==================== Time-window presets (replace weekly "periods") ==================== */
 
-function _fmtDate(d) {
-  return d.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' }).replace('.', '');
-}
+const TIME_WINDOWS = [
+  { key: 'all',          label: 'Todo o histórico', tw: 'all' },
+  { key: 'last_30_days', label: 'Últimos 30 dias',  tw: 'last_30_days' },
+  { key: '7d',           label: 'Últimos 7 dias',   tw: '7d' },
+  { key: '3d',           label: 'Últimos 3 dias',   tw: '3d' },
+  { key: '1d',           label: 'Últimas 24h',      tw: '1d' },
+];
 
-function generateTimeWindows() {
-  const now    = new Date();
-  const MS_DAY = 86400000;
-  const wins   = [{ key: '84d', label: 'Últimos 3 meses', tw: '84d' }];
-  for (let w = 1; w <= 13; w++) {
-    const days      = w * 7;
-    const endDate   = new Date(now - (w - 1) * 7 * MS_DAY);
-    const startDate = new Date(now - days * MS_DAY);
-    const tag   = w === 1 ? ' (atual)' : '';
-    const label = `Sem. ${String(w).padStart(2,'0')} · ${_fmtDate(startDate)}–${_fmtDate(endDate)}${tag}`;
-    wins.push({ key: `w${String(w).padStart(2,'0')}`, label, tw: `${days}d` });
-  }
-  return wins;
-}
-
-const TIME_WINDOWS  = generateTimeWindows();
-const DEFAULT_PERIOD = '84d';
+const DEFAULT_PERIOD = 'all';
 
 function twForPeriod(periodKey) {
-  return TIME_WINDOWS.find(w => w.key === periodKey)?.tw || '84d';
+  return TIME_WINDOWS.find(w => w.key === periodKey)?.tw || 'all';
 }
 
 /* region_id "regiao_002" → numeric fid 2 */

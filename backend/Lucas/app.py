@@ -14,7 +14,17 @@ import sys
 
 # Garante que `compstat` seja importável como pacote top-level,
 # independente de como o uvicorn for lançado.
-sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+_HERE = pathlib.Path(__file__).resolve().parent
+sys.path.insert(0, str(_HERE))
+
+# Carrega variáveis de ambiente do .env raiz do projeto (ANTHROPIC_API_KEY, etc.)
+try:
+    from dotenv import load_dotenv
+    _ROOT_ENV = _HERE.parent.parent / ".env"
+    if _ROOT_ENV.exists():
+        load_dotenv(_ROOT_ENV, override=False)
+except ImportError:
+    pass
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware

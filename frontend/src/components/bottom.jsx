@@ -65,7 +65,7 @@ function BottomBar({ area, report, onDismiss }) {
         </div>
       </div>
 
-      {tab === 'metrics' ? <MetricsView area={area} accent={c} /> : <ReportView area={area} accent={c} report={report} />}
+      {tab === 'metrics' ? <MetricsView area={area} accent={c} report={report} /> : <ReportView area={area} accent={c} report={report} />}
     </div>
   );
 }
@@ -85,10 +85,10 @@ function BottomTab({ label, active, onClick }) {
   );
 }
 
-/* ==================== Tab 1 — MÉTRICAS (synthesized, marked SIMULADO) ==================== */
-function MetricsView({ area, accent }) {
-  // Synthesize 4 metric cards from the summary's score/occurrence data
-  const metrics = _BB.useMemo(() => synthMetrics(area), [area.fid, area.score]);
+/* ==================== Tab 1 — MÉTRICAS ==================== */
+function MetricsView({ area, accent, report }) {
+  const detail = report?.status === 'ready' ? report.data?.detail : null;
+  const metrics = _BB.useMemo(() => buildMetrics(area, detail), [area.fid, area.score, detail]);
   return (
     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', background: 'var(--paper)' }}>
       {metrics.map((m, i) => (
@@ -110,8 +110,8 @@ function DetailCard({ m, accent, last }) {
           {m.label}
         </span>
         <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-          <SimuladoBadge />
-          <span className="mono" style={{ fontSize: 9, color: 'var(--ink-2)', padding: '1px 5px', border: '1px solid var(--border-pp)', background: 'var(--paper-2)' }}>24h</span>
+          {m.simulated && <SimuladoBadge />}
+          <span className="mono" style={{ fontSize: 9, color: 'var(--ink-2)', padding: '1px 5px', border: '1px solid var(--border-pp)', background: 'var(--paper-2)' }}>{m.timeLabel || 'PERÍODO'}</span>
         </div>
       </div>
       <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
@@ -136,7 +136,7 @@ function DetailCard({ m, accent, last }) {
   );
 }
 
-function synthMetrics(area) {
+function buildMetrics(area, detail) {
   const seed = area.fid * 17 + 5;
   const sp = (s, base, amp) => {
     const out = []; let v = s;
@@ -146,11 +146,44 @@ function synthMetrics(area) {
     }
     return out;
   };
+
+  const hourlyData = detail?.hourly_histogram?.length === 24
+    ? detail.hourly_histogram.map(h => h.count)
+    : null;
+  const realOccurrences = detail?.occurrence_count ?? null;
+  const realCameras     = detail?.camera_count ?? null;
+
   return [
-    { label: 'Ocorrências (24h)',    value: Math.round(area.occurrence_count / 6), unit: '',    delta: area.score_delta, spark: sp(seed, 40 + area.score / 3, 20 + area.score / 5) },
-    { label: 'Tempo médio resposta', value: (4 + area.score / 14).toFixed(1),       unit: 'min', delta: area.score_delta > 0 ? +0.4 : -0.3, spark: sp(seed + 11, 6 + area.score / 18, 3), inverted: true },
-    { label: 'Unidades em campo',    value: Math.round(6 + area.score / 8),         unit: '',    delta: Math.sign(area.score_delta), spark: sp(seed + 19, 10, 4) },
-    { label: 'Reincidência (7d)',    value: Math.round(20 + area.score / 3),        unit: '%',   delta: area.score_delta, spark: sp(seed + 31, 25, 10), inverted: true },
+    {
+      label: 'Ocorrências (período)',
+      value: realOccurrences != null ? realOccurrences : Math.round(area.occurrence_count / 6),
+      unit: '', delta: area.score_delta,
+      spark: hourlyData || sp(seed, 40 + area.score / 3, 20 + area.score / 5),
+      simulated: realOccurrences == null,
+      timeLabel: 'NO PERÍODO',
+    },
+    {
+      label: 'Tempo médio resposta',
+      value: (4 + area.score / 14).toFixed(1), unit: 'min',
+      delta: area.score_delta > 0 ? +0.4 : -0.3,
+      spark: sp(seed + 11, 6 + area.score / 18, 3),
+      inverted: true, simulated: true, timeLabel: 'SIMULADO',
+    },
+    {
+      label: 'Câmeras Ativas',
+      value: realCameras != null ? realCameras : Math.round(6 + area.score / 8),
+      unit: '', delta: Math.sign(area.score_delta),
+      spark: sp(seed + 19, 10, 4),
+      simulated: realCameras == null,
+      timeLabel: 'NO PERÍODO',
+    },
+    {
+      label: 'Reincidência (7d)',
+      value: Math.round(20 + area.score / 3), unit: '%',
+      delta: area.score_delta,
+      spark: sp(seed + 31, 25, 10),
+      inverted: true, simulated: true, timeLabel: 'SIMULADO',
+    },
   ];
 }
 
@@ -215,7 +248,7 @@ function ReportContent({ area, accent, report }) {
       <ReportCard label="Área"        last={false}><ReportArea area={area} /></ReportCard>
       <ReportCard label="Ocorrências" last={false}><ReportOccurrences area={area} report={report} /></ReportCard>
       <ReportCard label="Score"       last={false}><ReportScore area={area} /></ReportCard>
-      <ReportCard label="Efetividade" last={false}><ReportEffectiveness area={area} /></ReportCard>
+      <ReportCard label="Efetividade" last={false}><ReportEffectiveness area={area} report={report} /></ReportCard>
       <ReportCard label="Tendência"   last={true} ><ReportTrend area={area} accent={accent} /></ReportCard>
     </div>
   );
@@ -269,30 +302,37 @@ function ReportArea({ area }) {
 }
 
 function ReportOccurrences({ area, report }) {
-  // Breakdown: synth split of the area.occurrence_count by issue types it touches
-  const occs = report.occurrences || [];
-  const total = area.occurrence_count;
-  // approximate split: 42 / 23 / 20 / 10 / 5
-  const breakdown = [
-    { label: area.type || 'Tipo principal', value: Math.round(total * 0.42), color: '#D0021B' },
-    { label: 'Outros roubos',   value: Math.round(total * 0.23), color: '#F5A623' },
-    { label: 'Furtos',          value: Math.round(total * 0.20), color: '#0066CC' },
-    { label: 'Lesão corporal',  value: Math.round(total * 0.10), color: '#007A4D' },
-    { label: 'Outros',          value: Math.round(total * 0.05), color: '#8FA3BE' },
-  ];
+  const detail = report?.detail;
+  const types = detail?.occurrence_types || [];
+  const total = detail?.occurrence_count || area.occurrence_count || 0;
+  const COLORS = ['#D0021B', '#F5A623', '#0066CC', '#007A4D', '#8FA3BE'];
+  const isReal = types.length > 0;
+
+  const breakdown = isReal
+    ? types.slice(0, 5).map((t, i) => ({ label: t.tipo, value: t.count, color: COLORS[i] }))
+    : [
+        { label: area.type || 'Tipo principal', value: Math.round(total * 0.42), color: COLORS[0] },
+        { label: 'Outros roubos',  value: Math.round(total * 0.23), color: COLORS[1] },
+        { label: 'Furtos',         value: Math.round(total * 0.20), color: COLORS[2] },
+        { label: 'Lesão corporal', value: Math.round(total * 0.10), color: COLORS[3] },
+        { label: 'Outros',         value: Math.round(total * 0.05), color: COLORS[4] },
+      ];
+
+  const safeTotal = total || breakdown.reduce((s, b) => s + b.value, 0) || 1;
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
       <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
         <span className="h-cond-x" style={{ fontSize: 28, color: 'var(--brand)', letterSpacing: 0.02 }}>
           {total.toLocaleString('pt-BR')}
         </span>
-        <span className="mono uc" style={{ fontSize: 9.5, color: 'var(--ink-2)', fontWeight: 700 }}>últimas 24h</span>
+        <span className="mono uc" style={{ fontSize: 9.5, color: 'var(--ink-2)', fontWeight: 700 }}>no período</span>
         <span style={{ flex: 1 }} />
         <DeltaPaper value={area.score_delta} />
       </div>
       <div style={{ display: 'flex', height: 8, border: '1px solid var(--border-pp)' }}>
         {breakdown.map(b => (
-          <div key={b.label} style={{ flex: b.value / total, background: b.color }} title={`${b.label}: ${b.value}`} />
+          <div key={b.label} style={{ flex: b.value / safeTotal, background: b.color }} title={`${b.label}: ${b.value}`} />
         ))}
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
@@ -301,13 +341,11 @@ function ReportOccurrences({ area, report }) {
             <span style={{ width: 8, height: 8, background: b.color, flexShrink: 0 }} />
             <span style={{ fontSize: 10.5, color: 'var(--ink)', flex: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{b.label}</span>
             <span className="mono" style={{ fontSize: 10, color: 'var(--ink-2)', fontWeight: 600 }}>{b.value}</span>
-            <span className="mono" style={{ fontSize: 9.5, color: 'var(--ink-2)', width: 30, textAlign: 'right' }}>{Math.round(b.value/total*100)}%</span>
+            <span className="mono" style={{ fontSize: 9.5, color: 'var(--ink-2)', width: 30, textAlign: 'right' }}>{Math.round(b.value / safeTotal * 100)}%</span>
           </div>
         ))}
       </div>
-      <div style={{ marginTop: 4 }}>
-        <SimuladoBadge />
-      </div>
+      {!isReal && <div style={{ marginTop: 4 }}><SimuladoBadge /></div>}
     </div>
   );
 }
@@ -315,8 +353,7 @@ function ReportOccurrences({ area, report }) {
 function ReportScore({ area }) {
   const c = CIVITAS.riskColor(area.score);
   const tier = CIVITAS.RISK[CIVITAS.riskKeyFromScore(area.score)];
-  // total polygon count is fixed at 16 in our model
-  const total = 16;
+  const total = 8; // 8 real Força Municipal regions
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 8, height: '100%' }}>
       <div style={{ display: 'flex', alignItems: 'flex-end', gap: 6 }}>
@@ -350,12 +387,13 @@ function ReportScore({ area }) {
   );
 }
 
-function ReportEffectiveness({ area }) {
+function ReportEffectiveness({ area, report }) {
   const eff = Math.round(58 + (100 - area.score) * 0.3);
   const responseAvg = +(4 + area.score / 14).toFixed(1);
   const respPct = Math.min(100, (responseAvg / 8) * 100);
   const respOver = responseAvg > 8;
   const resources = Math.round(6 + area.score / 8);
+  const cameras = report?.detail?.camera_count ?? Math.round(resources * 4.2);
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -386,7 +424,7 @@ function ReportEffectiveness({ area }) {
         <Sep />
         <Cell label="Patrulhas" value={Math.max(2, Math.round(resources * 0.6))} big />
         <Sep />
-        <Cell label="Câmeras" value={Math.round(resources * 4.2)} big />
+        <Cell label="Câmeras" value={cameras} big />
       </div>
     </div>
   );

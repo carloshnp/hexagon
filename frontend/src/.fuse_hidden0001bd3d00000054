@@ -274,10 +274,10 @@ function StatusFooter({ area, store, summaryReady }) {
         Período: {store.period || '—'}
       </span>
       <span style={{ padding: '0 14px', borderRight: '1px solid var(--border)' }}>
-        Áreas críticas: {area ? `${area.critical_area_count ?? 0} detectadas` : '—'}
+        H3 hex: {area ? '142 selecionadas' : '0 selecionadas'}
       </span>
       <span style={{ padding: '0 14px', borderRight: '1px solid var(--border)' }}>
-        Ocorrências carregadas: {summaryReady ? (store.summary?.areas?.reduce((s, a) => s + (a.occurrence_count || 0), 0) || 0).toLocaleString('pt-BR') : '—'}
+        Ocorrências carregadas: {summaryReady ? '9.371' : '—'}
       </span>
       <span style={{ flex: 1 }} />
       <span style={{ padding: '0 14px', borderLeft: '1px solid var(--border)' }}>

@@ -10,6 +10,7 @@ Detecção de modo:
 from __future__ import annotations
 
 import os
+import re
 from pathlib import Path
 
 # ── Paths ───────────────────────────────────────────────────────────────────
@@ -70,21 +71,39 @@ def risk_level(score: float) -> str:
 
 
 # ── Recortes temporais ───────────────────────────────────────────────────────
-DEFAULT_TIME_WINDOW = "last_30_days"
+DEFAULT_TIME_WINDOW = "84d"
 TIME_WINDOW_DAYS = {
     "last_30_days": 30,
     "last_7_days": 7,
     "1d": 1,
     "3d": 3,
     "7d": 7,
+    "14d": 14,
+    "21d": 21,
+    "28d": 28,
+    "35d": 35,
+    "42d": 42,
+    "49d": 49,
+    "56d": 56,
+    "63d": 63,
+    "70d": 70,
+    "77d": 77,
+    "84d": 84,
     "all": None,
 }
+
+_ND_RE = re.compile(r'^(\d+)d$')
 
 
 def window_to_days(preset: str | None) -> int | None:
     if not preset:
-        return TIME_WINDOW_DAYS[DEFAULT_TIME_WINDOW]
-    return TIME_WINDOW_DAYS.get(preset, TIME_WINDOW_DAYS[DEFAULT_TIME_WINDOW])
+        return TIME_WINDOW_DAYS.get(DEFAULT_TIME_WINDOW, 84)
+    if preset in TIME_WINDOW_DAYS:
+        return TIME_WINDOW_DAYS[preset]
+    m = _ND_RE.match(preset)
+    if m:
+        return int(m.group(1))
+    return TIME_WINDOW_DAYS.get(DEFAULT_TIME_WINDOW, 84)
 
 
 # ── LLM ───────────────────────────────────────────────────────────────────────
