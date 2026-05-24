@@ -1,0 +1,281 @@
+janela_dias,ranking_tipo,instituicao,pos,h3_cell,lat,lon,score,cnt_ocorrencias,cnt_denuncias,cnt_fatores,cnt_cameras
+,geral,,1,88a8a06a55fffff,-22.911449,-43.186833,67.199133,1908.0,170.0,6.0,11.0
+,geral,,2,88a8a06085fffff,-22.875184,-43.336565,62.314268,1132.0,81.0,110.0,0.0
+,geral,,3,88a8a078ebfffff,-22.968869,-43.185129,61.941635,1067.0,176.0,34.0,0.0
+,geral,,4,88a8a06a0bfffff,-22.90377,-43.183576,61.259055,1920.0,175.0,43.0,87.0
+,geral,,5,88a8a06a09fffff,-22.91012,-43.17758,60.596807,2638.0,104.0,13.0,66.0
+,geral,,6,88a8a06087fffff,-22.868826,-43.342559,52.374368,1046.0,56.0,80.0,0.0
+,geral,,7,88a8a061ebfffff,-22.879965,-43.269067,51.289217,586.0,144.0,41.0,0.0
+,geral,,8,88a8a06027fffff,-22.902998,-43.278839,46.522364,776.0,83.0,47.0,0.0
+,geral,,9,88a8a06a43fffff,-22.917798,-43.180837,46.199988,1252.0,86.0,0.0,0.0
+,geral,,10,88a8a061cdfffff,-22.895321,-43.275582,45.342695,611.0,41.0,90.0,0.0
+,PM-RJ,Polícia Militar do Rio de Janeiro,1,88a8a06a55fffff,-22.911449,-43.186833,74.314977,1908.0,151.0,0.0,11.0
+,PM-RJ,Polícia Militar do Rio de Janeiro,2,88a8a06a0bfffff,-22.90377,-43.183576,70.391205,1920.0,154.0,6.0,87.0
+,PM-RJ,Polícia Militar do Rio de Janeiro,3,88a8a06a09fffff,-22.91012,-43.17758,69.751455,2638.0,89.0,0.0,66.0
+,PM-RJ,Polícia Militar do Rio de Janeiro,4,88a8a078ebfffff,-22.968869,-43.185129,61.362182,1067.0,153.0,2.0,0.0
+,PM-RJ,Polícia Militar do Rio de Janeiro,5,88a8a06085fffff,-22.875184,-43.336565,55.871233,1132.0,74.0,15.0,0.0
+,PM-RJ,Polícia Militar do Rio de Janeiro,6,88a8a06087fffff,-22.868826,-43.342559,48.98147,1046.0,47.0,15.0,0.0
+,PM-RJ,Polícia Militar do Rio de Janeiro,7,88a8a06a43fffff,-22.917798,-43.180837,48.730099,1252.0,77.0,0.0,0.0
+,PM-RJ,Polícia Militar do Rio de Janeiro,8,88a8a061ebfffff,-22.879965,-43.269067,47.375297,586.0,128.0,2.0,0.0
+,PM-RJ,Polícia Militar do Rio de Janeiro,9,88a8a06ec9fffff,-22.807618,-43.368741,45.208984,799.0,103.0,0.0,0.0
+,PM-RJ,Polícia Militar do Rio de Janeiro,10,88a8a06e41fffff,-22.844467,-43.323533,44.020214,541.0,122.0,0.0,0.0
+,GM-Rio,Guarda Municipal do Rio de Janeiro,1,88a8a06085fffff,-22.875184,-43.336565,56.382259,1132.0,2.0,63.0,0.0
+,GM-Rio,Guarda Municipal do Rio de Janeiro,2,88a8a06087fffff,-22.868826,-43.342559,46.387393,1046.0,4.0,46.0,0.0
+,GM-Rio,Guarda Municipal do Rio de Janeiro,3,88a8a078c9fffff,-22.98554,-43.200897,45.635611,472.0,3.0,53.0,0.0
+,GM-Rio,Guarda Municipal do Rio de Janeiro,4,88a8a07ab7fffff,-22.98052,-43.216147,43.007278,212.0,1.0,56.0,20.0
+,GM-Rio,Guarda Municipal do Rio de Janeiro,5,88a8a06a0bfffff,-22.90377,-43.183576,42.927911,1920.0,7.0,26.0,87.0
+,GM-Rio,Guarda Municipal do Rio de Janeiro,6,88a8a078ebfffff,-22.968869,-43.185129,42.032319,1067.0,12.0,24.0,0.0
+,GM-Rio,Guarda Municipal do Rio de Janeiro,7,88a8a0673bfffff,-22.865331,-43.419303,35.424564,56.0,25.0,0.0,0.0
+,GM-Rio,Guarda Municipal do Rio de Janeiro,8,88a8a06a55fffff,-22.911449,-43.186833,33.408361,1908.0,12.0,3.0,11.0
+,GM-Rio,Guarda Municipal do Rio de Janeiro,9,88a8a078abfffff,-22.947175,-43.184612,31.280732,640.0,0.0,37.0,48.0
+,GM-Rio,Guarda Municipal do Rio de Janeiro,10,88a8a06081fffff,-22.876504,-43.345817,30.403336,317.0,20.0,0.0,0.0
+,RioLuz,Rio Luz (Iluminação Pública),1,88a8a07885fffff,-22.954849,-43.187869,75.881684,518,0,45.0,27.0
+,RioLuz,Rio Luz (Iluminação Pública),2,88a8a078a9fffff,-22.953522,-43.178615,67.956011,505,0,40.0,46.0
+,RioLuz,Rio Luz (Iluminação Pública),3,88a8a078abfffff,-22.947175,-43.184612,63.269625,640,0,36.0,48.0
+,RioLuz,Rio Luz (Iluminação Pública),4,88a8a07ab7fffff,-22.98052,-43.216147,59.956011,212,0,37.0,20.0
+,RioLuz,Rio Luz (Iluminação Pública),5,88a8a061cdfffff,-22.895321,-43.275582,48.939704,611,0,27.0,0.0
+,RioLuz,Rio Luz (Iluminação Pública),6,88a8a078a3fffff,-22.9395,-43.181355,46.47099,394,0,27.0,58.0
+,RioLuz,Rio Luz (Iluminação Pública),7,88a8a06085fffff,-22.875184,-43.336565,45.533561,1132,0,21.0,0.0
+,RioLuz,Rio Luz (Iluminação Pública),8,88a8a061c1fffff,-22.888967,-43.281576,44.284414,612,0,24.0,0.0
+,RioLuz,Rio Luz (Iluminação Pública),9,88a8a078c9fffff,-22.98554,-43.200897,34.913917,472,0,19.0,0.0
+,RioLuz,Rio Luz (Iluminação Pública),10,88a8a06a09fffff,-22.91012,-43.17758,34.666667,2638,0,3.0,66.0
+,COMLURB,Companhia Municipal de Limpeza Urbana,1,88a8a061cdfffff,-22.895321,-43.275582,74.632297,611.0,0.0,63.0,0.0
+,COMLURB,Companhia Municipal de Limpeza Urbana,2,88a8a07885fffff,-22.954849,-43.187869,51.482773,518.0,1.0,41.0,27.0
+,COMLURB,Companhia Municipal de Limpeza Urbana,3,88a8a061c1fffff,-22.888967,-43.281576,37.528768,612.0,2.0,26.0,0.0
+,COMLURB,Companhia Municipal de Limpeza Urbana,4,88a8a061ebfffff,-22.879965,-43.269067,36.44276,586.0,1.0,27.0,0.0
+,COMLURB,Companhia Municipal de Limpeza Urbana,5,88a8a078a9fffff,-22.953522,-43.178615,32.717547,505.0,0.0,26.0,46.0
+,COMLURB,Companhia Municipal de Limpeza Urbana,6,88a8a078c9fffff,-22.98554,-43.200897,30.245135,472.0,0.0,24.0,0.0
+,COMLURB,Companhia Municipal de Limpeza Urbana,7,88a8a06085fffff,-22.875184,-43.336565,28.582259,1132.0,0.0,18.0,0.0
+,COMLURB,Companhia Municipal de Limpeza Urbana,8,88a8a06027fffff,-22.902998,-43.278839,28.105467,776.0,0.0,20.0,0.0
+,COMLURB,Companhia Municipal de Limpeza Urbana,9,88a8a06a09fffff,-22.91012,-43.17758,26.444444,2638.0,1.0,4.0,66.0
+,COMLURB,Companhia Municipal de Limpeza Urbana,10,88a8a07ab7fffff,-22.98052,-43.216147,26.051723,212.0,0.0,22.0,20.0
+,SEOP,Secretaria de Ordem Pública,1,88a8a06085fffff,-22.875184,-43.336565,55.881139,1132.0,2.0,38.0,0.0
+,SEOP,Secretaria de Ordem Pública,2,88a8a078ebfffff,-22.968869,-43.185129,45.760079,1067.0,12.0,11.0,0.0
+,SEOP,Secretaria de Ordem Pública,3,88a8a06087fffff,-22.868826,-43.342559,45.62605,1046.0,4.0,26.0,0.0
+,SEOP,Secretaria de Ordem Pública,4,88a8a06081fffff,-22.876504,-43.345817,41.802502,317.0,18.0,0.0,0.0
+,SEOP,Secretaria de Ordem Pública,5,88a8a06757fffff,-22.888358,-43.429079,41.654663,291.0,18.0,0.0,0.0
+,SEOP,Secretaria de Ordem Pública,6,88a8a06a55fffff,-22.911449,-43.186833,36.477783,1908.0,11.0,1.0,11.0
+,SEOP,Secretaria de Ordem Pública,7,88a8a06a0bfffff,-22.90377,-43.183576,33.724379,1920.0,6.0,8.0,87.0
+,SEOP,Secretaria de Ordem Pública,8,88a8a078a9fffff,-22.953522,-43.178615,32.783774,505.0,6.0,14.0,46.0
+,SEOP,Secretaria de Ordem Pública,9,88a8a078c9fffff,-22.98554,-43.200897,31.996717,472.0,2.0,21.0,0.0
+,SEOP,Secretaria de Ordem Pública,10,88a8a06a49fffff,-22.931824,-43.178098,27.333905,665.0,9.0,3.0,16.0
+,CET-Rio,Companhia de Engenharia de Tráfego do Rio,1,88a8a06085fffff,-22.875184,-43.336565,69.29113,1132.0,0.0,34.0,0.0
+,CET-Rio,Companhia de Engenharia de Tráfego do Rio,2,88a8a078c9fffff,-22.98554,-43.200897,64.17894,472.0,3.0,31.0,0.0
+,CET-Rio,Companhia de Engenharia de Tráfego do Rio,3,88a8a06087fffff,-22.868826,-43.342559,52.972478,1046.0,3.0,24.0,0.0
+,CET-Rio,Companhia de Engenharia de Tráfego do Rio,4,88a8a078ebfffff,-22.968869,-43.185129,40.184437,1067.0,9.0,14.0,0.0
+,CET-Rio,Companhia de Engenharia de Tráfego do Rio,5,88a8a078a9fffff,-22.953522,-43.178615,39.622662,505.0,5.0,17.0,46.0
+,CET-Rio,Companhia de Engenharia de Tráfego do Rio,6,88a8a06a0bfffff,-22.90377,-43.183576,36.297849,1920.0,4.0,13.0,87.0
+,CET-Rio,Companhia de Engenharia de Tráfego do Rio,7,88a8a078abfffff,-22.947175,-43.184612,34.92608,640.0,0.0,17.0,48.0
+,CET-Rio,Companhia de Engenharia de Tráfego do Rio,8,88a8a0291dfffff,-22.899035,-43.555333,32.90561,107.0,0.0,17.0,20.0
+,CET-Rio,Companhia de Engenharia de Tráfego do Rio,9,88a8a02957fffff,-22.906705,-43.558594,31.160639,151.0,0.0,16.0,6.0
+,CET-Rio,Companhia de Engenharia de Tráfego do Rio,10,88a8a07885fffff,-22.954849,-43.187869,30.811648,518.0,2.0,14.0,27.0
+1,geral,,1,88a8a06621fffff,-22.884625,-43.453574,55.0,1.0,0.0,0.0,0.0
+1,geral,,2,88a8a06083fffff,-22.870146,-43.35181,42.542373,0.0,1.0,15.0,0.0
+1,geral,,3,88a8a06635fffff,-22.871901,-43.465557,42.200468,0.0,1.0,14.0,1.0
+1,geral,,4,88a8a06e5dfffff,-22.839428,-43.338778,40.0,0.0,1.0,0.0,0.0
+1,geral,,5,88a8a07469fffff,-23.012162,-43.438228,40.0,0.0,1.0,0.0,0.0
+1,geral,,6,88a8a06757fffff,-22.888358,-43.429079,40.0,0.0,1.0,0.0,0.0
+1,geral,,7,88a8a06713fffff,-22.867961,-43.437805,40.0,0.0,1.0,0.0,0.0
+1,geral,,8,88a8a0628bfffff,-22.931545,-43.377878,40.0,0.0,1.0,0.0,0.0
+1,geral,,9,88a8a062e3fffff,-22.935265,-43.35338,40.0,0.0,1.0,0.0,0.0
+1,geral,,10,88a8a029e9fffff,-22.878635,-43.564054,40.0,0.0,1.0,0.0,0.0
+1,PM-RJ,Polícia Militar do Rio de Janeiro,1,88a8a06621fffff,-22.884625,-43.453574,60.0,1.0,0.0,0.0,0.0
+1,PM-RJ,Polícia Militar do Rio de Janeiro,2,88a8a06083fffff,-22.870146,-43.35181,42.0,0.0,1.0,3.0,0.0
+1,PM-RJ,Polícia Militar do Rio de Janeiro,3,88a8a06713fffff,-22.867961,-43.437805,40.0,0.0,1.0,0.0,0.0
+1,PM-RJ,Polícia Militar do Rio de Janeiro,4,88a8a061e5fffff,-22.877316,-43.250563,40.0,0.0,1.0,0.0,0.0
+1,PM-RJ,Polícia Militar do Rio de Janeiro,5,88a8a06757fffff,-22.888358,-43.429079,40.0,0.0,1.0,0.0,0.0
+1,PM-RJ,Polícia Militar do Rio de Janeiro,6,88a8a062e3fffff,-22.935265,-43.35338,40.0,0.0,1.0,0.0,0.0
+1,PM-RJ,Polícia Militar do Rio de Janeiro,7,88a8a0628bfffff,-22.931545,-43.377878,40.0,0.0,1.0,0.0,0.0
+1,PM-RJ,Polícia Militar do Rio de Janeiro,8,88a8a06e5dfffff,-22.839428,-43.338778,40.0,0.0,1.0,0.0,0.0
+1,PM-RJ,Polícia Militar do Rio de Janeiro,9,88a8a06635fffff,-22.871901,-43.465557,39.885057,0.0,1.0,0.0,1.0
+1,PM-RJ,Polícia Militar do Rio de Janeiro,10,88a8a06085fffff,-22.875184,-43.336565,20.0,0.0,0.0,15.0,0.0
+1,GM-Rio,Guarda Municipal do Rio de Janeiro,1,88a8a06085fffff,-22.875184,-43.336565,45.0,0.0,0.0,63.0,0.0
+1,GM-Rio,Guarda Municipal do Rio de Janeiro,2,88a8a07ab7fffff,-22.98052,-43.216147,40.0,0.0,0.0,56.0,20.0
+1,GM-Rio,Guarda Municipal do Rio de Janeiro,3,88a8a078c9fffff,-22.98554,-43.200897,37.857143,0.0,0.0,53.0,0.0
+1,GM-Rio,Guarda Municipal do Rio de Janeiro,4,88a8a07469fffff,-23.012162,-43.438228,35.0,0.0,1.0,0.0,0.0
+1,GM-Rio,Guarda Municipal do Rio de Janeiro,5,88a8a06087fffff,-22.868826,-43.342559,32.857143,0.0,0.0,46.0,0.0
+1,GM-Rio,Guarda Municipal do Rio de Janeiro,6,88a8a078abfffff,-22.947175,-43.184612,26.428571,0.0,0.0,37.0,48.0
+1,GM-Rio,Guarda Municipal do Rio de Janeiro,7,88a8a06621fffff,-22.884625,-43.453574,20.0,1.0,0.0,0.0,0.0
+1,GM-Rio,Guarda Municipal do Rio de Janeiro,8,88a8a0291dfffff,-22.899035,-43.555333,19.285714,0.0,0.0,27.0,20.0
+1,GM-Rio,Guarda Municipal do Rio de Janeiro,9,88a8a06a0bfffff,-22.90377,-43.183576,18.571429,0.0,0.0,26.0,87.0
+1,GM-Rio,Guarda Municipal do Rio de Janeiro,10,88a8a07ab5fffff,-22.986865,-43.210151,18.571429,0.0,0.0,26.0,3.0
+1,RioLuz,Rio Luz (Iluminação Pública),1,88a8a07885fffff,-22.954849,-43.187869,70.0,0.0,0,45.0,27.0
+1,RioLuz,Rio Luz (Iluminação Pública),2,88a8a078a9fffff,-22.953522,-43.178615,62.222222,0.0,0,40.0,46.0
+1,RioLuz,Rio Luz (Iluminação Pública),3,88a8a07ab7fffff,-22.98052,-43.216147,57.555556,0.0,0,37.0,20.0
+1,RioLuz,Rio Luz (Iluminação Pública),4,88a8a078abfffff,-22.947175,-43.184612,56.0,0.0,0,36.0,48.0
+1,RioLuz,Rio Luz (Iluminação Pública),5,88a8a078a3fffff,-22.9395,-43.181355,42.0,0.0,0,27.0,58.0
+1,RioLuz,Rio Luz (Iluminação Pública),6,88a8a061cdfffff,-22.895321,-43.275582,42.0,0.0,0,27.0,0.0
+1,RioLuz,Rio Luz (Iluminação Pública),7,88a8a061c1fffff,-22.888967,-43.281576,37.333333,0.0,0,24.0,0.0
+1,RioLuz,Rio Luz (Iluminação Pública),8,88a8a06085fffff,-22.875184,-43.336565,32.666667,0.0,0,21.0,0.0
+1,RioLuz,Rio Luz (Iluminação Pública),9,88a8a06621fffff,-22.884625,-43.453574,30.0,1.0,0,0.0,0.0
+1,RioLuz,Rio Luz (Iluminação Pública),10,88a8a078c9fffff,-22.98554,-43.200897,29.555556,0.0,0,19.0,0.0
+1,COMLURB,Companhia Municipal de Limpeza Urbana,1,88a8a061cdfffff,-22.895321,-43.275582,70.0,0.0,0.0,63.0,0.0
+1,COMLURB,Companhia Municipal de Limpeza Urbana,2,88a8a07885fffff,-22.954849,-43.187869,45.555556,0.0,0.0,41.0,27.0
+1,COMLURB,Companhia Municipal de Limpeza Urbana,3,88a8a061ebfffff,-22.879965,-43.269067,30.0,0.0,0.0,27.0,0.0
+1,COMLURB,Companhia Municipal de Limpeza Urbana,4,88a8a061c1fffff,-22.888967,-43.281576,28.888889,0.0,0.0,26.0,0.0
+1,COMLURB,Companhia Municipal de Limpeza Urbana,5,88a8a078a9fffff,-22.953522,-43.178615,28.888889,0.0,0.0,26.0,46.0
+1,COMLURB,Companhia Municipal de Limpeza Urbana,6,88a8a078c9fffff,-22.98554,-43.200897,26.666667,0.0,0.0,24.0,0.0
+1,COMLURB,Companhia Municipal de Limpeza Urbana,7,88a8a07ab7fffff,-22.98052,-43.216147,24.444444,0.0,0.0,22.0,20.0
+1,COMLURB,Companhia Municipal de Limpeza Urbana,8,88a8a06027fffff,-22.902998,-43.278839,22.222222,0.0,0.0,20.0,0.0
+1,COMLURB,Companhia Municipal de Limpeza Urbana,9,88a8a06621fffff,-22.884625,-43.453574,20.0,1.0,0.0,0.0,0.0
+1,COMLURB,Companhia Municipal de Limpeza Urbana,10,88a8a06085fffff,-22.875184,-43.336565,20.0,0.0,0.0,18.0,0.0
+1,SEOP,Secretaria de Ordem Pública,1,88a8a06085fffff,-22.875184,-43.336565,45.0,0.0,0.0,38.0,0.0
+1,SEOP,Secretaria de Ordem Pública,2,88a8a07469fffff,-23.012162,-43.438228,40.0,0.0,1.0,0.0,0.0
+1,SEOP,Secretaria de Ordem Pública,3,88a8a06087fffff,-22.868826,-43.342559,30.789474,0.0,0.0,26.0,0.0
+1,SEOP,Secretaria de Ordem Pública,4,88a8a078c9fffff,-22.98554,-43.200897,24.868421,0.0,0.0,21.0,0.0
+1,SEOP,Secretaria de Ordem Pública,5,88a8a078a9fffff,-22.953522,-43.178615,16.578947,0.0,0.0,14.0,46.0
+1,SEOP,Secretaria de Ordem Pública,6,88a8a078e1fffff,-22.967542,-43.175876,16.578947,0.0,0.0,14.0,0.0
+1,SEOP,Secretaria de Ordem Pública,7,88a8a06621fffff,-22.884625,-43.453574,15.0,1.0,0.0,0.0,0.0
+1,SEOP,Secretaria de Ordem Pública,8,88a8a078abfffff,-22.947175,-43.184612,14.210526,0.0,0.0,12.0,48.0
+1,SEOP,Secretaria de Ordem Pública,9,88a8a078ebfffff,-22.968869,-43.185129,13.026316,0.0,0.0,11.0,0.0
+1,SEOP,Secretaria de Ordem Pública,10,88a8a07ab5fffff,-22.986865,-43.210151,13.026316,0.0,0.0,11.0,3.0
+1,CET-Rio,Companhia de Engenharia de Tráfego do Rio,1,88a8a06085fffff,-22.875184,-43.336565,65.0,0.0,0.0,34.0,0.0
+1,CET-Rio,Companhia de Engenharia de Tráfego do Rio,2,88a8a078c9fffff,-22.98554,-43.200897,59.264706,0.0,0.0,31.0,0.0
+1,CET-Rio,Companhia de Engenharia de Tráfego do Rio,3,88a8a06087fffff,-22.868826,-43.342559,45.882353,0.0,0.0,24.0,0.0
+1,CET-Rio,Companhia de Engenharia de Tráfego do Rio,4,88a8a078a9fffff,-22.953522,-43.178615,32.5,0.0,0.0,17.0,46.0
+1,CET-Rio,Companhia de Engenharia de Tráfego do Rio,5,88a8a0291dfffff,-22.899035,-43.555333,32.5,0.0,0.0,17.0,20.0
+1,CET-Rio,Companhia de Engenharia de Tráfego do Rio,6,88a8a078abfffff,-22.947175,-43.184612,32.5,0.0,0.0,17.0,48.0
+1,CET-Rio,Companhia de Engenharia de Tráfego do Rio,7,88a8a02957fffff,-22.906705,-43.558594,30.588235,0.0,0.0,16.0,6.0
+1,CET-Rio,Companhia de Engenharia de Tráfego do Rio,8,88a8a07885fffff,-22.954849,-43.187869,26.764706,0.0,0.0,14.0,27.0
+1,CET-Rio,Companhia de Engenharia de Tráfego do Rio,9,88a8a07ab5fffff,-22.986865,-43.210151,26.764706,0.0,0.0,14.0,3.0
+1,CET-Rio,Companhia de Engenharia de Tráfego do Rio,10,88a8a078ebfffff,-22.968869,-43.185129,26.764706,0.0,0.0,14.0,0.0
+3,geral,,1,88a8a061ddfffff,-22.883934,-43.296822,63.333333,2.0,1.0,0.0,0.0
+3,geral,,2,88a8a078a3fffff,-22.9395,-43.181355,56.016949,2.0,0.0,65.0,58.0
+3,geral,,3,88a8a06249fffff,-23.004048,-43.330449,55.0,2.0,0.0,0.0,0.0
+3,geral,,4,88a8a06527fffff,-22.813982,-43.362749,55.0,2.0,0.0,0.0,0.0
+3,geral,,5,88a8a06f5dfffff,-22.83017,-43.27402,55.0,2.0,0.0,0.0,0.0
+3,geral,,6,88a8a06a03fffff,-22.896091,-43.18032,55.0,2.0,0.0,0.0,0.0
+3,geral,,7,88a8a06085fffff,-22.875184,-43.336565,53.644068,1.0,0.0,110.0,0.0
+3,geral,,8,88a8a06087fffff,-22.868826,-43.342559,48.559322,1.0,0.0,80.0,0.0
+3,geral,,9,88a8a07885fffff,-22.954849,-43.187869,46.107539,1.0,0.0,93.0,27.0
+3,geral,,10,88a8a061c1fffff,-22.888967,-43.281576,42.118644,1.0,0.0,42.0,0.0
+3,PM-RJ,Polícia Militar do Rio de Janeiro,1,88a8a061ddfffff,-22.883934,-43.296822,75.0,2.0,1.0,0.0,0.0
+3,PM-RJ,Polícia Militar do Rio de Janeiro,2,88a8a06249fffff,-23.004048,-43.330449,60.0,2.0,0.0,0.0,0.0
+3,PM-RJ,Polícia Militar do Rio de Janeiro,3,88a8a06a03fffff,-22.896091,-43.18032,60.0,2.0,0.0,0.0,0.0
+3,PM-RJ,Polícia Militar do Rio de Janeiro,4,88a8a06f5dfffff,-22.83017,-43.27402,60.0,2.0,0.0,0.0,0.0
+3,PM-RJ,Polícia Militar do Rio de Janeiro,5,88a8a06527fffff,-22.813982,-43.362749,60.0,2.0,0.0,0.0,0.0
+3,PM-RJ,Polícia Militar do Rio de Janeiro,6,88a8a078a3fffff,-22.9395,-43.181355,57.333333,2.0,0.0,6.0,58.0
+3,PM-RJ,Polícia Militar do Rio de Janeiro,7,88a8a06087fffff,-22.868826,-43.342559,45.0,1.0,0.0,15.0,0.0
+3,PM-RJ,Polícia Militar do Rio de Janeiro,8,88a8a06085fffff,-22.875184,-43.336565,45.0,1.0,0.0,15.0,0.0
+3,PM-RJ,Polícia Militar do Rio de Janeiro,9,88a8a06101fffff,-22.911731,-43.239092,41.666667,1.0,0.0,10.0,0.0
+3,PM-RJ,Polícia Militar do Rio de Janeiro,10,88a8a06e5dfffff,-22.839428,-43.338778,40.0,0.0,2.0,0.0,0.0
+3,GM-Rio,Guarda Municipal do Rio de Janeiro,1,88a8a06085fffff,-22.875184,-43.336565,55.0,1.0,0.0,63.0,0.0
+3,GM-Rio,Guarda Municipal do Rio de Janeiro,2,88a8a06087fffff,-22.868826,-43.342559,42.857143,1.0,0.0,46.0,0.0
+3,GM-Rio,Guarda Municipal do Rio de Janeiro,3,88a8a07ab7fffff,-22.98052,-43.216147,40.0,0.0,0.0,56.0,20.0
+3,GM-Rio,Guarda Municipal do Rio de Janeiro,4,88a8a078c9fffff,-22.98554,-43.200897,37.857143,0.0,0.0,53.0,0.0
+3,GM-Rio,Guarda Municipal do Rio de Janeiro,5,88a8a078a3fffff,-22.9395,-43.181355,35.714286,2.0,0.0,22.0,58.0
+3,GM-Rio,Guarda Municipal do Rio de Janeiro,6,88a8a06757fffff,-22.888358,-43.429079,35.0,0.0,1.0,0.0,0.0
+3,GM-Rio,Guarda Municipal do Rio de Janeiro,7,88a8a07469fffff,-23.012162,-43.438228,35.0,0.0,1.0,0.0,0.0
+3,GM-Rio,Guarda Municipal do Rio de Janeiro,8,88a8a07885fffff,-22.954849,-43.187869,27.857143,1.0,0.0,25.0,27.0
+3,GM-Rio,Guarda Municipal do Rio de Janeiro,9,88a8a078abfffff,-22.947175,-43.184612,26.428571,0.0,0.0,37.0,48.0
+3,GM-Rio,Guarda Municipal do Rio de Janeiro,10,88a8a0719bfffff,-23.009078,-43.3152,21.428571,1.0,0.0,16.0,0.0
+3,RioLuz,Rio Luz (Iluminação Pública),1,88a8a07885fffff,-22.954849,-43.187869,85.0,1.0,0,45.0,27.0
+3,RioLuz,Rio Luz (Iluminação Pública),2,88a8a078a3fffff,-22.9395,-43.181355,72.0,2.0,0,27.0,58.0
+3,RioLuz,Rio Luz (Iluminação Pública),3,88a8a078a9fffff,-22.953522,-43.178615,62.222222,0.0,0,40.0,46.0
+3,RioLuz,Rio Luz (Iluminação Pública),4,88a8a07ab7fffff,-22.98052,-43.216147,57.555556,0.0,0,37.0,20.0
+3,RioLuz,Rio Luz (Iluminação Pública),5,88a8a078abfffff,-22.947175,-43.184612,56.0,0.0,0,36.0,48.0
+3,RioLuz,Rio Luz (Iluminação Pública),6,88a8a061c1fffff,-22.888967,-43.281576,52.333333,1.0,0,24.0,0.0
+3,RioLuz,Rio Luz (Iluminação Pública),7,88a8a06085fffff,-22.875184,-43.336565,47.666667,1.0,0,21.0,0.0
+3,RioLuz,Rio Luz (Iluminação Pública),8,88a8a061cdfffff,-22.895321,-43.275582,42.0,0.0,0,27.0,0.0
+3,RioLuz,Rio Luz (Iluminação Pública),9,88a8a06087fffff,-22.868826,-43.342559,35.222222,1.0,0,13.0,0.0
+3,RioLuz,Rio Luz (Iluminação Pública),10,88a8a06161fffff,-22.923107,-43.217849,30.555556,1.0,0,10.0,14.0
+3,COMLURB,Companhia Municipal de Limpeza Urbana,1,88a8a061cdfffff,-22.895321,-43.275582,70.0,0.0,0.0,63.0,0.0
+3,COMLURB,Companhia Municipal de Limpeza Urbana,2,88a8a07885fffff,-22.954849,-43.187869,55.555556,1.0,0.0,41.0,27.0
+3,COMLURB,Companhia Municipal de Limpeza Urbana,3,88a8a061c1fffff,-22.888967,-43.281576,38.888889,1.0,0.0,26.0,0.0
+3,COMLURB,Companhia Municipal de Limpeza Urbana,4,88a8a078a3fffff,-22.9395,-43.181355,33.333333,2.0,0.0,12.0,58.0
+3,COMLURB,Companhia Municipal de Limpeza Urbana,5,88a8a06085fffff,-22.875184,-43.336565,30.0,1.0,0.0,18.0,0.0
+3,COMLURB,Companhia Municipal de Limpeza Urbana,6,88a8a061ebfffff,-22.879965,-43.269067,30.0,0.0,0.0,27.0,0.0
+3,COMLURB,Companhia Municipal de Limpeza Urbana,7,88a8a078a9fffff,-22.953522,-43.178615,28.888889,0.0,0.0,26.0,46.0
+3,COMLURB,Companhia Municipal de Limpeza Urbana,8,88a8a061c7fffff,-22.881288,-43.278319,27.777778,1.0,0.0,16.0,0.0
+3,COMLURB,Companhia Municipal de Limpeza Urbana,9,88a8a06161fffff,-22.923107,-43.217849,26.666667,1.0,0.0,15.0,14.0
+3,COMLURB,Companhia Municipal de Limpeza Urbana,10,88a8a078c9fffff,-22.98554,-43.200897,26.666667,0.0,0.0,24.0,0.0
+3,SEOP,Secretaria de Ordem Pública,1,88a8a06085fffff,-22.875184,-43.336565,52.5,1.0,0.0,38.0,0.0
+3,SEOP,Secretaria de Ordem Pública,2,88a8a07469fffff,-23.012162,-43.438228,40.0,0.0,1.0,0.0,0.0
+3,SEOP,Secretaria de Ordem Pública,3,88a8a06757fffff,-22.888358,-43.429079,40.0,0.0,1.0,0.0,0.0
+3,SEOP,Secretaria de Ordem Pública,4,88a8a06087fffff,-22.868826,-43.342559,38.289474,1.0,0.0,26.0,0.0
+3,SEOP,Secretaria de Ordem Pública,5,88a8a078c9fffff,-22.98554,-43.200897,24.868421,0.0,0.0,21.0,0.0
+3,SEOP,Secretaria de Ordem Pública,6,88a8a078a3fffff,-22.9395,-43.181355,19.736842,2.0,0.0,4.0,58.0
+3,SEOP,Secretaria de Ordem Pública,7,88a8a061c7fffff,-22.881288,-43.278319,16.973684,1.0,0.0,8.0,0.0
+3,SEOP,Secretaria de Ordem Pública,8,88a8a078e1fffff,-22.967542,-43.175876,16.578947,0.0,0.0,14.0,0.0
+3,SEOP,Secretaria de Ordem Pública,9,88a8a078a9fffff,-22.953522,-43.178615,16.578947,0.0,0.0,14.0,46.0
+3,SEOP,Secretaria de Ordem Pública,10,88a8a061ddfffff,-22.883934,-43.296822,15.0,2.0,0.0,0.0,0.0
+3,CET-Rio,Companhia de Engenharia de Tráfego do Rio,1,88a8a06085fffff,-22.875184,-43.336565,70.0,1.0,0.0,34.0,0.0
+3,CET-Rio,Companhia de Engenharia de Tráfego do Rio,2,88a8a078c9fffff,-22.98554,-43.200897,59.264706,0.0,0.0,31.0,0.0
+3,CET-Rio,Companhia de Engenharia de Tráfego do Rio,3,88a8a06087fffff,-22.868826,-43.342559,50.882353,1.0,0.0,24.0,0.0
+3,CET-Rio,Companhia de Engenharia de Tráfego do Rio,4,88a8a0291dfffff,-22.899035,-43.555333,32.5,0.0,0.0,17.0,20.0
+3,CET-Rio,Companhia de Engenharia de Tráfego do Rio,5,88a8a078a9fffff,-22.953522,-43.178615,32.5,0.0,0.0,17.0,46.0
+3,CET-Rio,Companhia de Engenharia de Tráfego do Rio,6,88a8a078abfffff,-22.947175,-43.184612,32.5,0.0,0.0,17.0,48.0
+3,CET-Rio,Companhia de Engenharia de Tráfego do Rio,7,88a8a07885fffff,-22.954849,-43.187869,31.764706,1.0,0.0,14.0,27.0
+3,CET-Rio,Companhia de Engenharia de Tráfego do Rio,8,88a8a02957fffff,-22.906705,-43.558594,30.588235,0.0,0.0,16.0,6.0
+3,CET-Rio,Companhia de Engenharia de Tráfego do Rio,9,88a8a06161fffff,-22.923107,-43.217849,29.852941,1.0,0.0,13.0,14.0
+3,CET-Rio,Companhia de Engenharia de Tráfego do Rio,10,88a8a078a3fffff,-22.9395,-43.181355,27.205882,2.0,0.0,9.0,58.0
+7,geral,,1,88a8a0610dfffff,-22.918083,-43.233097,57.542373,9.0,0.0,15.0,0.0
+7,geral,,2,88a8a06085fffff,-22.875184,-43.336565,51.421846,4.0,0.0,110.0,0.0
+7,geral,,3,88a8a06147fffff,-22.925759,-43.236354,51.111111,7.0,1.0,0.0,0.0
+7,geral,,4,88a8a06087fffff,-22.868826,-43.342559,50.781544,5.0,0.0,80.0,0.0
+7,geral,,5,88a8a078abfffff,-22.947175,-43.184612,49.078187,4.0,2.0,86.0,48.0
+7,geral,,6,88a8a061ddfffff,-22.883934,-43.296822,47.222222,5.0,2.0,0.0,0.0
+7,geral,,7,88a8a06a55fffff,-22.911449,-43.186833,45.231509,7.0,0.0,6.0,11.0
+7,geral,,8,88a8a06a43fffff,-22.917798,-43.180837,41.666667,6.0,0.0,0.0,0.0
+7,geral,,9,88a8a06a09fffff,-22.91012,-43.17758,41.379635,8.0,0.0,13.0,66.0
+7,geral,,10,88a8a06027fffff,-22.902998,-43.278839,41.299435,3.0,1.0,47.0,0.0
+7,PM-RJ,Polícia Militar do Rio de Janeiro,1,88a8a0610dfffff,-22.918083,-43.233097,61.333333,9.0,0.0,2.0,0.0
+7,PM-RJ,Polícia Militar do Rio de Janeiro,2,88a8a06147fffff,-22.925759,-43.236354,56.388889,7.0,1.0,0.0,0.0
+7,PM-RJ,Polícia Militar do Rio de Janeiro,3,88a8a061ddfffff,-22.883934,-43.296822,52.777778,5.0,2.0,0.0,0.0
+7,PM-RJ,Polícia Militar do Rio de Janeiro,4,88a8a06087fffff,-22.868826,-43.342559,47.777778,5.0,0.0,15.0,0.0
+7,PM-RJ,Polícia Militar do Rio de Janeiro,5,88a8a06a55fffff,-22.911449,-43.186833,47.624521,7.0,0.0,0.0,11.0
+7,PM-RJ,Polícia Militar do Rio de Janeiro,6,88a8a06a09fffff,-22.91012,-43.17758,46.858238,8.0,0.0,0.0,66.0
+7,PM-RJ,Polícia Militar do Rio de Janeiro,7,88a8a06e5dfffff,-22.839428,-43.338778,45.555556,1.0,4.0,0.0,0.0
+7,PM-RJ,Polícia Militar do Rio de Janeiro,8,88a8a06a43fffff,-22.917798,-43.180837,43.333333,6.0,0.0,0.0,0.0
+7,PM-RJ,Polícia Militar do Rio de Janeiro,9,88a8a06085fffff,-22.875184,-43.336565,42.222222,4.0,0.0,15.0,0.0
+7,PM-RJ,Polícia Militar do Rio de Janeiro,10,88a8a06163fffff,-22.916757,-43.223844,41.639847,5.0,0.0,7.0,7.0
+7,GM-Rio,Guarda Municipal do Rio de Janeiro,1,88a8a06085fffff,-22.875184,-43.336565,53.888889,4.0,0.0,63.0,0.0
+7,GM-Rio,Guarda Municipal do Rio de Janeiro,2,88a8a06087fffff,-22.868826,-43.342559,43.968254,5.0,0.0,46.0,0.0
+7,GM-Rio,Guarda Municipal do Rio de Janeiro,3,88a8a078c9fffff,-22.98554,-43.200897,40.079365,1.0,0.0,53.0,0.0
+7,GM-Rio,Guarda Municipal do Rio de Janeiro,4,88a8a07ab7fffff,-22.98052,-43.216147,40.0,0.0,0.0,56.0,20.0
+7,GM-Rio,Guarda Municipal do Rio de Janeiro,5,88a8a078abfffff,-22.947175,-43.184612,35.31746,4.0,0.0,37.0,48.0
+7,GM-Rio,Guarda Municipal do Rio de Janeiro,6,88a8a02a4dfffff,-22.994932,-43.622217,35.0,0.0,1.0,0.0,0.0
+7,GM-Rio,Guarda Municipal do Rio de Janeiro,7,88a8a06757fffff,-22.888358,-43.429079,35.0,0.0,1.0,0.0,0.0
+7,GM-Rio,Guarda Municipal do Rio de Janeiro,8,88a8a02833fffff,-22.885162,-43.610305,35.0,0.0,1.0,0.0,0.0
+7,GM-Rio,Guarda Municipal do Rio de Janeiro,9,88a8a07469fffff,-23.012162,-43.438228,35.0,0.0,1.0,0.0,0.0
+7,GM-Rio,Guarda Municipal do Rio de Janeiro,10,88a8a06a0bfffff,-22.90377,-43.183576,25.238095,3.0,0.0,26.0,87.0
+7,RioLuz,Rio Luz (Iluminação Pública),1,88a8a07885fffff,-22.954849,-43.187869,80.0,3.0,0,45.0,27.0
+7,RioLuz,Rio Luz (Iluminação Pública),2,88a8a078abfffff,-22.947175,-43.184612,69.333333,4.0,0,36.0,48.0
+7,RioLuz,Rio Luz (Iluminação Pública),3,88a8a078a9fffff,-22.953522,-43.178615,68.888889,2.0,0,40.0,46.0
+7,RioLuz,Rio Luz (Iluminação Pública),4,88a8a07ab7fffff,-22.98052,-43.216147,57.555556,0.0,0,37.0,20.0
+7,RioLuz,Rio Luz (Iluminação Pública),5,88a8a078a3fffff,-22.9395,-43.181355,52.0,3.0,0,27.0,58.0
+7,RioLuz,Rio Luz (Iluminação Pública),6,88a8a06085fffff,-22.875184,-43.336565,46.0,4.0,0,21.0,0.0
+7,RioLuz,Rio Luz (Iluminação Pública),7,88a8a061c1fffff,-22.888967,-43.281576,44.0,2.0,0,24.0,0.0
+7,RioLuz,Rio Luz (Iluminação Pública),8,88a8a061cdfffff,-22.895321,-43.275582,42.0,0.0,0,27.0,0.0
+7,RioLuz,Rio Luz (Iluminação Pública),9,88a8a0610dfffff,-22.918083,-43.233097,37.777778,9.0,0,5.0,0.0
+7,RioLuz,Rio Luz (Iluminação Pública),10,88a8a06087fffff,-22.868826,-43.342559,36.888889,5.0,0,13.0,0.0
+7,COMLURB,Companhia Municipal de Limpeza Urbana,1,88a8a061cdfffff,-22.895321,-43.275582,70.0,0.0,0.0,63.0,0.0
+7,COMLURB,Companhia Municipal de Limpeza Urbana,2,88a8a07885fffff,-22.954849,-43.187869,52.222222,3.0,0.0,41.0,27.0
+7,COMLURB,Companhia Municipal de Limpeza Urbana,3,88a8a078abfffff,-22.947175,-43.184612,36.666667,4.0,1.0,16.0,48.0
+7,COMLURB,Companhia Municipal de Limpeza Urbana,4,88a8a078a9fffff,-22.953522,-43.178615,33.333333,2.0,0.0,26.0,46.0
+7,COMLURB,Companhia Municipal de Limpeza Urbana,5,88a8a061c1fffff,-22.888967,-43.281576,33.333333,2.0,0.0,26.0,0.0
+7,COMLURB,Companhia Municipal de Limpeza Urbana,6,88a8a061ebfffff,-22.879965,-43.269067,30.0,0.0,0.0,27.0,0.0
+7,COMLURB,Companhia Municipal de Limpeza Urbana,7,88a8a06027fffff,-22.902998,-43.278839,28.888889,3.0,0.0,20.0,0.0
+7,COMLURB,Companhia Municipal de Limpeza Urbana,8,88a8a06085fffff,-22.875184,-43.336565,28.888889,4.0,0.0,18.0,0.0
+7,COMLURB,Companhia Municipal de Limpeza Urbana,9,88a8a078c9fffff,-22.98554,-43.200897,28.888889,1.0,0.0,24.0,0.0
+7,COMLURB,Companhia Municipal de Limpeza Urbana,10,88a8a0610dfffff,-22.918083,-43.233097,24.444444,9.0,0.0,4.0,0.0
+7,SEOP,Secretaria de Ordem Pública,1,88a8a06085fffff,-22.875184,-43.336565,51.666667,4.0,0.0,38.0,0.0
+7,SEOP,Secretaria de Ordem Pública,2,88a8a02833fffff,-22.885162,-43.610305,40.0,0.0,1.0,0.0,0.0
+7,SEOP,Secretaria de Ordem Pública,3,88a8a02a4dfffff,-22.994932,-43.622217,40.0,0.0,1.0,0.0,0.0
+7,SEOP,Secretaria de Ordem Pública,4,88a8a06757fffff,-22.888358,-43.429079,40.0,0.0,1.0,0.0,0.0
+7,SEOP,Secretaria de Ordem Pública,5,88a8a07469fffff,-23.012162,-43.438228,40.0,0.0,1.0,0.0,0.0
+7,SEOP,Secretaria de Ordem Pública,6,88a8a06087fffff,-22.868826,-43.342559,39.122807,5.0,0.0,26.0,0.0
+7,SEOP,Secretaria de Ordem Pública,7,88a8a078c9fffff,-22.98554,-43.200897,26.535088,1.0,0.0,21.0,0.0
+7,SEOP,Secretaria de Ordem Pública,8,88a8a078abfffff,-22.947175,-43.184612,20.877193,4.0,0.0,12.0,48.0
+7,SEOP,Secretaria de Ordem Pública,9,88a8a078a9fffff,-22.953522,-43.178615,19.912281,2.0,0.0,14.0,46.0
+7,SEOP,Secretaria de Ordem Pública,10,88a8a07ab5fffff,-22.986865,-43.210151,18.026316,3.0,0.0,11.0,3.0
+7,CET-Rio,Companhia de Engenharia de Tráfego do Rio,1,88a8a06085fffff,-22.875184,-43.336565,69.444444,4.0,0.0,34.0,0.0
+7,CET-Rio,Companhia de Engenharia de Tráfego do Rio,2,88a8a078c9fffff,-22.98554,-43.200897,60.375817,1.0,0.0,31.0,0.0
+7,CET-Rio,Companhia de Engenharia de Tráfego do Rio,3,88a8a06087fffff,-22.868826,-43.342559,51.437908,5.0,0.0,24.0,0.0
+7,CET-Rio,Companhia de Engenharia de Tráfego do Rio,4,88a8a078abfffff,-22.947175,-43.184612,36.944444,4.0,0.0,17.0,48.0
+7,CET-Rio,Companhia de Engenharia de Tráfego do Rio,5,88a8a078a9fffff,-22.953522,-43.178615,34.722222,2.0,0.0,17.0,46.0
+7,CET-Rio,Companhia de Engenharia de Tráfego do Rio,6,88a8a02957fffff,-22.906705,-43.558594,32.810458,2.0,0.0,16.0,6.0
+7,CET-Rio,Companhia de Engenharia de Tráfego do Rio,7,88a8a0291dfffff,-22.899035,-43.555333,32.5,0.0,0.0,17.0,20.0
+7,CET-Rio,Companhia de Engenharia de Tráfego do Rio,8,88a8a07885fffff,-22.954849,-43.187869,30.098039,3.0,0.0,14.0,27.0
+7,CET-Rio,Companhia de Engenharia de Tráfego do Rio,9,88a8a07ab5fffff,-22.986865,-43.210151,30.098039,3.0,0.0,14.0,3.0
+7,CET-Rio,Companhia de Engenharia de Tráfego do Rio,10,88a8a06a0bfffff,-22.90377,-43.183576,28.186275,3.0,0.0,13.0,87.0

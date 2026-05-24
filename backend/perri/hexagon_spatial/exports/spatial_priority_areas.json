@@ -1,0 +1,794 @@
+{
+  "elapsed_seconds": 6.97,
+  "filtro_dias": null,
+  "as_of_date": "2025-01-02",
+  "n_ocorrencias_usadas": 115354,
+  "n_denuncias_usadas": 17850,
+  "total_cells_scored": 1222,
+  "n_hotspot_clusters": 832,
+  "score_geral": {
+    "descricao": "Fusão ponderada de todas as fontes (MCDA)",
+    "top_areas": [
+      {
+        "h3_cell": "88a8a06a55fffff",
+        "lat": -22.911449,
+        "lon": -43.186833,
+        "score": 67.199133,
+        "cnt_ocorrencias": 1908.0,
+        "cnt_denuncias": 170.0,
+        "cnt_fatores": 6.0,
+        "cnt_cameras": 11.0
+      },
+      {
+        "h3_cell": "88a8a06085fffff",
+        "lat": -22.875184,
+        "lon": -43.336565,
+        "score": 62.314268,
+        "cnt_ocorrencias": 1132.0,
+        "cnt_denuncias": 81.0,
+        "cnt_fatores": 110.0,
+        "cnt_cameras": 0.0
+      },
+      {
+        "h3_cell": "88a8a078ebfffff",
+        "lat": -22.968869,
+        "lon": -43.185129,
+        "score": 61.941635,
+        "cnt_ocorrencias": 1067.0,
+        "cnt_denuncias": 176.0,
+        "cnt_fatores": 34.0,
+        "cnt_cameras": 0.0
+      },
+      {
+        "h3_cell": "88a8a06a0bfffff",
+        "lat": -22.90377,
+        "lon": -43.183576,
+        "score": 61.259055,
+        "cnt_ocorrencias": 1920.0,
+        "cnt_denuncias": 175.0,
+        "cnt_fatores": 43.0,
+        "cnt_cameras": 87.0
+      },
+      {
+        "h3_cell": "88a8a06a09fffff",
+        "lat": -22.91012,
+        "lon": -43.17758,
+        "score": 60.596807,
+        "cnt_ocorrencias": 2638.0,
+        "cnt_denuncias": 104.0,
+        "cnt_fatores": 13.0,
+        "cnt_cameras": 66.0
+      },
+      {
+        "h3_cell": "88a8a06087fffff",
+        "lat": -22.868826,
+        "lon": -43.342559,
+        "score": 52.374368,
+        "cnt_ocorrencias": 1046.0,
+        "cnt_denuncias": 56.0,
+        "cnt_fatores": 80.0,
+        "cnt_cameras": 0.0
+      },
+      {
+        "h3_cell": "88a8a061ebfffff",
+        "lat": -22.879965,
+        "lon": -43.269067,
+        "score": 51.289217,
+        "cnt_ocorrencias": 586.0,
+        "cnt_denuncias": 144.0,
+        "cnt_fatores": 41.0,
+        "cnt_cameras": 0.0
+      },
+      {
+        "h3_cell": "88a8a06027fffff",
+        "lat": -22.902998,
+        "lon": -43.278839,
+        "score": 46.522364,
+        "cnt_ocorrencias": 776.0,
+        "cnt_denuncias": 83.0,
+        "cnt_fatores": 47.0,
+        "cnt_cameras": 0.0
+      },
+      {
+        "h3_cell": "88a8a06a43fffff",
+        "lat": -22.917798,
+        "lon": -43.180837,
+        "score": 46.199988,
+        "cnt_ocorrencias": 1252.0,
+        "cnt_denuncias": 86.0,
+        "cnt_fatores": 0.0,
+        "cnt_cameras": 0.0
+      },
+      {
+        "h3_cell": "88a8a061cdfffff",
+        "lat": -22.895321,
+        "lon": -43.275582,
+        "score": 45.342695,
+        "cnt_ocorrencias": 611.0,
+        "cnt_denuncias": 41.0,
+        "cnt_fatores": 90.0,
+        "cnt_cameras": 0.0
+      }
+    ]
+  },
+  "scores_por_instituicao": {
+    "PM-RJ": {
+      "instituicao": "Polícia Militar do Rio de Janeiro",
+      "mandato": "Policiamento ostensivo, crimes contra patrimônio e pessoa, armas e drogas",
+      "pesos": {
+        "ocorrencias": 0.5,
+        "denuncias": 0.3,
+        "fatores": 0.1,
+        "cameras_inv": 0.1
+      },
+      "total_celulas": 1198,
+      "top_areas": [
+        {
+          "h3_cell": "88a8a06a55fffff",
+          "lat": -22.911449,
+          "lon": -43.186833,
+          "score": 74.314977,
+          "cnt_ocorr": 1908.0,
+          "cnt_den": 151.0,
+          "cnt_fat": 0.0,
+          "cnt_cameras": 11.0
+        },
+        {
+          "h3_cell": "88a8a06a0bfffff",
+          "lat": -22.90377,
+          "lon": -43.183576,
+          "score": 70.391205,
+          "cnt_ocorr": 1920.0,
+          "cnt_den": 154.0,
+          "cnt_fat": 6.0,
+          "cnt_cameras": 87.0
+        },
+        {
+          "h3_cell": "88a8a06a09fffff",
+          "lat": -22.91012,
+          "lon": -43.17758,
+          "score": 69.751455,
+          "cnt_ocorr": 2638.0,
+          "cnt_den": 89.0,
+          "cnt_fat": 0.0,
+          "cnt_cameras": 66.0
+        },
+        {
+          "h3_cell": "88a8a078ebfffff",
+          "lat": -22.968869,
+          "lon": -43.185129,
+          "score": 61.362182,
+          "cnt_ocorr": 1067.0,
+          "cnt_den": 153.0,
+          "cnt_fat": 2.0,
+          "cnt_cameras": 0.0
+        },
+        {
+          "h3_cell": "88a8a06085fffff",
+          "lat": -22.875184,
+          "lon": -43.336565,
+          "score": 55.871233,
+          "cnt_ocorr": 1132.0,
+          "cnt_den": 74.0,
+          "cnt_fat": 15.0,
+          "cnt_cameras": 0.0
+        },
+        {
+          "h3_cell": "88a8a06087fffff",
+          "lat": -22.868826,
+          "lon": -43.342559,
+          "score": 48.98147,
+          "cnt_ocorr": 1046.0,
+          "cnt_den": 47.0,
+          "cnt_fat": 15.0,
+          "cnt_cameras": 0.0
+        },
+        {
+          "h3_cell": "88a8a06a43fffff",
+          "lat": -22.917798,
+          "lon": -43.180837,
+          "score": 48.730099,
+          "cnt_ocorr": 1252.0,
+          "cnt_den": 77.0,
+          "cnt_fat": 0.0,
+          "cnt_cameras": 0.0
+        },
+        {
+          "h3_cell": "88a8a061ebfffff",
+          "lat": -22.879965,
+          "lon": -43.269067,
+          "score": 47.375297,
+          "cnt_ocorr": 586.0,
+          "cnt_den": 128.0,
+          "cnt_fat": 2.0,
+          "cnt_cameras": 0.0
+        },
+        {
+          "h3_cell": "88a8a06ec9fffff",
+          "lat": -22.807618,
+          "lon": -43.368741,
+          "score": 45.208984,
+          "cnt_ocorr": 799.0,
+          "cnt_den": 103.0,
+          "cnt_fat": 0.0,
+          "cnt_cameras": 0.0
+        },
+        {
+          "h3_cell": "88a8a06e41fffff",
+          "lat": -22.844467,
+          "lon": -43.323533,
+          "score": 44.020214,
+          "cnt_ocorr": 541.0,
+          "cnt_den": 122.0,
+          "cnt_fat": 0.0,
+          "cnt_cameras": 0.0
+        }
+      ]
+    },
+    "GM-Rio": {
+      "instituicao": "Guarda Municipal do Rio de Janeiro",
+      "mandato": "Ordem pública, proteção do patrimônio municipal, fiscalização urbana",
+      "pesos": {
+        "ocorrencias": 0.2,
+        "denuncias": 0.35,
+        "fatores": 0.45,
+        "cameras_inv": 0.0
+      },
+      "total_celulas": 1073,
+      "top_areas": [
+        {
+          "h3_cell": "88a8a06085fffff",
+          "lat": -22.875184,
+          "lon": -43.336565,
+          "score": 56.382259,
+          "cnt_ocorr": 1132.0,
+          "cnt_den": 2.0,
+          "cnt_fat": 63.0,
+          "cnt_cameras": 0.0
+        },
+        {
+          "h3_cell": "88a8a06087fffff",
+          "lat": -22.868826,
+          "lon": -43.342559,
+          "score": 46.387393,
+          "cnt_ocorr": 1046.0,
+          "cnt_den": 4.0,
+          "cnt_fat": 46.0,
+          "cnt_cameras": 0.0
+        },
+        {
+          "h3_cell": "88a8a078c9fffff",
+          "lat": -22.98554,
+          "lon": -43.200897,
+          "score": 45.635611,
+          "cnt_ocorr": 472.0,
+          "cnt_den": 3.0,
+          "cnt_fat": 53.0,
+          "cnt_cameras": 0.0
+        },
+        {
+          "h3_cell": "88a8a07ab7fffff",
+          "lat": -22.98052,
+          "lon": -43.216147,
+          "score": 43.007278,
+          "cnt_ocorr": 212.0,
+          "cnt_den": 1.0,
+          "cnt_fat": 56.0,
+          "cnt_cameras": 20.0
+        },
+        {
+          "h3_cell": "88a8a06a0bfffff",
+          "lat": -22.90377,
+          "lon": -43.183576,
+          "score": 42.927911,
+          "cnt_ocorr": 1920.0,
+          "cnt_den": 7.0,
+          "cnt_fat": 26.0,
+          "cnt_cameras": 87.0
+        },
+        {
+          "h3_cell": "88a8a078ebfffff",
+          "lat": -22.968869,
+          "lon": -43.185129,
+          "score": 42.032319,
+          "cnt_ocorr": 1067.0,
+          "cnt_den": 12.0,
+          "cnt_fat": 24.0,
+          "cnt_cameras": 0.0
+        },
+        {
+          "h3_cell": "88a8a0673bfffff",
+          "lat": -22.865331,
+          "lon": -43.419303,
+          "score": 35.424564,
+          "cnt_ocorr": 56.0,
+          "cnt_den": 25.0,
+          "cnt_fat": 0.0,
+          "cnt_cameras": 0.0
+        },
+        {
+          "h3_cell": "88a8a06a55fffff",
+          "lat": -22.911449,
+          "lon": -43.186833,
+          "score": 33.408361,
+          "cnt_ocorr": 1908.0,
+          "cnt_den": 12.0,
+          "cnt_fat": 3.0,
+          "cnt_cameras": 11.0
+        },
+        {
+          "h3_cell": "88a8a078abfffff",
+          "lat": -22.947175,
+          "lon": -43.184612,
+          "score": 31.280732,
+          "cnt_ocorr": 640.0,
+          "cnt_den": 0.0,
+          "cnt_fat": 37.0,
+          "cnt_cameras": 48.0
+        },
+        {
+          "h3_cell": "88a8a06081fffff",
+          "lat": -22.876504,
+          "lon": -43.345817,
+          "score": 30.403336,
+          "cnt_ocorr": 317.0,
+          "cnt_den": 20.0,
+          "cnt_fat": 0.0,
+          "cnt_cameras": 0.0
+        }
+      ]
+    },
+    "RioLuz": {
+      "instituicao": "Rio Luz (Iluminação Pública)",
+      "mandato": "Manutenção e expansão da rede de iluminação pública",
+      "pesos": {
+        "ocorrencias": 0.3,
+        "denuncias": 0.0,
+        "fatores": 0.7,
+        "cameras_inv": 0.0
+      },
+      "total_celulas": 1051,
+      "top_areas": [
+        {
+          "h3_cell": "88a8a07885fffff",
+          "lat": -22.954849,
+          "lon": -43.187869,
+          "score": 75.881684,
+          "cnt_ocorr": 518,
+          "cnt_den": 0,
+          "cnt_fat": 45.0,
+          "cnt_cameras": 27.0
+        },
+        {
+          "h3_cell": "88a8a078a9fffff",
+          "lat": -22.953522,
+          "lon": -43.178615,
+          "score": 67.956011,
+          "cnt_ocorr": 505,
+          "cnt_den": 0,
+          "cnt_fat": 40.0,
+          "cnt_cameras": 46.0
+        },
+        {
+          "h3_cell": "88a8a078abfffff",
+          "lat": -22.947175,
+          "lon": -43.184612,
+          "score": 63.269625,
+          "cnt_ocorr": 640,
+          "cnt_den": 0,
+          "cnt_fat": 36.0,
+          "cnt_cameras": 48.0
+        },
+        {
+          "h3_cell": "88a8a07ab7fffff",
+          "lat": -22.98052,
+          "lon": -43.216147,
+          "score": 59.956011,
+          "cnt_ocorr": 212,
+          "cnt_den": 0,
+          "cnt_fat": 37.0,
+          "cnt_cameras": 20.0
+        },
+        {
+          "h3_cell": "88a8a061cdfffff",
+          "lat": -22.895321,
+          "lon": -43.275582,
+          "score": 48.939704,
+          "cnt_ocorr": 611,
+          "cnt_den": 0,
+          "cnt_fat": 27.0,
+          "cnt_cameras": 0.0
+        },
+        {
+          "h3_cell": "88a8a078a3fffff",
+          "lat": -22.9395,
+          "lon": -43.181355,
+          "score": 46.47099,
+          "cnt_ocorr": 394,
+          "cnt_den": 0,
+          "cnt_fat": 27.0,
+          "cnt_cameras": 58.0
+        },
+        {
+          "h3_cell": "88a8a06085fffff",
+          "lat": -22.875184,
+          "lon": -43.336565,
+          "score": 45.533561,
+          "cnt_ocorr": 1132,
+          "cnt_den": 0,
+          "cnt_fat": 21.0,
+          "cnt_cameras": 0.0
+        },
+        {
+          "h3_cell": "88a8a061c1fffff",
+          "lat": -22.888967,
+          "lon": -43.281576,
+          "score": 44.284414,
+          "cnt_ocorr": 612,
+          "cnt_den": 0,
+          "cnt_fat": 24.0,
+          "cnt_cameras": 0.0
+        },
+        {
+          "h3_cell": "88a8a078c9fffff",
+          "lat": -22.98554,
+          "lon": -43.200897,
+          "score": 34.913917,
+          "cnt_ocorr": 472,
+          "cnt_den": 0,
+          "cnt_fat": 19.0,
+          "cnt_cameras": 0.0
+        },
+        {
+          "h3_cell": "88a8a06a09fffff",
+          "lat": -22.91012,
+          "lon": -43.17758,
+          "score": 34.666667,
+          "cnt_ocorr": 2638,
+          "cnt_den": 0,
+          "cnt_fat": 3.0,
+          "cnt_cameras": 66.0
+        }
+      ]
+    },
+    "COMLURB": {
+      "instituicao": "Companhia Municipal de Limpeza Urbana",
+      "mandato": "Limpeza urbana, coleta de lixo, poda de vegetação",
+      "pesos": {
+        "ocorrencias": 0.2,
+        "denuncias": 0.1,
+        "fatores": 0.7,
+        "cameras_inv": 0.0
+      },
+      "total_celulas": 1052,
+      "top_areas": [
+        {
+          "h3_cell": "88a8a061cdfffff",
+          "lat": -22.895321,
+          "lon": -43.275582,
+          "score": 74.632297,
+          "cnt_ocorr": 611.0,
+          "cnt_den": 0.0,
+          "cnt_fat": 63.0,
+          "cnt_cameras": 0.0
+        },
+        {
+          "h3_cell": "88a8a07885fffff",
+          "lat": -22.954849,
+          "lon": -43.187869,
+          "score": 51.482773,
+          "cnt_ocorr": 518.0,
+          "cnt_den": 1.0,
+          "cnt_fat": 41.0,
+          "cnt_cameras": 27.0
+        },
+        {
+          "h3_cell": "88a8a061c1fffff",
+          "lat": -22.888967,
+          "lon": -43.281576,
+          "score": 37.528768,
+          "cnt_ocorr": 612.0,
+          "cnt_den": 2.0,
+          "cnt_fat": 26.0,
+          "cnt_cameras": 0.0
+        },
+        {
+          "h3_cell": "88a8a061ebfffff",
+          "lat": -22.879965,
+          "lon": -43.269067,
+          "score": 36.44276,
+          "cnt_ocorr": 586.0,
+          "cnt_den": 1.0,
+          "cnt_fat": 27.0,
+          "cnt_cameras": 0.0
+        },
+        {
+          "h3_cell": "88a8a078a9fffff",
+          "lat": -22.953522,
+          "lon": -43.178615,
+          "score": 32.717547,
+          "cnt_ocorr": 505.0,
+          "cnt_den": 0.0,
+          "cnt_fat": 26.0,
+          "cnt_cameras": 46.0
+        },
+        {
+          "h3_cell": "88a8a078c9fffff",
+          "lat": -22.98554,
+          "lon": -43.200897,
+          "score": 30.245135,
+          "cnt_ocorr": 472.0,
+          "cnt_den": 0.0,
+          "cnt_fat": 24.0,
+          "cnt_cameras": 0.0
+        },
+        {
+          "h3_cell": "88a8a06085fffff",
+          "lat": -22.875184,
+          "lon": -43.336565,
+          "score": 28.582259,
+          "cnt_ocorr": 1132.0,
+          "cnt_den": 0.0,
+          "cnt_fat": 18.0,
+          "cnt_cameras": 0.0
+        },
+        {
+          "h3_cell": "88a8a06027fffff",
+          "lat": -22.902998,
+          "lon": -43.278839,
+          "score": 28.105467,
+          "cnt_ocorr": 776.0,
+          "cnt_den": 0.0,
+          "cnt_fat": 20.0,
+          "cnt_cameras": 0.0
+        },
+        {
+          "h3_cell": "88a8a06a09fffff",
+          "lat": -22.91012,
+          "lon": -43.17758,
+          "score": 26.444444,
+          "cnt_ocorr": 2638.0,
+          "cnt_den": 1.0,
+          "cnt_fat": 4.0,
+          "cnt_cameras": 66.0
+        },
+        {
+          "h3_cell": "88a8a07ab7fffff",
+          "lat": -22.98052,
+          "lon": -43.216147,
+          "score": 26.051723,
+          "cnt_ocorr": 212.0,
+          "cnt_den": 0.0,
+          "cnt_fat": 22.0,
+          "cnt_cameras": 20.0
+        }
+      ]
+    },
+    "SEOP": {
+      "instituicao": "Secretaria de Ordem Pública",
+      "mandato": "Fiscalização de ocupação irregular, ambulantes, posturas municipais",
+      "pesos": {
+        "ocorrencias": 0.15,
+        "denuncias": 0.4,
+        "fatores": 0.45,
+        "cameras_inv": 0.0
+      },
+      "total_celulas": 1070,
+      "top_areas": [
+        {
+          "h3_cell": "88a8a06085fffff",
+          "lat": -22.875184,
+          "lon": -43.336565,
+          "score": 55.881139,
+          "cnt_ocorr": 1132.0,
+          "cnt_den": 2.0,
+          "cnt_fat": 38.0,
+          "cnt_cameras": 0.0
+        },
+        {
+          "h3_cell": "88a8a078ebfffff",
+          "lat": -22.968869,
+          "lon": -43.185129,
+          "score": 45.760079,
+          "cnt_ocorr": 1067.0,
+          "cnt_den": 12.0,
+          "cnt_fat": 11.0,
+          "cnt_cameras": 0.0
+        },
+        {
+          "h3_cell": "88a8a06087fffff",
+          "lat": -22.868826,
+          "lon": -43.342559,
+          "score": 45.62605,
+          "cnt_ocorr": 1046.0,
+          "cnt_den": 4.0,
+          "cnt_fat": 26.0,
+          "cnt_cameras": 0.0
+        },
+        {
+          "h3_cell": "88a8a06081fffff",
+          "lat": -22.876504,
+          "lon": -43.345817,
+          "score": 41.802502,
+          "cnt_ocorr": 317.0,
+          "cnt_den": 18.0,
+          "cnt_fat": 0.0,
+          "cnt_cameras": 0.0
+        },
+        {
+          "h3_cell": "88a8a06757fffff",
+          "lat": -22.888358,
+          "lon": -43.429079,
+          "score": 41.654663,
+          "cnt_ocorr": 291.0,
+          "cnt_den": 18.0,
+          "cnt_fat": 0.0,
+          "cnt_cameras": 0.0
+        },
+        {
+          "h3_cell": "88a8a06a55fffff",
+          "lat": -22.911449,
+          "lon": -43.186833,
+          "score": 36.477783,
+          "cnt_ocorr": 1908.0,
+          "cnt_den": 11.0,
+          "cnt_fat": 1.0,
+          "cnt_cameras": 11.0
+        },
+        {
+          "h3_cell": "88a8a06a0bfffff",
+          "lat": -22.90377,
+          "lon": -43.183576,
+          "score": 33.724379,
+          "cnt_ocorr": 1920.0,
+          "cnt_den": 6.0,
+          "cnt_fat": 8.0,
+          "cnt_cameras": 87.0
+        },
+        {
+          "h3_cell": "88a8a078a9fffff",
+          "lat": -22.953522,
+          "lon": -43.178615,
+          "score": 32.783774,
+          "cnt_ocorr": 505.0,
+          "cnt_den": 6.0,
+          "cnt_fat": 14.0,
+          "cnt_cameras": 46.0
+        },
+        {
+          "h3_cell": "88a8a078c9fffff",
+          "lat": -22.98554,
+          "lon": -43.200897,
+          "score": 31.996717,
+          "cnt_ocorr": 472.0,
+          "cnt_den": 2.0,
+          "cnt_fat": 21.0,
+          "cnt_cameras": 0.0
+        },
+        {
+          "h3_cell": "88a8a06a49fffff",
+          "lat": -22.931824,
+          "lon": -43.178098,
+          "score": 27.333905,
+          "cnt_ocorr": 665.0,
+          "cnt_den": 9.0,
+          "cnt_fat": 3.0,
+          "cnt_cameras": 16.0
+        }
+      ]
+    },
+    "CET-Rio": {
+      "instituicao": "Companhia de Engenharia de Tráfego do Rio",
+      "mandato": "Fluidez do tráfego, sinalização, gestão de vias",
+      "pesos": {
+        "ocorrencias": 0.1,
+        "denuncias": 0.25,
+        "fatores": 0.65,
+        "cameras_inv": 0.0
+      },
+      "total_celulas": 1062,
+      "top_areas": [
+        {
+          "h3_cell": "88a8a06085fffff",
+          "lat": -22.875184,
+          "lon": -43.336565,
+          "score": 69.29113,
+          "cnt_ocorr": 1132.0,
+          "cnt_den": 0.0,
+          "cnt_fat": 34.0,
+          "cnt_cameras": 0.0
+        },
+        {
+          "h3_cell": "88a8a078c9fffff",
+          "lat": -22.98554,
+          "lon": -43.200897,
+          "score": 64.17894,
+          "cnt_ocorr": 472.0,
+          "cnt_den": 3.0,
+          "cnt_fat": 31.0,
+          "cnt_cameras": 0.0
+        },
+        {
+          "h3_cell": "88a8a06087fffff",
+          "lat": -22.868826,
+          "lon": -43.342559,
+          "score": 52.972478,
+          "cnt_ocorr": 1046.0,
+          "cnt_den": 3.0,
+          "cnt_fat": 24.0,
+          "cnt_cameras": 0.0
+        },
+        {
+          "h3_cell": "88a8a078ebfffff",
+          "lat": -22.968869,
+          "lon": -43.185129,
+          "score": 40.184437,
+          "cnt_ocorr": 1067.0,
+          "cnt_den": 9.0,
+          "cnt_fat": 14.0,
+          "cnt_cameras": 0.0
+        },
+        {
+          "h3_cell": "88a8a078a9fffff",
+          "lat": -22.953522,
+          "lon": -43.178615,
+          "score": 39.622662,
+          "cnt_ocorr": 505.0,
+          "cnt_den": 5.0,
+          "cnt_fat": 17.0,
+          "cnt_cameras": 46.0
+        },
+        {
+          "h3_cell": "88a8a06a0bfffff",
+          "lat": -22.90377,
+          "lon": -43.183576,
+          "score": 36.297849,
+          "cnt_ocorr": 1920.0,
+          "cnt_den": 4.0,
+          "cnt_fat": 13.0,
+          "cnt_cameras": 87.0
+        },
+        {
+          "h3_cell": "88a8a078abfffff",
+          "lat": -22.947175,
+          "lon": -43.184612,
+          "score": 34.92608,
+          "cnt_ocorr": 640.0,
+          "cnt_den": 0.0,
+          "cnt_fat": 17.0,
+          "cnt_cameras": 48.0
+        },
+        {
+          "h3_cell": "88a8a0291dfffff",
+          "lat": -22.899035,
+          "lon": -43.555333,
+          "score": 32.90561,
+          "cnt_ocorr": 107.0,
+          "cnt_den": 0.0,
+          "cnt_fat": 17.0,
+          "cnt_cameras": 20.0
+        },
+        {
+          "h3_cell": "88a8a02957fffff",
+          "lat": -22.906705,
+          "lon": -43.558594,
+          "score": 31.160639,
+          "cnt_ocorr": 151.0,
+          "cnt_den": 0.0,
+          "cnt_fat": 16.0,
+          "cnt_cameras": 6.0
+        },
+        {
+          "h3_cell": "88a8a07885fffff",
+          "lat": -22.954849,
+          "lon": -43.187869,
+          "score": 30.811648,
+          "cnt_ocorr": 518.0,
+          "cnt_den": 2.0,
+          "cnt_fat": 14.0,
+          "cnt_cameras": 27.0
+        }
+      ]
+    }
+  }
+}
