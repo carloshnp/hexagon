@@ -1,0 +1,35 @@
+{
+  "available_periods": [
+    {
+      "key": "2026_21",
+      "label": "Semana 21 · 2026",
+      "year": 2026,
+      "week": 21
+    },
+    {
+      "key": "2026_20",
+      "label": "Semana 20 · 2026",
+      "year": 2026,
+      "week": 20
+    },
+    {
+      "key": "2026_19",
+      "label": "Semana 19 · 2026",
+      "year": 2026,
+      "week": 19
+    },
+    {
+      "key": "2026_18",
+      "label": "Semana 18 · 2026",
+      "year": 2026,
+      "week": 18
+    },
+    {
+      "key": "2026_17",
+      "label": "Semana 17 · 2026",
+      "year": 2026,
+      "week": 17
+    }
+  ],
+  "latest": "2026_21"
+}
