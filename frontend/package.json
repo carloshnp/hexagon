@@ -1,0 +1,9 @@
+{
+  "name": "civitas-frontend",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "npx serve src -p 5173 --no-clipboard",
+    "start": "npx serve src -p 5173 --no-clipboard"
+  }
+}
