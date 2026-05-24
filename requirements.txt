@@ -30,3 +30,6 @@ Pillow>=10.0.0
 
 # HTTP client
 httpx>=0.24.0
+
+# Form/file upload support
+python-multipart>=0.0.6
