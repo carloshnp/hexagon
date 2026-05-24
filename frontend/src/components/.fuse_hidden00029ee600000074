@@ -5,8 +5,7 @@ const _SB = React;
 /* ── Inline markdown → JSX renderer ─────────────────────────────────────── */
 function renderInline(text) {
   const parts = [];
-  // matches **bold**, *italic*, `code`, and [SectionLabel] bracket tags
-  const re = /(\*\*[^*]+\*\*|\*[^*]+\*|`[^`]+`|\[[A-Za-zÀ-ú][\w\sÀ-ú-]*\])/g;
+  const re = /(\*\*[^*]+\*\*|\*[^*]+\*|`[^`]+`)/g;
   let last = 0, m;
   while ((m = re.exec(text)) !== null) {
     if (m.index > last) parts.push(text.slice(last, m.index));
@@ -15,27 +14,15 @@ function renderInline(text) {
       parts.push(<strong key={m.index}>{tok.slice(2, -2)}</strong>);
     else if (tok.startsWith('*'))
       parts.push(<em key={m.index}>{tok.slice(1, -1)}</em>);
-    else if (tok.startsWith('`'))
-      parts.push(<code key={m.index} style={{ fontFamily: 'JetBrains Mono', fontSize: '0.88em', background: 'var(--bg-2)', padding: '1px 4px' }}>{tok.slice(1, -1)}</code>);
     else
-      // [SectionLabel] → styled inline tag
-      parts.push(
-        <span key={m.index} className="mono uc" style={{
-          fontSize: '0.8em', fontWeight: 800, letterSpacing: '0.1em',
-          color: 'var(--brand)', background: 'var(--brand-tint)',
-          border: '1px solid var(--border-2)',
-          padding: '1px 5px', marginRight: 4,
-          display: 'inline-block', verticalAlign: 'middle',
-          lineHeight: 1.4,
-        }}>{tok.slice(1, -1)}</span>
-      );
+      parts.push(<code key={m.index} style={{ fontFamily: 'JetBrains Mono', fontSize: '0.88em', background: 'var(--bg-2)', padding: '1px 4px' }}>{tok.slice(1, -1)}</code>);
     last = m.index + tok.length;
   }
   if (last < text.length) parts.push(text.slice(last));
   return parts;
 }
 
-function MarkdownBlock({ text, color }) {
+function MarkdownBlock({ text }) {
   if (!text) return null;
   const lines = text.split('\n');
   const els = [];
@@ -108,7 +95,7 @@ function MarkdownBlock({ text, color }) {
   flushList(); flushTable();
 
   return (
-    <div style={{ fontSize: 12.5, color: color || 'var(--text)', lineHeight: 1.6 }}>
+    <div style={{ fontSize: 12.5, color: 'var(--text)', lineHeight: 1.6 }}>
       {els}
     </div>
   );
@@ -486,7 +473,7 @@ function ChatMessage({ msg }) {
         padding: '10px 12px', background: 'var(--bg-2)', border: '1px solid var(--border)',
         fontSize: 12, color: 'var(--text)', lineHeight: 1.6,
       }}>
-        <MarkdownBlock text={msg.text} />
+        {msg.text}
       </div>
       {msg.limitations?.length > 0 && (
         <div style={{
@@ -638,7 +625,7 @@ function IssueCard({ issue, expanded, onExpand, report, selected, hovered, flyin
         </div>
 
         <div style={{ marginTop: 8, fontSize: 13, color: 'var(--text-2)', lineHeight: 1.5, textWrap: 'pretty' }}>
-          <MarkdownBlock text={issue.summary} color="var(--text-2)" />
+          {issue.summary}
         </div>
 
         <div style={{ marginTop: 10, display: 'flex', gap: 5, flexWrap: 'wrap', alignItems: 'center' }}>
