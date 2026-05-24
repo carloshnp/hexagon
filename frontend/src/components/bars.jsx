@@ -26,20 +26,6 @@ function HeaderBar({ now, periods, currentPeriod, periodLoading, periodOpen, set
         </span>
       </div>
 
-      <div style={{ display: 'flex', alignItems: 'stretch' }}>
-        {['Mapa Operacional','Ocorrências','Análises','Recursos','Relatórios'].map((t, i) => (
-          <button key={t} style={{
-            padding: '0 18px', background: 'transparent', color: i===0 ? '#fff' : '#BFD4EA',
-            border: 'none', borderRight: '1px solid #00305C',
-            fontSize: 12, fontWeight: 600, letterSpacing: 0.04,
-            position: 'relative',
-          }}>
-            {t}
-            {i === 0 && <span style={{ position: 'absolute', left: 0, right: 0, bottom: -1, height: 3, background: '#fff' }} />}
-          </button>
-        ))}
-      </div>
-
       <div style={{ flex: 1 }} />
 
       {/* period selector */}
@@ -91,7 +77,7 @@ function PrefeituraMark() {
 
 /* === Period selector (label + chevrons + dropdown) === */
 function PeriodSelector({ periods, current, loading, open, setOpen, onChangePeriod, onStepPeriod }) {
-  const label = current ? `S${current.week} · ${current.year}` : 'S— · ——';
+  const label = current ? current.label : '— · ——';
   return (
     <div style={{ display: 'flex', alignItems: 'stretch', borderLeft: '1px solid #00305C', position: 'relative' }}>
       <button onClick={() => onStepPeriod(+1)} title="Semana anterior" style={pillBtn()}>‹</button>
@@ -140,7 +126,7 @@ function PeriodSelector({ periods, current, loading, open, setOpen, onChangePeri
               }}>
               <span>{p.label}</span>
               <span className="mono" style={{ fontSize: 10, color: 'var(--text-2)' }}>
-                S{p.week}/{p.year}
+                {p.key}
               </span>
             </button>
           ))}
