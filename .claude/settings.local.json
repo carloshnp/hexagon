@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:awesome-skills.com)",
+      "WebFetch(domain:tonsofskills.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:docs.factory.ai)",
+      "WebFetch(domain:grok.com)"
+    ]
+  }
+}

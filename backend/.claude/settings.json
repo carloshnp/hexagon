@@ -1,0 +1,13 @@
+{
+  "model": "claude-sonnet-4-6",
+  "permissions": {
+    "allow": [
+      "Bash(git *)", "Bash(python *)", "Bash(pip *)",
+      "Bash(pytest *)", "Bash(make *)", "Bash(uvicorn *)",
+      "Bash(curl *)", "Bash(mkdir *)",
+      "Read(*)", "Write(*)", "Edit(*)"
+    ],
+    "deny": ["Bash(rm -rf *)"]
+  },
+  "env": { "WORKSPACE": "backend", "PYTHONPATH": "./src" }
+}

@@ -1,0 +1,32 @@
+# CIVITAS — Requirements
+
+# Core
+fastapi>=0.100.0
+uvicorn[standard]>=0.22.0
+pydantic>=2.0.0
+
+# Data
+numpy>=1.24.0
+
+# FAISS (uncomment if using real embeddings)
+# faiss-cpu>=1.7.0
+
+# Sentence Transformers (uncomment if using real embeddings)
+# sentence-transformers>=2.2.0
+
+# Graph
+networkx>=3.0
+pyvis>=0.3.0
+
+# Computer Vision (Vision module)
+opencv-python>=4.8.0
+Pillow>=10.0.0
+
+# Optional: better face detection
+# facenet-pytorch>=2.5.0
+
+# Optional: YOLO object detection
+# ultralytics>=8.0.0
+
+# HTTP client
+httpx>=0.24.0

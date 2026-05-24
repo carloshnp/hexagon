@@ -1,0 +1,2262 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Claude Code Agent Harness — Guia Claude Impact Lab Rio</title>
+  <style>
+    /* ─── Reset & Base ─────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0f1117;
+      --bg-card: #1a1d27;
+      --bg-code: #12141e;
+      --bg-highlight: #1e2235;
+      --border: #2a2d3e;
+      --accent: #6c8ef7;
+      --accent-soft: #3d4f99;
+      --accent-glow: rgba(108,142,247,0.15);
+      --orange: #f6993f;
+      --green: #42d392;
+      --purple: #c084fc;
+      --red: #f87171;
+      --text: #e2e8f0;
+      --text-muted: #8892a4;
+      --text-dim: #5a6478;
+      --sidebar-w: 280px;
+      --header-h: 60px;
+      --radius: 10px;
+      --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+      --font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      font-size: 15px;
+    }
+
+    /* ─── Google Fonts ──────────────────────────────────────────────────── */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+    /* ─── Scrollbar ─────────────────────────────────────────────────────── */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--accent-soft); }
+
+    /* ─── Header ────────────────────────────────────────────────────────── */
+    header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: var(--header-h);
+      background: rgba(15,17,23,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      padding: 0 24px;
+      z-index: 100;
+      gap: 16px;
+    }
+
+    .header-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 15px;
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .header-logo .logo-icon {
+      width: 32px; height: 32px;
+      background: linear-gradient(135deg, var(--accent), var(--purple));
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    .header-badge {
+      margin-left: auto;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .badge {
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .badge-event { background: rgba(108,142,247,0.15); color: var(--accent); border: 1px solid rgba(108,142,247,0.3); }
+    .badge-rio { background: rgba(66,211,146,0.12); color: var(--green); border: 1px solid rgba(66,211,146,0.25); }
+
+    /* ─── Layout ────────────────────────────────────────────────────────── */
+    .layout {
+      display: flex;
+      margin-top: var(--header-h);
+      min-height: calc(100vh - var(--header-h));
+    }
+
+    /* ─── Sidebar ───────────────────────────────────────────────────────── */
+    nav {
+      width: var(--sidebar-w);
+      flex-shrink: 0;
+      position: fixed;
+      top: var(--header-h);
+      bottom: 0;
+      left: 0;
+      overflow-y: auto;
+      padding: 24px 0 40px;
+      border-right: 1px solid var(--border);
+      background: var(--bg);
+    }
+
+    .nav-section-label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-dim);
+      padding: 16px 20px 6px;
+    }
+
+    nav a {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 20px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 13.5px;
+      transition: all 0.15s;
+      border-left: 2px solid transparent;
+    }
+
+    nav a:hover {
+      color: var(--text);
+      background: var(--bg-highlight);
+    }
+
+    nav a.active {
+      color: var(--accent);
+      border-left-color: var(--accent);
+      background: var(--accent-glow);
+    }
+
+    nav a .nav-num {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-dim);
+      min-width: 18px;
+    }
+
+    /* ─── Main Content ──────────────────────────────────────────────────── */
+    main {
+      margin-left: var(--sidebar-w);
+      flex: 1;
+      padding: 48px 60px 80px;
+      max-width: 960px;
+    }
+
+    /* ─── Hero ──────────────────────────────────────────────────────────── */
+    .hero {
+      padding: 48px 0 56px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 56px;
+    }
+
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--accent-glow);
+      border: 1px solid rgba(108,142,247,0.3);
+      color: var(--accent);
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 {
+      font-size: 36px;
+      font-weight: 800;
+      line-height: 1.2;
+      background: linear-gradient(135deg, #e2e8f0 0%, var(--accent) 60%, var(--purple) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 8px;
+    }
+
+    .hero h1 .sub {
+      font-size: 22px;
+      font-weight: 500;
+      display: block;
+      background: linear-gradient(135deg, #8892a4, #c084fc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero p {
+      color: var(--text-muted);
+      font-size: 16px;
+      max-width: 600px;
+      margin-top: 16px;
+    }
+
+    .hero-meta {
+      display: flex;
+      gap: 24px;
+      margin-top: 28px;
+      flex-wrap: wrap;
+    }
+
+    .hero-meta-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .hero-meta-item strong {
+      color: var(--text);
+    }
+
+    /* ─── Sections ──────────────────────────────────────────────────────── */
+    section {
+      margin-bottom: 72px;
+      scroll-margin-top: 80px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+
+    .section-num {
+      width: 32px; height: 32px;
+      background: linear-gradient(135deg, var(--accent-soft), var(--purple) / 60%);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+
+    .section-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .section-subtitle {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    h2 { font-size: 20px; font-weight: 700; margin: 40px 0 16px; color: var(--text); }
+    h3 { font-size: 16px; font-weight: 600; margin: 28px 0 12px; color: var(--accent); }
+    h4 { font-size: 14px; font-weight: 600; margin: 20px 0 10px; color: var(--orange); }
+
+    p { margin-bottom: 16px; color: var(--text-muted); }
+    p strong { color: var(--text); }
+
+    /* ─── Callout / Info boxes ──────────────────────────────────────────── */
+    .callout {
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      margin: 20px 0;
+      border-left: 3px solid;
+      font-size: 14px;
+    }
+
+    .callout-info { background: rgba(108,142,247,0.08); border-color: var(--accent); color: #a5b4fc; }
+    .callout-tip { background: rgba(66,211,146,0.08); border-color: var(--green); color: #86efac; }
+    .callout-warn { background: rgba(246,153,63,0.08); border-color: var(--orange); color: #fdba74; }
+    .callout-danger { background: rgba(248,113,113,0.08); border-color: var(--red); color: #fca5a5; }
+
+    .callout strong { display: block; margin-bottom: 4px; font-weight: 700; }
+
+    /* ─── Code blocks ───────────────────────────────────────────────────── */
+    pre {
+      background: var(--bg-code);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      overflow-x: auto;
+      margin: 16px 0;
+      position: relative;
+    }
+
+    pre code {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      line-height: 1.7;
+      color: #cdd6f4;
+    }
+
+    code:not(pre code) {
+      font-family: var(--font-mono);
+      font-size: 12.5px;
+      background: rgba(108,142,247,0.1);
+      color: var(--accent);
+      padding: 2px 6px;
+      border-radius: 4px;
+      border: 1px solid rgba(108,142,247,0.2);
+    }
+
+    .code-label {
+      position: absolute;
+      top: 10px;
+      right: 14px;
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--text-dim);
+      font-family: var(--font-mono);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    /* Syntax colors */
+    .kw { color: #c084fc; }
+    .str { color: #a3e635; }
+    .num { color: #fb923c; }
+    .cmt { color: #4b5563; font-style: italic; }
+    .fn { color: #60a5fa; }
+    .op { color: #f87171; }
+    .key { color: #34d399; }
+
+    /* ─── Tables ────────────────────────────────────────────────────────── */
+    .table-wrap { overflow-x: auto; margin: 20px 0; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13.5px;
+    }
+
+    thead th {
+      background: var(--bg-highlight);
+      color: var(--text);
+      font-weight: 600;
+      text-align: left;
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+
+    tbody td {
+      padding: 9px 16px;
+      border-bottom: 1px solid rgba(42,45,62,0.6);
+      color: var(--text-muted);
+      vertical-align: top;
+    }
+
+    tbody tr:hover td { background: var(--bg-highlight); }
+
+    tbody td:first-child { color: var(--text); font-weight: 500; }
+
+    /* ─── Cards ─────────────────────────────────────────────────────────── */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 16px;
+      margin: 20px 0;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      transition: border-color 0.2s;
+    }
+
+    .card:hover { border-color: var(--accent-soft); }
+
+    .card-icon { font-size: 24px; margin-bottom: 10px; }
+    .card-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+    .card-desc { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+    .card-tag { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px; margin-top: 8px; }
+    .card-tag-blue { background: rgba(108,142,247,0.15); color: var(--accent); }
+    .card-tag-green { background: rgba(66,211,146,0.12); color: var(--green); }
+    .card-tag-orange { background: rgba(246,153,63,0.12); color: var(--orange); }
+
+    /* ─── Steps ─────────────────────────────────────────────────────────── */
+    .steps { margin: 24px 0; }
+
+    .step {
+      display: flex;
+      gap: 16px;
+      padding: 20px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .step:last-child { border-bottom: none; }
+
+    .step-num {
+      width: 28px; height: 28px;
+      background: linear-gradient(135deg, var(--accent), var(--purple));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      color: white;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .step-content { flex: 1; }
+    .step-title { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+    .step-desc { font-size: 13.5px; color: var(--text-muted); }
+
+    /* ─── Roles table ───────────────────────────────────────────────────── */
+    .roles { display: flex; flex-direction: column; gap: 12px; margin: 20px 0; }
+
+    .role-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .role-icon { font-size: 24px; flex-shrink: 0; }
+    .role-name { font-size: 14px; font-weight: 700; color: var(--text); }
+    .role-sub { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+    .role-tags { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+    .role-tag { font-size: 11px; padding: 2px 8px; border-radius: 10px; background: var(--bg-highlight); color: var(--text-muted); border: 1px solid var(--border); }
+
+    /* ─── Flow diagram ──────────────────────────────────────────────────── */
+    .flow {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      margin: 24px 0;
+      flex-wrap: wrap;
+    }
+
+    .flow-step {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 18px;
+      flex: 1;
+      min-width: 140px;
+      text-align: center;
+    }
+
+    .flow-step-icon { font-size: 22px; margin-bottom: 6px; }
+    .flow-step-label { font-size: 12px; font-weight: 600; color: var(--text); }
+    .flow-step-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+    .flow-arrow {
+      font-size: 20px;
+      color: var(--accent);
+      padding: 0 8px;
+      flex-shrink: 0;
+    }
+
+    /* ─── Tag inline ────────────────────────────────────────────────────── */
+    .tag {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 10px;
+      margin: 0 2px;
+    }
+
+    .tag-blue { background: rgba(108,142,247,0.15); color: var(--accent); }
+    .tag-green { background: rgba(66,211,146,0.12); color: var(--green); }
+    .tag-orange { background: rgba(246,153,63,0.12); color: var(--orange); }
+    .tag-purple { background: rgba(192,132,252,0.12); color: var(--purple); }
+
+    /* ─── Divider ───────────────────────────────────────────────────────── */
+    hr { border: none; border-top: 1px solid var(--border); margin: 40px 0; }
+
+    /* ─── Footer ────────────────────────────────────────────────────────── */
+    footer {
+      text-align: center;
+      padding: 40px;
+      color: var(--text-dim);
+      font-size: 13px;
+      border-top: 1px solid var(--border);
+    }
+
+    footer a { color: var(--accent); text-decoration: none; }
+
+    /* ─── Responsive ────────────────────────────────────────────────────── */
+    @media (max-width: 900px) {
+      nav { display: none; }
+      main { margin-left: 0; padding: 24px 20px 60px; }
+      .hero h1 { font-size: 26px; }
+      .hero h1 .sub { font-size: 16px; }
+      .flow { flex-direction: column; }
+      .flow-arrow { transform: rotate(90deg); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ─── Header ──────────────────────────────────────────────────────────── -->
+<header>
+  <a href="#" class="header-logo">
+    <div class="logo-icon">⚡</div>
+    Claude Code Harness
+  </a>
+  <div class="header-badge">
+    <span class="badge badge-event">Claude Impact Lab</span>
+    <span class="badge badge-rio">🇧🇷 Rio de Janeiro</span>
+  </div>
+</header>
+
+<!-- ─── Layout ──────────────────────────────────────────────────────────── -->
+<div class="layout">
+
+  <!-- ─── Sidebar ─────────────────────────────────────────────────────── -->
+  <nav id="sidebar">
+    <div class="nav-section-label">Guia / Guide</div>
+    <a href="#concepts"><span class="nav-num">1</span> Conceitos / Concepts</a>
+    <a href="#setup"><span class="nav-num">2</span> Configuração / Setup</a>
+    <a href="#config-files"><span class="nav-num">3</span> Arquivos de Config</a>
+    <a href="#spec-doc"><span class="nav-num">4</span> Fluxo Spec Doc</a>
+    <a href="#research"><span class="nav-num">5</span> Pesquisa / Research</a>
+    <a href="#skills"><span class="nav-num">6</span> Skills & Plugins</a>
+    <a href="#github"><span class="nav-num">7</span> GitHub Integration</a>
+    <a href="#team"><span class="nav-num">8</span> Coordenação de Time</a>
+    <a href="#examples"><span class="nav-num">9</span> Exemplos / Examples</a>
+    <div class="nav-section-label" style="margin-top:16px;">Workspace Setup</div>
+    <a href="#isolation"><span class="nav-num">2.4</span> Isolamento de Workspaces</a>
+    <a href="#isolation-why"> ↳ Por que importa</a>
+    <a href="#isolation-structure"> ↳ Estrutura de Pastas</a>
+    <a href="#isolation-rules"> ↳ Regras Práticas</a>
+    <div class="nav-section-label" style="margin-top:16px;">Ecossistema / Ecosystem</div>
+    <a href="#ecosystem"><span class="nav-num">10</span> Skills & Plugin Ecosystem</a>
+    <a href="#feynman"> ↳ Feynman CLI</a>
+    <a href="#plugins-vs-skills"> ↳ Plugins vs Skills</a>
+    <a href="#repos"> ↳ Repos & Marketplaces</a>
+    <a href="#antigravity"> ↳ Antigravity Catalog</a>
+    <a href="#geospatial"> ↳ Skills Geoespaciais</a>
+    <a href="#ecc"> ↳ ECC (Hackathon Winner)</a>
+    <a href="#starter-pack"> ↳ Starter Pack</a>
+    <div class="nav-section-label" style="margin-top:16px;">Quick Ref</div>
+    <a href="#emergency">🚨 Prompts de Emergência</a>
+    <a href="#commands">⌨️ Comandos Rápidos</a>
+  </nav>
+
+  <!-- ─── Main ─────────────────────────────────────────────────────────── -->
+  <main>
+
+    <!-- Hero -->
+    <div class="hero">
+      <div class="hero-tag">⚡ Claude Impact Lab — Rio de Janeiro 2025</div>
+      <h1>
+        Claude Code Agent Harness
+        <span class="sub">Guia para Hackathon de Segurança Pública</span>
+      </h1>
+      <p>
+        Um guia completo e bilíngue (PT-BR / EN) para usar Claude Code como harness de agentes
+        de IA — desde configuração inicial até geração de código completo, pesquisa e pitch.
+      </p>
+      <div class="hero-meta">
+        <div class="hero-meta-item">🏆 <strong>Desafio:</strong> Segurança Pública / Public Safety</div>
+        <div class="hero-meta-item">💳 <strong>Créditos:</strong> $50 por participante</div>
+        <div class="hero-meta-item">👥 <strong>Times:</strong> 5 pessoas</div>
+        <div class="hero-meta-item">⏱️ <strong>Entregável:</strong> GitHub repo + pitch</div>
+      </div>
+    </div>
+
+    <!-- ──────────────────────────────────────────────────────────────────
+         SECTION 1 — CONCEITOS
+    ─────────────────────────────────────────────────────────────────────── -->
+    <section id="concepts">
+      <div class="section-header">
+        <div class="section-num">1</div>
+        <div>
+          <div class="section-title">Conceitos Fundamentais / Core Concepts</div>
+          <div class="section-subtitle">Modelos, Harness e Agentes explicados</div>
+        </div>
+      </div>
+
+      <h3>1.1 Modelos / Models</h3>
+      <p>Claude Code usa modelos da Anthropic. Escolha o modelo certo para cada tarefa para usar seus créditos com eficiência. / Claude Code uses Anthropic models. Choose the right model for each task to use your credits efficiently.</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Modelo / Model</th>
+              <th>Velocidade / Speed</th>
+              <th>Custo / Cost</th>
+              <th>Melhor para / Best for</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>claude-haiku-4-5</code></td>
+              <td>⚡ Muito rápido</td>
+              <td>💚 Baixo</td>
+              <td>Pesquisa, tarefas simples, bulk</td>
+            </tr>
+            <tr>
+              <td><code>claude-sonnet-4-6</code> <span class="tag tag-blue">Padrão</span></td>
+              <td>⚡ Equilibrado</td>
+              <td>💛 Médio</td>
+              <td>Geração de código, análise</td>
+            </tr>
+            <tr>
+              <td><code>claude-opus-4-7</code></td>
+              <td>🐢 Mais lento</td>
+              <td>🔴 Alto</td>
+              <td>Arquitetura, raciocínio complexo</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout callout-tip">
+        <strong>💡 Recomendação para o hackathon</strong>
+        Use <strong>Sonnet</strong> para a maioria do trabalho. Reserve <strong>Opus</strong> para decisões de arquitetura críticas. Use <strong>Haiku</strong> para pesquisa rápida e tarefas repetitivas. Com $50, você tem margem ampla para iterar.
+      </div>
+
+      <h3>1.2 Harness</h3>
+      <p>O <strong>harness</strong> é o ambiente de execução que orquestra o trabalho do Claude. <strong>Claude Code É o harness.</strong></p>
+
+      <div class="cards">
+        <div class="card">
+          <div class="card-icon">💬</div>
+          <div class="card-title">Contexto de Conversa</div>
+          <div class="card-desc">Mantém histórico e estado da sessão. Claude "lembra" do que foi feito.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🔧</div>
+          <div class="card-title">Ferramentas / Tools</div>
+          <div class="card-desc">Controla quais ações Claude pode executar: ler arquivos, rodar código, buscar na web.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🔐</div>
+          <div class="card-title">Permissões / Permissions</div>
+          <div class="card-desc">Define o que é permitido sem aprovação manual — configura via settings.json.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🪝</div>
+          <div class="card-title">Hooks</div>
+          <div class="card-desc">Comandos automáticos que rodam antes/depois de ações específicas.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🧠</div>
+          <div class="card-title">Memória / Memory</div>
+          <div class="card-desc">Persiste informações e decisões entre sessões diferentes.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🤖</div>
+          <div class="card-title">Sub-agentes / Sub-agents</div>
+          <div class="card-desc">Cria instâncias especializadas em paralelo para dividir trabalho complexo.</div>
+        </div>
+      </div>
+
+      <h3>1.3 Agentes / Agents</h3>
+      <p>Um <strong>agente</strong> é uma instância do Claude com papel, contexto, ferramentas e regras específicas. Claude Code pode criar múltiplos sub-agentes em paralelo.</p>
+
+      <div class="roles">
+        <div class="role-card">
+          <div class="role-icon">🎯</div>
+          <div>
+            <div class="role-name">Orchestrator (Orquestrador)</div>
+            <div class="role-sub">Planeja a abordagem geral e coordena entre especialistas</div>
+            <div class="role-tags">
+              <span class="role-tag">Quebra tarefas</span>
+              <span class="role-tag">Delega</span>
+              <span class="role-tag">Revisão final</span>
+            </div>
+          </div>
+        </div>
+        <div class="role-card">
+          <div class="role-icon">🔍</div>
+          <div>
+            <div class="role-name">Researcher (Pesquisador)</div>
+            <div class="role-sub">Busca dados, APIs, documentação e contexto do problema</div>
+            <div class="role-tags">
+              <span class="role-tag">Web search</span>
+              <span class="role-tag">Dados abertos</span>
+              <span class="role-tag">Documentação</span>
+            </div>
+          </div>
+        </div>
+        <div class="role-card">
+          <div class="role-icon">💻</div>
+          <div>
+            <div class="role-name">Coder (Programador)</div>
+            <div class="role-sub">Escreve, testa e depura código backend e frontend</div>
+            <div class="role-tags">
+              <span class="role-tag">Python/FastAPI</span>
+              <span class="role-tag">React/Vite</span>
+              <span class="role-tag">Testes</span>
+            </div>
+          </div>
+        </div>
+        <div class="role-card">
+          <div class="role-icon">📊</div>
+          <div>
+            <div class="role-name">Data Scientist</div>
+            <div class="role-sub">Analisa dados, gera visualizações e modelos estatísticos</div>
+            <div class="role-tags">
+              <span class="role-tag">Pandas</span>
+              <span class="role-tag">GeoPandas</span>
+              <span class="role-tag">Matplotlib</span>
+            </div>
+          </div>
+        </div>
+        <div class="role-card">
+          <div class="role-icon">🎤</div>
+          <div>
+            <div class="role-name">Presenter</div>
+            <div class="role-sub">Gera pitch, slides e documentação para apresentação</div>
+            <div class="role-tags">
+              <span class="role-tag">PITCH.md</span>
+              <span class="role-tag">SLIDES.md</span>
+              <span class="role-tag">README</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr>
+
+    <!-- ──────────────────────────────────────────────────────────────────
+         SECTION 2 — SETUP
+    ─────────────────────────────────────────────────────────────────────── -->
+    <section id="setup">
+      <div class="section-header">
+        <div class="section-num">2</div>
+        <div>
+          <div class="section-title">Configurando o Claude Code / Setting Up Claude Code</div>
+          <div class="section-subtitle">Autenticação e configuração inicial do projeto</div>
+        </div>
+      </div>
+
+      <h3>2.1 Autenticação / Authentication</h3>
+
+      <pre><code><span class="cmt"># Opção 1: Login via browser / Option 1: Login via browser</span>
+claude auth login
+
+<span class="cmt"># Opção 2: API key direta / Option 2: Direct API key</span>
+<span class="kw">export</span> ANTHROPIC_API_KEY=<span class="str">"sk-ant-api03-..."</span>
+
+<span class="cmt"># Persistir no perfil do shell / Persist to shell profile</span>
+<span class="fn">echo</span> <span class="str">'export ANTHROPIC_API_KEY="sk-ant-api03-..."'</span> >> ~/.bashrc
+
+<span class="cmt"># Verificar / Verify</span>
+claude --version
+claude <span class="str">"Hello, are you working?"</span></code><div class="code-label">bash</div></pre>
+
+      <h3>2.2 Iniciando um Projeto / Starting a Project</h3>
+
+      <pre><code><span class="cmt"># Criar e entrar no diretório / Create and enter directory</span>
+mkdir rio-safety-dashboard && cd rio-safety-dashboard
+
+<span class="cmt"># Inicializar git</span>
+git init
+
+<span class="cmt"># Iniciar Claude Code no modo interativo / Start Claude Code interactive mode</span>
+claude
+
+<span class="cmt"># Ou enviar um comando direto / Or send a direct command</span>
+claude <span class="str">"Set up the initial project structure for a FastAPI + React Vite project"</span></code><div class="code-label">bash</div></pre>
+
+      <h3>2.3 Configurações de Projeto / Project Settings</h3>
+      <p>Crie <code>.claude/settings.json</code> na raiz para configurar permissões e o modelo padrão.</p>
+
+      <pre><code>{
+  <span class="key">"permissions"</span>: {
+    <span class="key">"allow"</span>: [
+      <span class="str">"Bash(git *)"</span>,
+      <span class="str">"Bash(python *)"</span>,
+      <span class="str">"Bash(pip *)"</span>,
+      <span class="str">"Bash(npm *)"</span>,
+      <span class="str">"Bash(make *)"</span>,
+      <span class="str">"Bash(docker *)"</span>,
+      <span class="str">"Read(*)"</span>,
+      <span class="str">"Write(*)"</span>,
+      <span class="str">"Edit(*)"</span>
+    ]
+  },
+  <span class="key">"model"</span>: <span class="str">"claude-sonnet-4-6"</span>
+}</code><div class="code-label">.claude/settings.json</div></pre>
+    </section>
+
+    <hr>
+
+    <!-- ──────────────────────────────────────────────────────────────────
+         SECTION 2.4 — WORKSPACE ISOLATION
+    ─────────────────────────────────────────────────────────────────────── -->
+    <section id="isolation">
+      <div class="section-header">
+        <div class="section-num">2.4</div>
+        <div>
+          <div class="section-title">Isolamento de Workspaces / Workspace Isolation</div>
+          <div class="section-subtitle">Por que e como isolar cada workspace para economizar tokens</div>
+        </div>
+      </div>
+
+      <div id="isolation-why" class="callout callout-warn">
+        <strong>💰 Por que isso é crítico para um hackathon de $50</strong>
+        Cada skill, CLAUDE.md e arquivo de config que o Claude Code carrega consome <strong>tokens de contexto</strong>. Skills de geoespacial carregadas no workspace de pitch = tokens queimados sem retorno. <br><br>
+        <strong>Isolamento total = contexto menor = menos tokens por prompt = mais iterações com $50.</strong>
+      </div>
+
+      <h3>Como o Claude Code Carrega Configurações / Config Loading Hierarchy</h3>
+      <p>O Claude Code acumula configurações em camadas — da mais geral para a mais específica:</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Camada / Layer</th><th>Localização / Location</th><th>Escopo / Scope</th></tr></thead>
+          <tbody>
+            <tr><td><span class="tag tag-orange">Global</span></td><td><code>~/.claude/settings.json</code><br><code>~/.claude/commands/*.md</code></td><td>Todos os projetos — sempre carregado</td></tr>
+            <tr><td><span class="tag tag-blue">Projeto</span></td><td><code>.claude/settings.json</code><br><code>.claude/commands/*.md</code></td><td>Este diretório apenas</td></tr>
+            <tr><td><span class="tag tag-green">Contexto</span></td><td><code>CLAUDE.md</code> (atual + pais até git root)</td><td>Lido em cascata até o git root</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout callout-danger">
+        <strong>⚠️ Armadilha comum / Common trap</strong>
+        Skills em <code>~/.claude/commands/</code> são carregadas em <strong>TODOS</strong> os workspaces automaticamente. Se você instalar geoai-skills globalmente, elas aparecerão no workspace de pitch — desperdiçando tokens.
+      </div>
+
+      <hr>
+
+      <h2 id="isolation-structure">Estrutura de Pastas Recomendada</h2>
+
+      <pre><code>hackathon-rio/                     <span class="cmt">← git init aqui (define o limite)</span>
+├── .claude/
+│   ├── settings.json              <span class="cmt">← Config MÍNIMA para toda a raiz</span>
+│   └── commands/                  <span class="cmt">← Skills compartilhadas (POUCAS)</span>
+│       └── byterover.md
+├── CLAUDE.md                      <span class="cmt">← MÍNIMO — só o que todo workspace precisa</span>
+│
+├── backend/                       <span class="cmt">← Workspace Backend → rodar claude aqui</span>
+│   ├── .claude/
+│   │   ├── settings.json
+│   │   └── commands/              <span class="cmt">← Skills APENAS do backend</span>
+│   │       ├── tdd-workflow.md
+│   │       ├── data-scientist.md
+│   │       └── geopandas-spatial-analysis.md
+│   └── CLAUDE.md                  <span class="cmt">← Contexto COMPLETO de backend + Python</span>
+│
+├── frontend/                      <span class="cmt">← Workspace Frontend → rodar claude aqui</span>
+│   ├── .claude/
+│   │   ├── settings.json
+│   │   └── commands/
+│   │       ├── gis-web-mapping.md
+│   │       └── artifacts-builder.md
+│   └── CLAUDE.md
+│
+└── pitch-research/                <span class="cmt">← Workspace Pitch → rodar claude aqui</span>
+    ├── .claude/
+    │   ├── settings.json          <span class="cmt">← Pode usar Haiku! Mais barato para escrita</span>
+    │   └── commands/
+    │       ├── steve-jobs.md
+    │       └── data-storytelling.md
+    └── CLAUDE.md</code><div class="code-label">estrutura de pastas</div></pre>
+
+      <div class="callout callout-tip">
+        <strong>✅ Regra fundamental</strong>
+        Cada pessoa do time abre o terminal <strong>dentro do seu workspace</strong> e roda <code>claude</code> de lá — nunca do diretório raiz. Isso garante que apenas as skills e o contexto daquele workspace sejam carregados.
+      </div>
+
+      <hr>
+
+      <h2 id="isolation-rules">Prevenindo Herança Indesejada / Preventing Unwanted Inheritance</h2>
+
+      <h3>1. Estabeleça o Limite com Git</h3>
+      <p>O Claude Code pára de ler CLAUDE.md nos diretórios pai quando encontra o <strong>git root</strong>. Um único <code>git init</code> na raiz define o limite superior da cascata.</p>
+
+      <pre><code><span class="cmt"># Na raiz do hackathon — fazer PRIMEIRO</span>
+cd hackathon-rio
+git init
+
+<span class="cmt"># Resultado: quando claude roda em backend/,</span>
+<span class="cmt"># ele lê: backend/CLAUDE.md ✅ + hackathon-rio/CLAUDE.md ✅</span>
+<span class="cmt"># Não lê: qualquer CLAUDE.md acima de hackathon-rio/ ❌</span></code><div class="code-label">bash</div></pre>
+
+      <h3>2. Skills: Local não Global</h3>
+
+      <pre><code><span class="cmt"># ❌ EVITE — aparece em TODOS os workspaces</span>
+cp data-scientist.md ~/.claude/commands/
+
+<span class="cmt"># ✅ CORRETO — só aparece no backend</span>
+cp data-scientist.md backend/.claude/commands/
+
+<span class="cmt"># ✅ CORRETO — só aparece no pitch</span>
+cp steve-jobs.md pitch-research/.claude/commands/</code><div class="code-label">bash</div></pre>
+
+      <h3>3. Settings por Workspace</h3>
+
+      <div class="cards">
+        <div class="card">
+          <div class="card-icon">🌐</div>
+          <div class="card-title">~/.claude/settings.json</div>
+          <div class="card-desc">MÍNIMO — apenas o modelo padrão. Nada mais. Cada workspace define o resto.</div>
+          <pre style="margin-top:8px;font-size:11px;padding:10px"><code>{ "model": "claude-sonnet-4-6" }</code></pre>
+        </div>
+        <div class="card">
+          <div class="card-icon">🔧</div>
+          <div class="card-title">backend/.claude/settings.json</div>
+          <div class="card-desc">Permissions específicas de Python. Bash para pytest, pip, make.</div>
+          <span class="card-tag card-tag-blue">Sonnet (código)</span>
+        </div>
+        <div class="card">
+          <div class="card-icon">⚛️</div>
+          <div class="card-title">frontend/.claude/settings.json</div>
+          <div class="card-desc">Permissions específicas de Node. Bash para npm, npx. Sem Python.</div>
+          <span class="card-tag card-tag-blue">Sonnet (código)</span>
+        </div>
+        <div class="card">
+          <div class="card-icon">🎤</div>
+          <div class="card-title">pitch-research/.claude/settings.json</div>
+          <div class="card-desc">Apenas Read/Write/Edit. Sem Bash de compilação. Modelo mais barato.</div>
+          <span class="card-tag card-tag-green">Haiku (escrita)</span>
+        </div>
+      </div>
+
+      <pre><code><span class="cmt">// backend/.claude/settings.json</span>
+{
+  <span class="key">"model"</span>: <span class="str">"claude-sonnet-4-6"</span>,
+  <span class="key">"permissions"</span>: {
+    <span class="key">"allow"</span>: [
+      <span class="str">"Bash(git *)"</span>, <span class="str">"Bash(python *)"</span>, <span class="str">"Bash(pip *)"</span>,
+      <span class="str">"Bash(pytest *)"</span>, <span class="str">"Bash(make *)"</span>,
+      <span class="str">"Read(*)"</span>, <span class="str">"Write(*)"</span>, <span class="str">"Edit(*)"</span>
+    ],
+    <span class="key">"deny"</span>: [<span class="str">"Bash(rm -rf *)"</span>]
+  },
+  <span class="key">"env"</span>: { <span class="key">"WORKSPACE"</span>: <span class="str">"backend"</span>, <span class="key">"PYTHONPATH"</span>: <span class="str">"./src"</span> }
+}
+
+<span class="cmt">// pitch-research/.claude/settings.json — usa Haiku para economizar</span>
+{
+  <span class="key">"model"</span>: <span class="str">"claude-haiku-4-5"</span>,
+  <span class="key">"permissions"</span>: {
+    <span class="key">"allow"</span>: [<span class="str">"Bash(git *)"</span>, <span class="str">"Read(*)"</span>, <span class="str">"Write(*)"</span>, <span class="str">"Edit(*)"</span>]
+  },
+  <span class="key">"env"</span>: { <span class="key">"WORKSPACE"</span>: <span class="str">"pitch-research"</span> }
+}</code><div class="code-label">settings.json por workspace</div></pre>
+
+      <h3>4. CLAUDE.md Raiz — Mínimo / Root CLAUDE.md — Minimal</h3>
+      <p>Será lido por todos os workspaces. Mantenha curto — apenas o que é verdadeiro para todos.</p>
+
+      <pre><code><span class="cmt"># hackathon-rio/CLAUDE.md — MANTER CURTO</span>
+
+<span class="kw"># Hackathon: Claude Impact Lab Rio</span>
+
+<span class="kw">## Projeto</span>
+Sistema de análise de segurança pública para o Rio de Janeiro.
+
+<span class="kw">## Time</span>
+Carlos (Tech Lead), Ana (Backend), Bruno (Frontend), Lívia (Data), Rafael (Pitch)
+
+<span class="kw">## Regras Globais</span>
+- NUNCA expor PII em APIs, logs ou saídas
+- Commit messages em Inglês
+
+<span class="kw">## Workspaces</span>
+Cada workspace tem seu próprio CLAUDE.md com contexto completo.
+<span class="cmt">Use esse — não este arquivo — para detalhes específicos.</span></code><div class="code-label">CLAUDE.md — raiz (mínimo)</div></pre>
+
+      <h3>Tabela de Regras Práticas</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Regra</th><th>❌ Errado</th><th>✅ Certo</th></tr></thead>
+          <tbody>
+            <tr><td>Instalar skills</td><td><code>~/.claude/commands/skill.md</code></td><td><code>workspace/.claude/commands/skill.md</code></td></tr>
+            <tr><td>Abrir o Claude Code</td><td>Da pasta raiz</td><td>Do workspace específico</td></tr>
+            <tr><td>Modelo para escrita/pitch</td><td>Sonnet (caro)</td><td>Haiku (3× mais barato)</td></tr>
+            <tr><td>CLAUDE.md raiz</td><td>Detalhado e longo</td><td>Mínimo — só regras globais</td></tr>
+            <tr><td>Config global (~/.claude)</td><td>Tudo configurado lá</td><td>Só o modelo padrão</td></tr>
+            <tr><td>MCP servers</td><td>Configurados globalmente</td><td>Em <code>.claude/settings.json</code> do workspace</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <hr>
+
+    <!-- ──────────────────────────────────────────────────────────────────
+         SECTION 3 — CONFIGURATION FILES
+    ─────────────────────────────────────────────────────────────────────── -->
+    <section id="config-files">
+      <div class="section-header">
+        <div class="section-num">3</div>
+        <div>
+          <div class="section-title">Arquivos de Configuração / Configuration Files</div>
+          <div class="section-subtitle">O DNA do projeto para o Claude Code</div>
+        </div>
+      </div>
+
+      <div class="callout callout-info">
+        <strong>🧬 Como esses arquivos funcionam</strong>
+        O <strong>CLAUDE.md</strong> é o único arquivo lido automaticamente. Os demais (AGENTS.md, SOUL.md, USER.md, SKILLS.md) devem ser referenciados no CLAUDE.md ou adicionados ao contexto explicitamente.
+      </div>
+
+      <h3>3.1 CLAUDE.md — O Cérebro do Projeto / The Project Brain</h3>
+      <p><strong>O arquivo mais importante.</strong> Claude Code lê automaticamente ao iniciar em um diretório. Define contexto, stack, comandos e regras.</p>
+
+      <pre><code><span class="cmt"># Projeto / Project: Rio Safety Dashboard</span>
+
+<span class="kw">## Contexto / Context</span>
+Painel de análise de segurança pública para o Rio de Janeiro.
+Integra dados de ocorrências de múltiplas fontes.
+Public safety analytics dashboard for Rio de Janeiro.
+
+<span class="kw">## Stack</span>
+- Backend: Python 3.12 + FastAPI + SQLite (MVP)
+- Frontend: React 18 + Vite + Tailwind CSS + Leaflet
+- Data: Pandas + GeoPandas
+
+<span class="kw">## Comandos / Commands</span>
+- `make dev`   — Inicia dev servers / Start dev servers
+- `make test`  — Roda todos os testes / Run all tests
+- `make lint`  — Roda linters / Run linters
+
+<span class="kw">## Regras / Rules</span>
+- Textos para usuário em Português
+- NUNCA expor PII nas APIs ou logs
+- Usar variáveis de ambiente para credenciais
+- MVP: preferir soluções funcionais a soluções perfeitas
+
+<span class="kw">## Arquivos Adicionais / Additional Files</span>
+- AGENTS.md: definições de sub-agentes
+- SOUL.md:   personalidade e valores do agente
+- USER.md:   preferências do time
+- SPEC.md:   especificação técnica completa</code><div class="code-label">CLAUDE.md</div></pre>
+
+      <h3>3.2 AGENTS.md — Definindo Especialistas / Defining Specialists</h3>
+
+      <pre><code><span class="cmt"># Agents</span>
+
+<span class="kw">## Orchestrator</span>
+**Papel:** Planeja e coordena entre especialistas.
+**Como invocar:**
+"Act as the Orchestrator. Review SPEC.md and create a step-by-step
+implementation plan. Assign tasks to each specialist."
+
+<span class="kw">## Backend Engineer</span>
+**Stack:** FastAPI, SQLAlchemy, Pytest, SQLite
+**Como invocar:**
+"Act as the Backend Engineer. Implement [feature] per SPEC.md.
+Include Pytest tests for all endpoints."
+
+<span class="kw">## Frontend Engineer</span>
+**Stack:** React 18, Vite, Tailwind, Leaflet, Recharts
+**Como invocar:**
+"Act as the Frontend Engineer. Build [component] per SPEC.md.
+Use Tailwind for all styling. No inline styles."
+
+<span class="kw">## Data Scientist</span>
+**Stack:** Pandas, GeoPandas, Matplotlib, Seaborn
+**Como invocar:**
+"Act as the Data Scientist. Analyze [dataset], identify [pattern].
+Generate visualization and explain findings in Portuguese."
+
+<span class="kw">## Researcher</span>
+**Como invocar:**
+"Act as the Researcher. Find all public APIs for Rio de Janeiro
+crime data. For each: URL, format, auth, limitations, license."
+
+<span class="kw">## Presenter</span>
+**Como invocar:**
+"Act as the Presenter. Generate a 5-minute pitch for our dashboard.
+Audience: Rio city officials + hackathon judges."</code><div class="code-label">AGENTS.md</div></pre>
+
+      <h3>3.3 SOUL.md — Identidade do Agente / Agent Identity</h3>
+
+      <pre><code><span class="cmt"># Agent Soul — Rio Safety Dashboard</span>
+
+<span class="kw">## Identidade / Identity</span>
+Engenheiro assistente de IA em solução crítica de segurança pública
+para o Rio de Janeiro. Prioriza precisão, transparência e privacidade.
+Prazo apertado (hackathon de 1 dia): equilibrar qualidade com velocidade.
+
+<span class="kw">## Valores / Values</span>
+- **Precisão primeiro:** Nunca invente dados. Cite todas as fontes.
+- **Privacidade por padrão:** Anonimize PII em todas as camadas.
+- **Clareza:** Explique o raciocínio. Membros não técnicos revisarão.
+- **Eficiência:** Prefira soluções funcionais a soluções perfeitas.
+
+<span class="kw">## Restrições / Constraints</span>
+- NUNCA expor PII (nomes, CPF, endereços) em APIs ou logs
+- Usar coordenadas reais do Rio (lat: -23.0 a -23.1, lon: -43.1 a -43.8)
+- Atribuir dados à fonte original
+- Código deve funcionar offline com dados do hackathon
+
+<span class="kw">## Estilo / Style</span>
+- Explicações em Português, código em Inglês
+- Conciso — estamos no prazo de um hackathon</code><div class="code-label">SOUL.md</div></pre>
+
+      <h3>3.4 USER.md — Perfil do Time / Team Profile</h3>
+
+      <pre><code><span class="cmt"># Team Profile</span>
+
+<span class="kw">## Composição / Composition</span>
+- Carlos (Tech Lead): Full-stack, Python + React
+- Ana (Backend): Pipelines de dados
+- Bruno (Frontend): React + Vite, UI/UX
+- Lívia (Data Science): Pandas, GeoPandas, visualizações
+- Rafael (Pesquisa + Pitch): Não técnico, pesquisa e apresentação
+
+<span class="kw">## Preferências / Preferences</span>
+- Backend: FastAPI + SQLite (MVP), sem ORM pesado
+- Frontend: React + Vite + Tailwind, sem bibliotecas UI externas
+- Formatação: Black (Python), Prettier (JS/TS)
+- Git: mensagens de commit em Inglês
+
+<span class="kw">## Não Fazer / Do Not</span>
+- Sugerir novas dependências sem perguntar
+- Escrever estilos inline (sempre Tailwind)
+- Pular testes para endpoints de API
+- Criar abstrações prematuras — é um hackathon
+
+<span class="kw">## Restrição / Constraint</span>
+MVP em 6 horas. Prefira funcional a perfeito.</code><div class="code-label">USER.md</div></pre>
+
+      <h3>3.5 SKILLS.md — Capacidades Disponíveis / Available Capabilities</h3>
+
+      <pre><code><span class="cmt"># Available Skills</span>
+
+<span class="kw">## Skills Nativas / Built-in</span>
+| Skill           | Comando    | Quando usar                        |
+|-----------------|------------|------------------------------------|
+| verify          | /verify    | Após implementar uma feature       |
+| run             | /run       | Screenshot do app em execução      |
+| code-review     | /code-review | Antes de commitar                |
+| security-review | /security-review | Antes da demo final          |
+| init            | /init      | Criar CLAUDE.md para novo projeto  |
+
+<span class="kw">## Skills Instaladas / Installed</span>
+| Skill       | Comando     | Descrição                          |
+|-------------|-------------|------------------------------------|
+| byterover   | brv         | Armazenar decisões do projeto      |
+| data-science| /data-science | Análise Pandas + visualizações   |
+| research    | /research   | Pesquisa web estilo Feynman        |
+| slides      | /slides     | Gerar outline de slides do pitch   |</code><div class="code-label">SKILLS.md</div></pre>
+    </section>
+
+    <hr>
+
+    <!-- ──────────────────────────────────────────────────────────────────
+         SECTION 4 — SPEC DOC WORKFLOW
+    ─────────────────────────────────────────────────────────────────────── -->
+    <section id="spec-doc">
+      <div class="section-header">
+        <div class="section-num">4</div>
+        <div>
+          <div class="section-title">Fluxo de Spec Doc / Spec Doc Workflow</div>
+          <div class="section-subtitle">Prompt bruto → SPEC.md aprovado → código completo gerado</div>
+        </div>
+      </div>
+
+      <div class="callout callout-tip">
+        <strong>✨ A Regra de Ouro / The Golden Rule</strong>
+        Claude Code gera código <em>muito melhor</em> a partir de um spec detalhado do que de um prompt vago. Invista 30-45 minutos no spec e economize horas de retrabalho.
+      </div>
+
+      <div class="flow">
+        <div class="flow-step">
+          <div class="flow-step-icon">📝</div>
+          <div class="flow-step-label">Prompt Inicial</div>
+          <div class="flow-step-sub">~10 min</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-step-icon">🤖</div>
+          <div class="flow-step-label">Claude Refina</div>
+          <div class="flow-step-sub">Gera SPEC.md</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-step-icon">🔁</div>
+          <div class="flow-step-label">Você Itera</div>
+          <div class="flow-step-sub">~20-30 min</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-step-icon">✅</div>
+          <div class="flow-step-label">Aprovação</div>
+          <div class="flow-step-sub">"I approve it"</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-step-icon">⚡</div>
+          <div class="flow-step-label">Código Gerado</div>
+          <div class="flow-step-sub">Projeto completo</div>
+        </div>
+      </div>
+
+      <h3>Passo 1: Escreva o Prompt Inicial / Write the Initial Prompt</h3>
+      <p>Use este template. Descreva o <em>problema</em>, não a solução. / Use this template. Describe the <em>problem</em>, not the solution.</p>
+
+      <pre><code>Problema:
+[Descreva o problema que você está resolvendo — em detalhes]
+
+Usuários:
+[Quem vai usar isso? Qual o contexto deles?]
+
+Dados disponíveis:
+[Que fontes de dados você tem? Qual o schema?]
+
+Resultado esperado:
+[Como é o sucesso? O que o usuário consegue fazer?]
+
+Stack:
+[Tecnologias que você quer usar — seja específico]
+
+Restrições:
+[Tempo, integrações, requisitos especiais, offline/online]</code><div class="code-label">template</div></pre>
+
+      <h4>Exemplo completo para segurança pública:</h4>
+
+      <pre><code>Problema:
+A Secretaria de Segurança Pública do Rio tem dados de ocorrências policiais
+em múltiplos sistemas isolados por delegacia. Analistas precisam integrar
+esses dados manualmente — processo lento e propenso a erros. Não há
+visibilidade centralizada de padrões geográficos ou temporais.
+
+Usuários:
+Analistas de segurança pública, delegados e gestores municipais que precisam
+identificar padrões e alocar recursos de policiamento.
+
+Dados disponíveis:
+- CSVs mensais de ocorrências por delegacia
+- Colunas: data, hora, tipo_crime, delegacia, bairro, latitude, longitude
+- GeoJSON de bairros do Rio (público, dados.rio)
+
+Resultado esperado:
+Dashboard web com:
+- Mapa de calor interativo filtrável por tipo de crime e período
+- Ranking dos 10 bairros com mais ocorrências
+- Gráfico de tendência mensal
+- Alertas automáticos para bairros com picos anômalos (>2 std devs)
+
+Stack: FastAPI + SQLite (backend), React + Vite + Leaflet (frontend)
+
+Restrições:
+- Funcionar offline com os dados do hackathon
+- MVP em 6 horas
+- Nenhum PII nos dados — apenas dados agregados por bairro</code><div class="code-label">prompt inicial / initial prompt</div></pre>
+
+      <h3>Passo 2: Gere o SPEC.md / Generate SPEC.md</h3>
+
+      <pre><code>Based on the problem description above, generate a comprehensive SPEC.md.
+
+Include:
+1. Problem Statement (what problem + why it matters)
+2. Solution Overview (plain language description)
+3. Architecture (ASCII diagram showing all components)
+4. Data Models (complete schema for all entities)
+5. API Interfaces (all endpoints: method, path, params, request/response)
+6. Frontend Components (list + describe each React component)
+7. Data Pipeline (how CSV data gets loaded and processed)
+8. Rules and Constraints (technical + business rules)
+9. Out of Scope (what we are NOT building in this MVP)
+10. Implementation Order (what to build first, second, third)
+
+Be specific enough that a developer can implement any section
+without asking clarifying questions.</code><div class="code-label">prompt para gerar o SPEC.md</div></pre>
+
+      <h3>Passo 3: Itere Até Aprovar / Iterate Until Approved</h3>
+
+      <pre><code><span class="cmt"># Exemplos de feedback / Feedback examples:</span>
+
+"Add an endpoint for filtering occurrences by date range."
+
+"The Occurrence data model is missing latitude and longitude fields."
+
+"Simplify the architecture — remove Redis, we don't need it for MVP.
+Use in-memory caching instead."
+
+"Add a section for the anomaly detection algorithm — explain exactly
+how it detects neighborhoods 'above average'."
+
+"The frontend component list needs a &lt;FilterPanel /&gt; with:
+date range picker, crime type multi-select, neighborhood dropdown."</code><div class="code-label">iteração / iteration</div></pre>
+
+      <h3>Passo 4: Aprove e Gere o Código / Approve and Generate</h3>
+
+      <pre><code>The SPEC.md looks good. I approve it.
+
+Please implement the full project based on this spec.
+Build in this order:
+
+1. Project structure and config (Makefile, .env.example, .gitignore)
+2. Backend: data models and SQLite initialization
+3. Backend: CSV ingestion pipeline
+4. Backend: all API endpoints
+5. Backend: Pytest tests for all endpoints
+6. Frontend: Vite + Tailwind setup
+7. Frontend: MapView and FilterPanel components
+8. Frontend: StatsChart and OccurrenceTable components
+9. Frontend: API integration
+10. README.md with setup instructions
+
+Commit after completing each numbered step.</code><div class="code-label">aprovação e geração / approval and generation</div></pre>
+    </section>
+
+    <hr>
+
+    <!-- ──────────────────────────────────────────────────────────────────
+         SECTION 5 — RESEARCH
+    ─────────────────────────────────────────────────────────────────────── -->
+    <section id="research">
+      <div class="section-header">
+        <div class="section-num">5</div>
+        <div>
+          <div class="section-title">Pesquisa com Claude Code / Research with Claude Code</div>
+          <div class="section-subtitle">Claude como agente de pesquisa web e análise de dados</div>
+        </div>
+      </div>
+
+      <h3>5.1 Template de Pesquisa / Research Template</h3>
+
+      <pre><code>Research [topic] for our project. For each finding:
+1. Provide the source URL
+2. Summarize the key information in Portuguese
+3. Note any limitations or caveats
+4. Rate relevance (High / Medium / Low)
+
+Compile results in docs/RESEARCH.md</code><div class="code-label">template</div></pre>
+
+      <h3>5.2 Encontrando Fontes de Dados / Finding Data Sources</h3>
+
+      <pre><code>Research all available open data sources for Rio de Janeiro public safety.
+Check: dados.rio, data.rio, ISP-RJ (Instituto de Segurança Pública do RJ),
+and any other official sources.
+
+For each source, document:
+- URL and access method (API, download, scraping)
+- Data format and schema (if available)
+- Time coverage (years available)
+- Update frequency
+- Geographic granularity (neighborhood, district, city)
+- Authentication requirements
+- License terms and hackathon restrictions
+
+Save to docs/DATA_SOURCES.md</code><div class="code-label">pesquisa de fontes</div></pre>
+
+      <h3>5.3 Pesquisa de Contexto do Problema / Problem Context Research</h3>
+
+      <pre><code">Research the Rio de Janeiro public safety landscape:
+- Current crime statistics and trends (2022-2024)
+- Key challenges for law enforcement data integration
+- Existing government systems and why they fail to share data
+- Success stories of data-driven policing in Brazil
+
+This research will inform our pitch.
+Save to docs/PROBLEM_CONTEXT.md</code><div class="code-label">contexto do problema</div></pre>
+
+      <h3>5.4 Gerando Resumo para o Pitch / Generating Pitch Summary</h3>
+
+      <pre><code>Based on DATA_SOURCES.md and PROBLEM_CONTEXT.md, generate an executive
+summary for our pitch deck:
+1. Scale of the problem (data points, affected population)
+2. Why current systems fail
+3. How our solution addresses the gap
+4. Expected impact (time saved, decisions improved)
+
+Write in Portuguese. Max 300 words. 2-minute verbal pitch format.
+Save to docs/PITCH_SUMMARY.md</code><div class="code-label">resumo executivo</div></pre>
+    </section>
+
+    <hr>
+
+    <!-- ──────────────────────────────────────────────────────────────────
+         SECTION 6 — SKILLS & PLUGINS
+    ─────────────────────────────────────────────────────────────────────── -->
+    <section id="skills">
+      <div class="section-header">
+        <div class="section-num">6</div>
+        <div>
+          <div class="section-title">Skills, Plugins e MCP Servers</div>
+          <div class="section-subtitle">Estendendo o Claude Code com capacidades especializadas</div>
+        </div>
+      </div>
+
+      <h3>6.1 Awesome Claude Code Skills</h3>
+      <p>A comunidade mantém repositórios de skills prontas para instalar. / The community maintains repositories of ready-to-install skills.</p>
+
+      <div class="callout callout-info">
+        <strong>🔗 Onde encontrar / Where to find</strong>
+        Repositório principal: <strong>github.com/anthropics/awesome-claude-code</strong><br>
+        Busque também: <code>awesome-claude-code-skills</code>, <code>claude-code-commands</code> no GitHub
+      </div>
+
+      <pre><code><span class="cmt"># Instalar skill globalmente / Install skill globally (all projects)</span>
+mkdir -p ~/.claude/commands
+curl -o ~/.claude/commands/research.md \
+  https://raw.githubusercontent.com/anthropics/awesome-claude-code/main/skills/research.md
+
+<span class="cmt"># Instalar no projeto / Install for this project only</span>
+mkdir -p .claude/commands
+curl -o .claude/commands/data-science.md \
+  https://raw.githubusercontent.com/anthropics/awesome-claude-code/main/skills/data-science.md
+
+<span class="cmt"># Verificar skills disponíveis / Check available skills</span>
+<span class="cmt"># No Claude Code, digite / In Claude Code, type:</span>
+/   <span class="cmt"># Lista todos os comandos / Lists all available commands</span></code><div class="code-label">instalando skills</div></pre>
+
+      <h4>Criando sua própria skill / Creating your own skill:</h4>
+
+      <pre><code>---
+name: analyze-crime-data
+description: Analyze a crime CSV and generate statistical summary + charts
+---
+
+Analyze the crime dataset at the given path using Python/Pandas.
+Generate:
+1. Summary statistics (total, by type, by neighborhood)
+2. Time series chart (incidents per month)
+3. Top 10 neighborhoods by incident count
+4. Anomaly detection (neighborhoods >2 std devs above mean)
+
+Save analysis to docs/ANALYSIS.md and charts to docs/charts/</code><div class="code-label">.claude/commands/analyze-crime-data.md</div></pre>
+
+      <h3>6.2 Skills Nativas / Built-in Skills</h3>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Comando</th><th>O Que Faz / What It Does</th><th>Quando Usar / When to Use</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>/verify</code></td><td>Roda o app e verifica se mudança funciona</td><td>Após implementar uma feature</td></tr>
+            <tr><td><code>/run</code></td><td>Inicia o app e tira screenshot</td><td>Para confirmar a UI visualmente</td></tr>
+            <tr><td><code>/code-review</code></td><td>Revisa mudanças staged para bugs</td><td>Antes de commitar código</td></tr>
+            <tr><td><code>/security-review</code></td><td>Auditoria de segurança completa</td><td>Antes da demo final</td></tr>
+            <tr><td><code>/init</code></td><td>Gera CLAUDE.md para novo projeto</td><td>Início de projeto</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>6.3 MCP Servers</h3>
+      <p>Model Context Protocol servers adicionam acesso a ferramentas externas.</p>
+
+      <pre><code><span class="cmt">// .claude/settings.json</span>
+{
+  <span class="key">"mcpServers"</span>: {
+    <span class="key">"google-drive"</span>: {
+      <span class="key">"command"</span>: <span class="str">"npx"</span>,
+      <span class="key">"args"</span>: [<span class="str">"-y"</span>, <span class="str">"@anthropic-ai/mcp-server-google-drive"</span>]
+    },
+    <span class="key">"puppeteer"</span>: {
+      <span class="key">"command"</span>: <span class="str">"npx"</span>,
+      <span class="key">"args"</span>: [<span class="str">"-y"</span>, <span class="str">"@anthropic-ai/mcp-server-puppeteer"</span>]
+    }
+  }
+}</code><div class="code-label">.claude/settings.json</div></pre>
+
+      <div class="cards">
+        <div class="card">
+          <div class="card-icon">📁</div>
+          <div class="card-title">Google Drive MCP</div>
+          <div class="card-desc">Ler datasets compartilhados pelos organizadores. Salvar relatórios e slides gerados.</div>
+          <span class="card-tag card-tag-blue">Dados do Hackathon</span>
+        </div>
+        <div class="card">
+          <div class="card-icon">🌐</div>
+          <div class="card-title">Puppeteer/Browser MCP</div>
+          <div class="card-desc">Screenshot do app em execução. Web scraping para pesquisa. Testar UI automaticamente.</div>
+          <span class="card-tag card-tag-green">UI Testing</span>
+        </div>
+      </div>
+
+      <h3>6.4 Skills Especiais para o Hackathon / Hackathon-Specific Skills</h3>
+
+      <h4>byterover — Gestão de Conhecimento</h4>
+      <pre><code><span class="cmt"># Armazenar decisão / Store decision</span>
+brv store <span class="str">"Using SQLite instead of PostgreSQL for MVP — faster setup, no Docker"</span>
+brv store <span class="str">"Crime data has inconsistent bairro names — normalize with fuzzy matching"</span>
+
+<span class="cmt"># Recuperar conhecimento relevante / Retrieve relevant knowledge</span>
+brv retrieve <span class="str">"database choice"</span>
+brv retrieve <span class="str">"data normalization"</span></code><div class="code-label">byterover</div></pre>
+
+      <h4>Análise de Dados / Data Analysis</h4>
+      <pre><code>Analyze the crime dataset at data/ocorrencias.csv:
+1. Load with Pandas — show dtypes and sample rows
+2. Check for missing values and inconsistencies
+3. Identify unique crime types and neighborhoods
+4. Plot incident count by month (save to docs/charts/monthly.png)
+5. Top 10 neighborhoods by total incidents
+6. Flag any data quality issues for the team
+
+Save full analysis to docs/ANALYSIS.md</code><div class="code-label">análise de dados</div></pre>
+
+      <h4>Geração de Slides / Slide Generation</h4>
+      <pre><code">Generate a structured pitch outline for our Rio Safety Dashboard.
+Audience: Rio city officials + hackathon judges (mixed technical level).
+Format: slide-by-slide with:
+  - Slide title
+  - 3-5 bullet points
+  - Suggested visual
+  - Speaker notes
+
+Save to docs/SLIDES.md</code><div class="code-label">geração de slides</div></pre>
+    </section>
+
+    <hr>
+
+    <!-- ──────────────────────────────────────────────────────────────────
+         SECTION 7 — GITHUB
+    ─────────────────────────────────────────────────────────────────────── -->
+    <section id="github">
+      <div class="section-header">
+        <div class="section-num">7</div>
+        <div>
+          <div class="section-title">Integração com GitHub / GitHub Integration</div>
+          <div class="section-subtitle">Claude Code gerencia git e GitHub para você</div>
+        </div>
+      </div>
+
+      <h3>7.1 Setup Inicial / Initial Setup</h3>
+
+      <pre><code><span class="cmt"># Inicializar git / Initialize git</span>
+git init
+
+<span class="cmt"># Criar repositório no GitHub via CLI / Create GitHub repo via CLI</span>
+gh repo create rio-safety-dashboard --public --source=. --remote=origin
+
+<span class="cmt"># Ou conectar a repo existente / Or connect to existing repo</span>
+git remote add origin https://github.com/your-team/rio-safety-dashboard.git</code><div class="code-label">bash</div></pre>
+
+      <p>Deixe Claude Code fazer o scaffold inicial:</p>
+      <pre><code>Set up the initial project structure for Python FastAPI + React Vite.
+Include: .gitignore (Python + Node + .env), README.md (placeholder),
+docker-compose.yml, Makefile with dev/test/build targets.
+Create initial commit: "chore: initial project setup"</code><div class="code-label">prompt de scaffold</div></pre>
+
+      <h3>7.2 Operações Git com Claude Code / Git Operations with Claude Code</h3>
+
+      <pre><code><span class="cmt"># Commitar / Commit</span>
+"Commit all current changes. Use conventional commits format
+(feat/fix/chore/docs). Write a descriptive message."
+
+<span class="cmt"># Criar branch / Create branch</span>
+"Create a new branch called feature/crime-heatmap and switch to it."
+
+<span class="cmt"># Criar PR / Create PR</span>
+"Push the current branch and create a GitHub PR.
+Title: 'feat: interactive crime heatmap with filtering'
+Include: what was implemented, how to test, screenshot placeholder."
+
+<span class="cmt"># Gerar README completo / Generate full README</span>
+"Generate a comprehensive README.md including: project overview,
+architecture diagram (ASCII), setup instructions, API docs,
+screenshots section, team credits, hackathon context."</code><div class="code-label">prompts git</div></pre>
+
+      <h3>7.3 Workflow Recomendado para Times / Recommended Team Workflow</h3>
+
+      <pre><code>main (protegido / protected)
+  └── develop (integração / integration)
+        ├── feature/backend-api          ← Backend Dev
+        ├── feature/frontend-map         ← Frontend Dev
+        ├── feature/data-pipeline        ← Data Scientist
+        └── docs/pitch-and-research      ← Researcher</code><div class="code-label">git flow</div></pre>
+
+      <h3>7.4 Preparação Final / Final Preparation</h3>
+
+      <pre><code"><span class="cmt"># Antes da demo / Before the demo:</span>
+
+/security-review
+<span class="cmt"># → Audita vulnerabilidades antes de tornar o repo público</span>
+
+"Generate a comprehensive README.md with setup instructions and screenshots"
+
+"Create DEMO.md with step-by-step demo script for the judges"
+
+"Tag the final version: git tag -a v1.0.0-hackathon -m 'Final submission'"
+
+"Push all branches and tags to GitHub"</code><div class="code-label">checklist final</div></pre>
+    </section>
+
+    <hr>
+
+    <!-- ──────────────────────────────────────────────────────────────────
+         SECTION 8 — TEAM COORDINATION
+    ─────────────────────────────────────────────────────────────────────── -->
+    <section id="team">
+      <div class="section-header">
+        <div class="section-num">8</div>
+        <div>
+          <div class="section-title">Coordenação de Equipe / Team Coordination</div>
+          <div class="section-subtitle">Como um time de 5 usa Claude Code em paralelo</div>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Pessoa</th><th>Papel</th><th>Foco Claude Code</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Tech Lead</td><td>Arquiteto</td><td>CLAUDE.md, SPEC.md, coordenação</td></tr>
+            <tr><td>Backend Dev 1</td><td>API Engineer</td><td>FastAPI endpoints, modelos de dados</td></tr>
+            <tr><td>Backend Dev 2</td><td>Data Engineer</td><td>Pipeline CSV, análise de qualidade</td></tr>
+            <tr><td>Frontend Dev</td><td>UI Engineer</td><td>React components, mapa Leaflet</td></tr>
+            <tr><td>Researcher</td><td>Research + Pitch</td><td>DATA_SOURCES.md, PITCH.md, slides</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Agenda do Hackathon / Hackathon Agenda</h3>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <div class="step-title">Manhã — Planejamento (Horas 1-2)</div>
+            <div class="step-desc">
+              Tech Lead escreve o prompt inicial. Todo o time itera no SPEC.md com Claude (30-45 min). Time revisa e aprova o SPEC.md. Criar CLAUDE.md, SOUL.md, USER.md com base no spec. Setup do GitHub. Dividir em workstreams.
+            </div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <div class="step-title">Tarde — Construção (Horas 3-7)</div>
+            <div class="step-desc">
+              Cada pessoa roda sua própria sessão do Claude Code com o mesmo CLAUDE.md + SPEC.md. Backend: implementa API endpoints e pipeline. Frontend: implementa componentes React e mapa. Data Scientist: analisa dados e documenta qualidade. Researcher: pesquisa contexto e gera PITCH.md.
+            </div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <div class="step-title">Final — Integração e Demo (Horas 7-8)</div>
+            <div class="step-desc">
+              Merge dos branches para develop. <code>/code-review</code> na integração. <code>/security-review</code> antes de publicar. <code>/run</code> para screenshot. Finalizar PITCH.md e README.md. Tag e push final para GitHub.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout-warn">
+        <strong>⚠️ Dicas para sessões multi-pessoa</strong>
+        • Todos devem ter o mesmo CLAUDE.md + SPEC.md — use <code>git pull</code> antes de iniciar.<br>
+        • Use <strong>byterover</strong> para registrar decisões tomadas: <code>brv store "API usa JWT para auth"</code><br>
+        • Se o SPEC.md mudar, atualize e avise o time via chat do grupo.<br>
+        • Cada pessoa pode ter preferências pessoais em <code>~/.claude/PERSONAL.md</code>
+      </div>
+    </section>
+
+    <hr>
+
+    <!-- ──────────────────────────────────────────────────────────────────
+         SECTION 9 — EXAMPLES
+    ─────────────────────────────────────────────────────────────────────── -->
+    <section id="examples">
+      <div class="section-header">
+        <div class="section-num">9</div>
+        <div>
+          <div class="section-title">Exemplos de Segurança Pública / Public Safety Examples</div>
+          <div class="section-subtitle">Prompts prontos para usar no hackathon</div>
+        </div>
+      </div>
+
+      <h3>9.1 Mapa de Calor de Crimes / Crime Heatmap</h3>
+      <p>Prompt completo para gerar o sistema central do hackathon:</p>
+
+      <pre><code">Act as the Backend Engineer.
+
+Implement a FastAPI crime heatmap API based on SPEC.md.
+
+Endpoints to implement:
+- GET /api/occurrences?start_date&end_date&crime_type&bairro
+  → { total: int, data: Occurrence[] }
+- GET /api/stats/by-type
+  → { crime_type: count }
+- GET /api/stats/by-neighborhood
+  → { bairro: { count, lat, lon } }
+- GET /api/alerts
+  → Alert[] (neighborhoods significantly above historical average)
+
+Data ingestion:
+- On startup, scan /data/*.csv and load into SQLite
+- Normalize crime_type strings (lowercase, strip whitespace)
+- Handle missing lat/lon gracefully (skip the row, log warning)
+
+Include complete Pytest test suite.
+Commit each endpoint separately with a descriptive message.</code><div class="code-label">backend prompt</div></pre>
+
+      <h3>9.2 Detecção de Anomalias / Anomaly Detection</h3>
+
+      <pre><code">Implement an anomaly detection module for crime data.
+
+Algorithm:
+1. Group data by (bairro, crime_type) for the past 90 days
+2. For each group, calculate: 30-day rolling average, std deviation
+3. Compare current week count to historical average
+4. Flag as alert if z-score > 2.0 (high: z>3, medium: z>2)
+
+Output schema for GET /api/alerts:
+{
+  "bairro": string,
+  "crime_type": string,
+  "current_week_count": int,
+  "historical_avg": float,
+  "z_score": float,
+  "severity": "high" | "medium",
+  "lat": float,
+  "lon": float
+}
+
+Include Pytest tests with synthetic data that covers:
+- Normal distribution (no alerts)
+- Single outlier above threshold
+- Multiple simultaneous alerts</code><div class="code-label">anomaly detection</div></pre>
+
+      <h3>9.3 Componente de Mapa / Map Component</h3>
+
+      <pre><code>Act as the Frontend Engineer.
+
+Build the MapView component for our crime heatmap dashboard.
+
+Requirements:
+- Use react-leaflet with leaflet-heat plugin for heatmap rendering
+- Center on Rio de Janeiro (lat: -22.9068, lon: -43.1729), zoom: 12
+- Load heatmap data from GET /api/stats/by-neighborhood
+- Show intensity based on crime count (normalize to 0-1 scale)
+- Add click-to-inspect: clicking a neighborhood shows a popup with:
+  total count, top crime type, alert status
+- Responsive: fill 100% of parent container height
+- Loading skeleton while data is fetching
+
+Use Tailwind for any wrapper styling.
+Use TypeScript. No inline styles.</code><div class="code-label">frontend map component</div></pre>
+
+      <h3>9.4 Pesquisa de Fontes / Source Research</h3>
+
+      <pre><code>Act as the Researcher.
+
+Find all public crime data sources for Rio de Janeiro.
+
+Check specifically:
+1. dados.rio — Plataforma de Dados Abertos da Prefeitura do Rio
+2. isp.rj.gov.br — Instituto de Segurança Pública do Estado do RJ
+3. data.rio — Portal de Dados da Cidade do Rio
+4. Any ISP monthly crime statistics (Evolução Mensal das Ocorrências)
+
+For each source, document in docs/DATA_SOURCES.md:
+- URL
+- Available datasets (names and descriptions)
+- Data format (CSV, JSON, API, shapefile)
+- Time coverage
+- Update frequency
+- Access method (direct download, API key required)
+- License and usage rights for hackathon
+- Relevance rating (High/Medium/Low)
+
+Conclude with: recommended source for hackathon use and why.</code><div class="code-label">pesquisa de dados</div></pre>
+    </section>
+
+    <hr>
+
+    <!-- ──────────────────────────────────────────────────────────────────
+         QUICK REFERENCE
+    ─────────────────────────────────────────────────────────────────────── -->
+    <!-- ──────────────────────────────────────────────────────────────────
+         SECTION 10 — FULL ECOSYSTEM
+    ─────────────────────────────────────────────────────────────────────── -->
+    <section id="ecosystem">
+      <div class="section-header">
+        <div class="section-num">10</div>
+        <div>
+          <div class="section-title">Ecossistema Completo de Skills e Plugins / Full Skills & Plugin Ecosystem</div>
+          <div class="section-subtitle">Pesquisa web de maio de 2026 · 6.700+ skills · 840+ MCP servers</div>
+        </div>
+      </div>
+
+      <div class="callout callout-tip">
+        <strong>🌐 Tamanho do ecossistema / Ecosystem scale</strong>
+        Em maio de 2026, o ecossistema Claude Code tem <strong>6.700+ skills</strong>, <strong>2.500 marketplaces</strong>, e <strong>840+ MCP servers</strong> disponíveis — e cresce todos os dias.
+      </div>
+
+      <!-- Feynman -->
+      <h2 id="feynman">10.1 Feynman CLI — Pesquisa com Verificação de Fontes</h2>
+      <p><strong>Repo:</strong> <code>github.com/companion-inc/feynman</code> — Agente de pesquisa open-source com 4 sub-agentes especializados que <em>verifica cada citação contra a fonte real</em>. Sem links mortos, sem fontes inventadas.</p>
+
+      <div class="cards">
+        <div class="card">
+          <div class="card-icon">🔍</div>
+          <div class="card-title">Researcher</div>
+          <div class="card-desc">Busca papers (alphaXiv), web, GitHub, documentação. Nunca fabrica fontes — requer URL verificável para cada citação.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🧪</div>
+          <div class="card-title">Reviewer</div>
+          <div class="card-desc">Simula peer review — identifica afirmações fracas, contradições e lacunas nos achados. Flag claims sem evidência.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">✍️</div>
+          <div class="card-title">Writer</div>
+          <div class="card-desc">Estrutura os achados em formato de artigo acadêmico com citações inline e seções claras.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">✅</div>
+          <div class="card-title">Verifier</div>
+          <div class="card-desc">Valida cada URL citada. Links mortos eliminados. Afirmações sem fonte flagadas. O que outros não fazem.</div>
+        </div>
+      </div>
+
+      <h3>Comandos / Commands</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Comando</th><th>O Que Faz</th></tr></thead>
+          <tbody>
+            <tr><td><code>/deepresearch</code></td><td>Investigação multi-agente com pesquisadores em paralelo</td></tr>
+            <tr><td><code>/lit</code></td><td>Revisão de literatura: consenso e discordâncias entre fontes</td></tr>
+            <tr><td><code>/audit</code></td><td>Compara afirmações de papers contra código real no GitHub</td></tr>
+            <tr><td><code>/recipe</code></td><td>Encontra receitas de ML implementáveis com datasets e código</td></tr>
+            <tr><td><code>/watch</code></td><td>Monitoramento recorrente de um tópico de pesquisa</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Integração com Claude Code</h3>
+      <pre><code><span class="cmt"># Instalar como skill do Claude Code (sem app completo)</span>
+npx feynman install --target claude-code
+<span class="cmt"># Adiciona em .agents/skills/feynman</span>
+
+<span class="cmt"># Uso para o hackathon:</span>
+<span class="str">"Research all available open crime data APIs for Rio de Janeiro.
+Verify every URL is live and accessible. Flag any dead links."</span></code><div class="code-label">bash</div></pre>
+
+      <div class="callout callout-info">
+        <strong>💡 O que torna o Feynman único</strong>
+        O <code>feynman audit</code> compara afirmações de papers contra código real no GitHub — "não tem equivalente em nenhuma outra ferramenta." Para pesquisa de fontes de dados do Rio de Janeiro, isso garante que você cite apenas APIs e datasets que realmente existem e estão acessíveis.
+      </div>
+
+      <hr>
+
+      <!-- Plugins vs Skills -->
+      <h2 id="plugins-vs-skills">10.2 Plugins vs Skills — A Diferença</h2>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th></th><th>Plugin</th><th>Skill</th></tr></thead>
+          <tbody>
+            <tr><td><strong>O que é</strong></td><td>Pacote que distribui skills + hooks + MCPs</td><td>Capacidade específica invocável</td></tr>
+            <tr><td><strong>Formato</strong></td><td>Pacote instalável (npm, git)</td><td>Arquivo <code>.md</code> ou <code>.js</code></td></tr>
+            <tr><td><strong>Analogia</strong></td><td>App da App Store</td><td>Feature dentro do app</td></tr>
+            <tr><td><strong>Instala via</strong></td><td><code>/plugin install</code>, <code>ccpi install</code></td><td><code>/skill add</code>, copiar arquivo</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p><strong>Resumo:</strong> Você instala <strong>plugins</strong>; você usa <strong>skills</strong>.</p>
+
+      <hr>
+
+      <!-- Repos & Marketplaces -->
+      <h2 id="repos">10.3 Repositórios e Marketplaces Recomendados</h2>
+
+      <h3>Marketplaces</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Site</th><th>Skills</th><th>Destaque</th></tr></thead>
+          <tbody>
+            <tr><td><strong><a href="https://awesome-skills.com" style="color:var(--accent)">awesome-skills.com</a></strong></td><td>153+ curadas</td><td>Interface clara, atualizado maio 2026</td></tr>
+            <tr><td><strong><a href="https://tonsofskills.com" style="color:var(--accent)">tonsofskills.com</a></strong></td><td>2.753, 425 plugins</td><td>CLI próprio (ccpi), 53k downloads/mês</td></tr>
+            <tr><td><strong><a href="https://claudemarketplaces.com" style="color:var(--accent)">claudemarketplaces.com</a></strong></td><td>6.700+, 840+ MCPs</td><td>Maior diretório, atualizado diariamente</td></tr>
+            <tr><td><strong><a href="https://mcpmarket.com" style="color:var(--accent)">mcpmarket.com</a></strong></td><td>Skills + MCPs</td><td>Especializado em geoespacial e dados</td></tr>
+            <tr><td><strong>code.claude.ai/docs/discover-plugins</strong></td><td>Curado Anthropic</td><td>Validado e seguro</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Repositórios GitHub</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Repo</th><th>Conteúdo</th><th>Melhor para</th></tr></thead>
+          <tbody>
+            <tr><td><code>rohitg00/awesome-claude-code-toolkit</code></td><td>135 agentes, 35 skills, 176+ plugins</td><td>Tudo em um, produção-grade</td></tr>
+            <tr><td><code>affaan-m/everything-claude-code</code> 🏆</td><td>119 skills, 28 agentes, 60 comandos</td><td>Metodologia EDD, hackathon winner</td></tr>
+            <tr><td><code>ComposioHQ/awesome-claude-plugins</code></td><td>Plugins com agents, hooks, MCPs</td><td>Automação e extensibilidade</td></tr>
+            <tr><td><code>ComposioHQ/awesome-claude-skills</code></td><td>1000+ skills (Apache 2.0)</td><td>Variedade e licença aberta</td></tr>
+            <tr><td><code>jeremylongshore/claude-code-plugins-plus-skills</code></td><td>425 plugins, 2.810 skills</td><td>Maior coleção + ccpi CLI</td></tr>
+            <tr><td><code>travisvn/awesome-claude-skills</code></td><td>Curado, foco em qualidade</td><td>Ponto de entrada para iniciantes</td></tr>
+            <tr><td><code>sickn33/antigravity-awesome-skills</code></td><td>Catalog por domínio</td><td>Skills especializadas de produção</td></tr>
+            <tr><td><code>companion-inc/feynman</code></td><td>Pesquisa verificada</td><td>Research com verificação de citações</td></tr>
+            <tr><td><code>opengeos/geoai-skills</code></td><td>GeoAI espacial</td><td>Mapas, satélite, análise geoespacial</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <hr>
+
+      <!-- Antigravity -->
+      <h2 id="antigravity">10.4 Antigravity Awesome Skills Catalog</h2>
+      <p>Repositório: <code>github.com/sickn33/antigravity-awesome-skills/blob/main/CATALOG.md</code></p>
+      <p>Coleção curada com foco em skills de produção por domínio. Skills mais relevantes para o hackathon:</p>
+
+      <h3>Data Science & Análise</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Skill</th><th>Descrição</th></tr></thead>
+          <tbody>
+            <tr><td><code>data-scientist</code></td><td>Expert em analytics avançado, ML e modelagem estatística</td></tr>
+            <tr><td><code>data-storytelling</code></td><td>Transforma dados brutos em narrativas que guiam decisões</td></tr>
+            <tr><td><code>business-analyst</code></td><td>Dashboards em tempo real com AI-powered analytics</td></tr>
+            <tr><td><code>data-quality-frameworks</code></td><td>Validação com Great Expectations, dbt tests, contratos de dados</td></tr>
+            <tr><td><code>analytics-product</code></td><td>PostHog, Mixpanel, funnels, cohorts</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Pesquisa & Web</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Skill</th><th>Descrição</th></tr></thead>
+          <tbody>
+            <tr><td><code>adhx</code></td><td>Busca posts do X/Twitter como JSON limpo para LLMs</td></tr>
+            <tr><td><code>apify-market-research</code></td><td>Análise de mercado, oportunidades geográficas, comportamento</td></tr>
+            <tr><td><code>helium-mcp</code></td><td>Pesquisa de notícias com análise de viés de mídia</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Visualização & Pitch</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Skill</th><th>Descrição</th></tr></thead>
+          <tbody>
+            <tr><td><code>claude-d3js-skill</code></td><td>Visualizações interativas sofisticadas com D3.js</td></tr>
+            <tr><td><code>kpi-dashboard-design</code></td><td>Padrões para design de dashboards de KPIs eficazes</td></tr>
+            <tr><td><code>steve-jobs</code></td><td>Abordagem Steve Jobs para apresentações de produto</td></tr>
+            <tr><td><code>product-marketing-context</code></td><td>Positioning, audiência, ICP, use cases, messaging</td></tr>
+            <tr><td><code>startup-business-analyst-business-case</code></td><td>Business case pronto para investidores e juízes</td></tr>
+            <tr><td><code>launch-strategy</code></td><td>Planejar lançamentos que criam momentum e capturam atenção</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <hr>
+
+      <!-- Geospatial -->
+      <h2 id="geospatial">10.5 Skills Geoespaciais / Geospatial Skills</h2>
+
+      <div class="callout callout-warn">
+        <strong>🗺️ Por que isso é crítico para segurança pública</strong>
+        Análise criminal <em>é</em> análise espacial. Heatmaps, raio de atuação de gangues, padrões por bairro — tudo requer dados geoespaciais. Estas skills automatizam o que normalmente exigiria expertise específica em GIS.
+      </div>
+
+      <h3>geoai-skills (opengeos/geoai-skills)</h3>
+      <p>Plugin que adiciona 7 comandos GeoAI diretamente no Claude Code:</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Comando</th><th>O Que Faz</th></tr></thead>
+          <tbody>
+            <tr><td><code>/inspect-geo</code></td><td>Analisa arquivos raster/vector: coordenadas, limites, resolução</td></tr>
+            <tr><td><code>/download-data</code></td><td>Baixa imagens aéreas NAIP para área geográfica especificada</td></tr>
+            <tr><td><code>/search-stac</code></td><td>Busca imagens de satélite no Microsoft Planetary Computer</td></tr>
+            <tr><td><code>/overture-data</code></td><td>Dados OpenStreetMap: edifícios, vias, uso do solo</td></tr>
+            <tr><td><code>/process-raster</code></td><td>Recorta, empilha, mosaica e converte raster/vector</td></tr>
+            <tr><td><code>/detect-objects</code></td><td>IA para detectar edifícios, veículos e features customizadas</td></tr>
+            <tr><td><code>/read-memories</code></td><td>Recupera contexto de sessões anteriores do Claude Code</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <pre><code><span class="cmt"># Instalar geoai-skills</span>
+/plugin marketplace add opengeos/geoai-skills
+/plugin install geoai-skills@geoai-skills
+<span class="cmt"># Requer: Python 3.10+ com geoai-py instalado</span></code></pre>
+
+      <h3>Skills Geoespaciais no MCPMarket</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Skill</th><th>O Que Faz</th></tr></thead>
+          <tbody>
+            <tr><td><code>geopandas-spatial-analysis</code></td><td>Análise espacial com GeoPandas, operações vetoriais, joins espaciais</td></tr>
+            <tr><td><code>gis-web-mapping</code></td><td>Leaflet + vector tiles + GeoJSON overlays + clustering de pontos</td></tr>
+            <tr><td><code>geospatial-visualization</code></td><td>Mapas interativos: draw tools, area selection, isochrones</td></tr>
+            <tr><td><code>geomaster</code></td><td>Expert GIS: satélite multi-sensor, ML espacial, análise de terreno</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <hr>
+
+      <!-- ECC -->
+      <h2 id="ecc">10.6 ECC — Everything Claude Code 🏆</h2>
+
+      <div class="callout callout-tip">
+        <strong>🏆 Vencedor do Hackathon Cerebral Valley × Anthropic — Fevereiro 2026</strong>
+        <code>affaan-m/everything-claude-code</code> ganhou com 68k+ stars. Não é uma coleção de skills — é uma metodologia completa chamada <strong>Eval-Driven Development (EDD)</strong>.
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Componente</th><th>Qtd</th><th>Destaque</th></tr></thead>
+          <tbody>
+            <tr><td>Skills</td><td>119</td><td>TDD workflow, strategic-compact, verification-loop</td></tr>
+            <tr><td>Agentes</td><td>28</td><td>Backend, frontend, security, data, research</td></tr>
+            <tr><td>Slash Commands</td><td>60</td><td>Shims de compatibilidade com ferramentas legadas</td></tr>
+            <tr><td>Instincts</td><td>Sistema contínuo</td><td>Aprende padrões das suas sessões automaticamente</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Skills Essenciais do ECC</h3>
+
+      <div class="cards">
+        <div class="card">
+          <div class="card-icon">🔴</div>
+          <div class="card-title">tdd-workflow</div>
+          <div class="card-desc">Ciclo RED-GREEN-REFACTOR para IA: Claude escreve o teste que FALHA primeiro, depois implementa. Garante código testável por design.</div>
+          <span class="card-tag card-tag-orange">Crítico para segurança pública</span>
+        </div>
+        <div class="card">
+          <div class="card-icon">🗜️</div>
+          <div class="card-title">strategic-compact</div>
+          <div class="card-desc">Sessões 3x mais longas: preserva decisões críticas, descarta histórico de baixo sinal. Evita degradação de qualidade por overflow de contexto.</div>
+          <span class="card-tag card-tag-blue">Sessões longas</span>
+        </div>
+        <div class="card">
+          <div class="card-icon">🔁</div>
+          <div class="card-title">verification-loop</div>
+          <div class="card-desc">Validação contínua após cada mudança. Reduz bugs que chegam ao final do ciclo de desenvolvimento.</div>
+          <span class="card-tag card-tag-green">Qualidade</span>
+        </div>
+        <div class="card">
+          <div class="card-icon">🧠</div>
+          <div class="card-title">instincts</div>
+          <div class="card-desc">Aprendizado contínuo: extrai padrões das suas sessões em "instincts" reutilizáveis com score de confiança. Evoluem para skills completas.</div>
+          <span class="card-tag card-tag-blue">Aprendizado</span>
+        </div>
+      </div>
+
+      <pre><code><span class="cmt"># Instalar ECC</span>
+/plugin marketplace add affaan-m/everything-claude-code
+
+<span class="cmt"># Ou manual</span>
+git clone https://github.com/affaan-m/everything-claude-code ~/.claude/plugins/ecc</code></pre>
+
+      <p><strong>Resultado medido:</strong> 65% redução no tempo de desenvolvimento. Taxa de aprovação de PR na primeira revisão muito mais alta.</p>
+
+      <hr>
+
+      <!-- Outros recursos -->
+      <h3>10.7 Outros Recursos Relevantes / Other Useful Resources</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Site / Recurso</th><th>O Que É</th><th>Por Que Útil</th></tr></thead>
+          <tbody>
+            <tr><td><a href="https://claudeskills.info" style="color:var(--accent)">claudeskills.info</a></td><td>Blog sobre skills e hackathons</td><td>Análise profunda do ECC e metodologia EDD</td></tr>
+            <tr><td><a href="https://agensi.io/learn" style="color:var(--accent)">agensi.io/learn</a></td><td>Guias de skills por linguagem</td><td>Python, React, hackathons — tutoriais práticos</td></tr>
+            <tr><td><a href="https://augmentcode.com/learn" style="color:var(--accent)">augmentcode.com/learn</a></td><td>Análise técnica do ecossistema</td><td>Comparações, casos de uso, benchmarks</td></tr>
+            <tr><td><a href="https://blog.geomusings.com" style="color:var(--accent)">blog.geomusings.com</a></td><td>Análise espacial com Claude Code</td><td>Workflows geoespaciais detalhados</td></tr>
+            <tr><td><a href="https://carto.com/blog" style="color:var(--accent)">carto.com/blog</a></td><td>IA geoespacial com Claude</td><td>Transformar Claude em agente GIS</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <hr>
+
+      <!-- Starter Pack -->
+      <h2 id="starter-pack">10.8 Starter Pack para o Hackathon do Rio</h2>
+      <p>Instale antes do evento começar / Install before the event starts:</p>
+
+      <pre><code><span class="cmt"># 1. Gerenciador de plugins / Plugin manager</span>
+pnpm add -g @intentsolutionsio/ccpi
+
+<span class="cmt"># 2. ECC — metodologia completa (instalar primeiro!)</span>
+/plugin marketplace add affaan-m/everything-claude-code
+
+<span class="cmt"># 3. Toolkit abrangente</span>
+/plugin marketplace add rohitg00/awesome-claude-code-toolkit
+
+<span class="cmt"># 4. Skills geoespaciais (crítico para mapas!)</span>
+/plugin marketplace add opengeos/geoai-skills
+/plugin install geoai-skills@geoai-skills
+
+<span class="cmt"># 5. Feynman — pesquisa com verificação de fontes</span>
+npx feynman install --target claude-code
+
+<span class="cmt"># 6. Skills do Antigravity (copiar de sickn33/antigravity-awesome-skills)</span>
+<span class="cmt"># data-scientist.md, claude-d3js-skill.md, steve-jobs.md → ~/.claude/commands/</span>
+
+<span class="cmt"># 7. Verificar tudo instalado</span>
+/   <span class="cmt"># Lista todos os comandos disponíveis no Claude Code</span></code><div class="code-label">bash — instale antes do hackathon</div></pre>
+
+      <h3>Tabela de Uso por Fase / Usage by Phase</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Fase</th><th>Skill</th><th>Como Usar</th></tr></thead>
+          <tbody>
+            <tr><td>Pesquisa de dados</td><td><code>feynman</code> + <code>/deepresearch</code></td><td>Verificar fontes de dados do Rio com citações reais</td></tr>
+            <tr><td>Planejamento</td><td><code>/plan</code> + <code>/architect</code></td><td>Estruturar SPEC.md antes de codificar</td></tr>
+            <tr><td>Backend Python</td><td><code>data-scientist</code> + <code>tdd-workflow</code></td><td>Pipeline de dados + testes automáticos</td></tr>
+            <tr><td>Análise espacial</td><td><code>/geopandas-spatial-analysis</code> + <code>/inspect-geo</code></td><td>CSV com lat/lon → análise geoespacial</td></tr>
+            <tr><td>Frontend mapas</td><td><code>/gis-web-mapping</code> + artifacts-builder</td><td>Leaflet + React components</td></tr>
+            <tr><td>Visualizações</td><td><code>/claude-d3js-skill</code> + <code>kpi-dashboard-design</code></td><td>Gráficos D3.js para crimes por tipo/período</td></tr>
+            <tr><td>Revisão de código</td><td><code>/code-review</code> + <code>verification-loop</code></td><td>Antes de cada commit</td></tr>
+            <tr><td>Segurança</td><td><code>/security-review</code> + ECC security-review</td><td>Antes de publicar o repositório</td></tr>
+            <tr><td>Pitch</td><td><code>steve-jobs</code> + <code>startup-business-analyst-business-case</code></td><td>Roteiro e slides para os juízes</td></tr>
+            <tr><td>Sessão longa</td><td><code>strategic-compact</code></td><td>Quando o contexto estiver ficando longo</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Fontes / Sources</h3>
+      <p style="font-size:12px; color:var(--text-dim); line-height:2">
+        <a href="https://github.com/companion-inc/feynman" style="color:var(--accent)">companion-inc/feynman</a> ·
+        <a href="https://virtualuncle.com/feynman-ai-research-agent-2026/" style="color:var(--accent)">Feynman AI Research Agent 2026</a> ·
+        <a href="https://awesome-skills.com" style="color:var(--accent)">awesome-skills.com</a> ·
+        <a href="https://github.com/ComposioHQ/awesome-claude-skills" style="color:var(--accent)">ComposioHQ/awesome-claude-skills</a> ·
+        <a href="https://github.com/jeremylongshore/claude-code-plugins-plus-skills" style="color:var(--accent)">jeremylongshore/claude-code-plugins-plus-skills</a> ·
+        <a href="https://github.com/rohitg00/awesome-claude-code-toolkit" style="color:var(--accent)">rohitg00/awesome-claude-code-toolkit</a> ·
+        <a href="https://github.com/affaan-m/everything-claude-code" style="color:var(--accent)">affaan-m/everything-claude-code</a> ·
+        <a href="https://github.com/sickn33/antigravity-awesome-skills" style="color:var(--accent)">sickn33/antigravity-awesome-skills</a> ·
+        <a href="https://github.com/opengeos/geoai-skills" style="color:var(--accent)">opengeos/geoai-skills</a> ·
+        <a href="https://claudeskills.info/blog/everything-claude-code-hackathon-eval-driven/" style="color:var(--accent)">ECC Hackathon Winner — Claude Skills Hub</a> ·
+        <a href="https://mcpmarket.com/tools/skills/gis-web-mapping" style="color:var(--accent)">GIS Web Mapping — MCPMarket</a> ·
+        <a href="https://blog.geomusings.com/2026/01/14/spatial-analysis-with-claude-code/" style="color:var(--accent)">Spatial Analysis — GeoMusings</a> ·
+        <a href="https://toolradar.com/blog/best-claude-code-skills-2026" style="color:var(--accent)">Best Skills 2026 — Toolradar</a> ·
+        <a href="https://claude.com/blog/meet-the-winners-of-our-built-with-opus-4-6-claude-code-hackathon" style="color:var(--accent)">Hackathon Winners — Claude Blog</a>
+      </p>
+    </section>
+
+    <hr>
+
+    <section id="emergency">
+      <div class="section-header">
+        <div class="section-num">🚨</div>
+        <div>
+          <div class="section-title">Prompts de Emergência / Emergency Prompts</div>
+          <div class="section-subtitle">Para usar quando o tempo está acabando</div>
+        </div>
+      </div>
+
+      <h3>Travado num bug / Stuck on a bug</h3>
+      <pre><code>I'm getting this error: [paste full error message]
+
+Here's the relevant code:
+[paste code]
+
+Context: [what you were trying to do]
+
+What's wrong and how do I fix it?</code></pre>
+
+      <h3>Tempo acabando / Running out of time</h3>
+      <pre><code>We have 1 hour left.
+
+Working features: [list what works]
+Not working: [list what's broken]
+Demo needs: [what the judges need to see]
+
+What is the MINIMUM I need to do to have a demo-able product?
+Prioritize ruthlessly. Ignore non-essential features.</code></pre>
+
+      <h3>Gerar testes rapidamente / Quick test generation</h3>
+      <pre><code>Generate a complete Pytest test suite for all endpoints in [file].
+Cover: happy path, empty results, invalid parameters, edge cases.
+Use pytest fixtures and a test SQLite database.
+Do not mock the database.</code></pre>
+
+      <h3>Debug de dados / Data debugging</h3>
+      <pre><code>Load data/ocorrencias.csv and show me:
+1. First 5 rows
+2. All column names and dtypes
+3. Missing value counts per column
+4. Unique values in 'tipo_crime' column
+5. Date range of the data
+6. Any obvious data quality issues</code></pre>
+    </section>
+
+    <section id="commands">
+      <div class="section-header">
+        <div class="section-num">⌨️</div>
+        <div>
+          <div class="section-title">Comandos Rápidos / Quick Commands</div>
+          <div class="section-subtitle">Referência rápida de comandos essenciais</div>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Comando / Command</th><th>O Que Faz / What It Does</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>claude</code></td><td>Inicia Claude Code no modo interativo</td></tr>
+            <tr><td><code>claude "prompt"</code></td><td>Envia um comando direto</td></tr>
+            <tr><td><code>/verify</code></td><td>Verifica se a mudança funciona</td></tr>
+            <tr><td><code>/run</code></td><td>Inicia o app e tira screenshot</td></tr>
+            <tr><td><code>/code-review</code></td><td>Revisa mudanças para bugs</td></tr>
+            <tr><td><code>/security-review</code></td><td>Auditoria de segurança</td></tr>
+            <tr><td><code>/init</code></td><td>Gera CLAUDE.md para o projeto</td></tr>
+            <tr><td><code>brv store "..."</code></td><td>Salva decisão no byterover</td></tr>
+            <tr><td><code>brv retrieve "..."</code></td><td>Recupera conhecimento do byterover</td></tr>
+            <tr><td><code>/</code></td><td>Lista todos os comandos disponíveis</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <footer>
+      Guia criado para o <a href="https://lu.ma/3i0rkczm">Claude Impact Lab — Rio de Janeiro</a><br>
+      Powered by <strong>Claude Code</strong> + <code>claude-sonnet-4-6</code>
+    </footer>
+
+  </main>
+</div>
+
+<!-- Active nav link on scroll -->
+<script>
+  const sections = document.querySelectorAll('section[id], .hero');
+  const navLinks = document.querySelectorAll('nav a');
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(link => link.classList.remove('active'));
+        const active = document.querySelector(`nav a[href="#${entry.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+
+  sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>

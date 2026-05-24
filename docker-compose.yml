@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  civitas-backend:
+    build: .
+    container_name: civitas-backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./research/data:/app/research/data
+      - ./research/faiss:/app/research/faiss
+    environment:
+      - PYTHONPATH=/app
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+    command: uvicorn research.backend.main:app --host 0.0.0.0 --port 8000 --reload
+    restart: unless-stopped
+
+  # civitas-frontend: (optional — build from research/frontend/civitas-frontend)
+  #   build: ./research/frontend/civitas-frontend
+  #   ports:
+  #     - "5173:5173"

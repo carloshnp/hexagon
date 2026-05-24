@@ -1,0 +1,26 @@
+FROM python:3.12-slim
+
+WORKDIR /app
+
+# Install system dependencies for OpenCV
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libgl1-mesa-glx libglib2.0-0 libsm6 libxext6 libxrender-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy requirements
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy application code
+COPY research/ research/
+COPY .env.example .env 2>/dev/null || true
+
+# Expose port
+EXPOSE 8000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s \
+    CMD python3 -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/')" || exit 1
+
+# Run
+CMD ["uvicorn", "research.backend.main:app", "--host", "0.0.0.0", "--port", "8000"]

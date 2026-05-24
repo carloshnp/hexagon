@@ -1,0 +1,1408 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Droid CLI — Guia para o Claude Impact Lab Rio</title>
+  <style>
+    /* ─── Reset & Base ─────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0f1117;
+      --bg-card: #1a1d27;
+      --bg-code: #12141e;
+      --bg-highlight: #1e2235;
+      --border: #2a2d3e;
+      --accent: #f6993f;        /* orange — distinct from Claude Code blue */
+      --accent-soft: #7a4a1a;
+      --accent-glow: rgba(246,153,63,0.12);
+      --blue: #6c8ef7;
+      --green: #42d392;
+      --purple: #c084fc;
+      --red: #f87171;
+      --text: #e2e8f0;
+      --text-muted: #8892a4;
+      --text-dim: #5a6478;
+      --sidebar-w: 280px;
+      --header-h: 60px;
+      --radius: 10px;
+      --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+      --font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+    }
+
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font-sans); background: var(--bg); color: var(--text); line-height: 1.7; font-size: 15px; }
+
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--accent-soft); }
+
+    /* ─── Header ────────────────────────────────────────────────────────── */
+    header {
+      position: fixed; top: 0; left: 0; right: 0;
+      height: var(--header-h);
+      background: rgba(15,17,23,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; padding: 0 24px;
+      z-index: 100; gap: 16px;
+    }
+    .header-logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 15px; color: var(--text); text-decoration: none; }
+    .header-logo .logo-icon { width: 32px; height: 32px; background: linear-gradient(135deg, var(--accent), var(--purple)); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+    .header-badge { margin-left: auto; display: flex; gap: 8px; align-items: center; }
+    .badge { padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; }
+    .badge-droid { background: rgba(246,153,63,0.15); color: var(--accent); border: 1px solid rgba(246,153,63,0.3); }
+    .badge-rio { background: rgba(66,211,146,0.12); color: var(--green); border: 1px solid rgba(66,211,146,0.25); }
+    .header-nav-link { font-size: 13px; color: var(--text-muted); text-decoration: none; transition: color 0.15s; }
+    .header-nav-link:hover { color: var(--accent); }
+
+    /* ─── Layout ────────────────────────────────────────────────────────── */
+    .layout { display: flex; margin-top: var(--header-h); min-height: calc(100vh - var(--header-h)); }
+
+    /* ─── Sidebar ───────────────────────────────────────────────────────── */
+    nav {
+      width: var(--sidebar-w); flex-shrink: 0;
+      position: fixed; top: var(--header-h); bottom: 0; left: 0;
+      overflow-y: auto; padding: 24px 0 40px;
+      border-right: 1px solid var(--border); background: var(--bg);
+    }
+    .nav-section-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-dim); padding: 16px 20px 6px; }
+    nav a { display: flex; align-items: center; gap: 8px; padding: 7px 20px; color: var(--text-muted); text-decoration: none; font-size: 13.5px; transition: all 0.15s; border-left: 2px solid transparent; }
+    nav a:hover { color: var(--text); background: var(--bg-highlight); }
+    nav a.active { color: var(--accent); border-left-color: var(--accent); background: var(--accent-glow); }
+    nav a .nav-num { font-size: 11px; font-weight: 600; color: var(--text-dim); min-width: 22px; }
+
+    /* ─── Main ──────────────────────────────────────────────────────────── */
+    main { margin-left: var(--sidebar-w); flex: 1; padding: 48px 60px 80px; max-width: 960px; }
+
+    /* ─── Hero ──────────────────────────────────────────────────────────── */
+    .hero { padding: 48px 0 56px; border-bottom: 1px solid var(--border); margin-bottom: 56px; }
+    .hero-tag { display: inline-flex; align-items: center; gap: 6px; background: var(--accent-glow); border: 1px solid rgba(246,153,63,0.3); color: var(--accent); border-radius: 20px; padding: 4px 12px; font-size: 12px; font-weight: 600; margin-bottom: 20px; }
+    .hero h1 { font-size: 36px; font-weight: 800; line-height: 1.2; background: linear-gradient(135deg, #e2e8f0 0%, var(--accent) 60%, var(--purple) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 8px; }
+    .hero h1 .sub { font-size: 20px; font-weight: 500; display: block; background: linear-gradient(135deg, #8892a4, var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .hero p { color: var(--text-muted); font-size: 16px; max-width: 620px; margin-top: 16px; }
+    .hero-meta { display: flex; gap: 24px; margin-top: 28px; flex-wrap: wrap; }
+    .hero-meta-item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-muted); }
+    .hero-meta-item strong { color: var(--text); }
+
+    /* ─── Compare banner ────────────────────────────────────────────────── */
+    .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 24px 0; }
+    .compare-col { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 20px; }
+    .compare-col.highlight { border-color: rgba(246,153,63,0.4); background: var(--accent-glow); }
+    .compare-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 10px; }
+    .compare-label.orange { color: var(--accent); }
+    .compare-label.blue { color: var(--blue); }
+    .compare-col ul { list-style: none; }
+    .compare-col ul li { font-size: 13px; color: var(--text-muted); padding: 3px 0; display: flex; gap: 8px; }
+    .compare-col ul li::before { content: '→'; color: var(--accent); flex-shrink: 0; }
+    .compare-col.highlight ul li::before { content: '✓'; color: var(--green); }
+
+    /* ─── Sections ──────────────────────────────────────────────────────── */
+    section { margin-bottom: 72px; scroll-margin-top: 80px; }
+    .section-header { display: flex; align-items: center; gap: 12px; margin-bottom: 32px; }
+    .section-num { width: 32px; height: 32px; background: linear-gradient(135deg, var(--accent-soft), rgba(192,132,252,0.4)); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: var(--accent); flex-shrink: 0; }
+    .section-title { font-size: 22px; font-weight: 700; color: var(--text); }
+    .section-subtitle { font-size: 13px; color: var(--text-muted); }
+
+    h2 { font-size: 20px; font-weight: 700; margin: 40px 0 16px; color: var(--text); }
+    h3 { font-size: 16px; font-weight: 600; margin: 28px 0 12px; color: var(--accent); }
+    h4 { font-size: 14px; font-weight: 600; margin: 20px 0 10px; color: var(--purple); }
+    p { margin-bottom: 16px; color: var(--text-muted); }
+    p strong { color: var(--text); }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ─── Callouts ──────────────────────────────────────────────────────── */
+    .callout { border-radius: var(--radius); padding: 16px 20px; margin: 20px 0; border-left: 3px solid; font-size: 14px; }
+    .callout-info { background: rgba(108,142,247,0.08); border-color: var(--blue); color: #a5b4fc; }
+    .callout-tip { background: rgba(66,211,146,0.08); border-color: var(--green); color: #86efac; }
+    .callout-warn { background: rgba(246,153,63,0.08); border-color: var(--accent); color: #fdba74; }
+    .callout-danger { background: rgba(248,113,113,0.08); border-color: var(--red); color: #fca5a5; }
+    .callout strong { display: block; margin-bottom: 4px; font-weight: 700; }
+
+    /* ─── Code ──────────────────────────────────────────────────────────── */
+    pre { background: var(--bg-code); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 24px; overflow-x: auto; margin: 16px 0; position: relative; }
+    pre code { font-family: var(--font-mono); font-size: 13px; line-height: 1.7; color: #cdd6f4; }
+    code:not(pre code) { font-family: var(--font-mono); font-size: 12.5px; background: rgba(246,153,63,0.1); color: var(--accent); padding: 2px 6px; border-radius: 4px; border: 1px solid rgba(246,153,63,0.2); }
+    .code-label { position: absolute; top: 10px; right: 14px; font-size: 10px; font-weight: 600; color: var(--text-dim); font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.08em; }
+    .kw { color: #c084fc; } .str { color: #a3e635; } .num { color: #fb923c; }
+    .cmt { color: #4b5563; font-style: italic; } .fn { color: #60a5fa; }
+    .key { color: #34d399; } .op { color: #f87171; }
+
+    /* ─── Tables ────────────────────────────────────────────────────────── */
+    .table-wrap { overflow-x: auto; margin: 20px 0; }
+    table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+    thead th { background: var(--bg-highlight); color: var(--text); font-weight: 600; text-align: left; padding: 10px 16px; border-bottom: 1px solid var(--border); white-space: nowrap; }
+    tbody td { padding: 9px 16px; border-bottom: 1px solid rgba(42,45,62,0.6); color: var(--text-muted); vertical-align: top; }
+    tbody tr:hover td { background: var(--bg-highlight); }
+    tbody td:first-child { color: var(--text); font-weight: 500; }
+
+    /* ─── Cards ─────────────────────────────────────────────────────────── */
+    .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; margin: 20px 0; }
+    .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 20px; transition: border-color 0.2s; }
+    .card:hover { border-color: rgba(246,153,63,0.4); }
+    .card-icon { font-size: 22px; margin-bottom: 10px; }
+    .card-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+    .card-desc { font-size: 12.5px; color: var(--text-muted); line-height: 1.5; }
+    .card-tag { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px; margin-top: 8px; }
+    .card-tag-orange { background: rgba(246,153,63,0.15); color: var(--accent); }
+    .card-tag-green { background: rgba(66,211,146,0.12); color: var(--green); }
+    .card-tag-blue { background: rgba(108,142,247,0.12); color: var(--blue); }
+    .card-tag-purple { background: rgba(192,132,252,0.12); color: var(--purple); }
+
+    /* ─── Steps ─────────────────────────────────────────────────────────── */
+    .steps { margin: 24px 0; }
+    .step { display: flex; gap: 16px; padding: 18px 0; border-bottom: 1px solid var(--border); }
+    .step:last-child { border-bottom: none; }
+    .step-num { width: 28px; height: 28px; background: linear-gradient(135deg, var(--accent), var(--purple)); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: white; flex-shrink: 0; margin-top: 2px; }
+    .step-content { flex: 1; }
+    .step-title { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+    .step-desc { font-size: 13.5px; color: var(--text-muted); }
+
+    /* ─── Command reference ─────────────────────────────────────────────── */
+    .cmd-grid { display: flex; flex-direction: column; gap: 2px; margin: 20px 0; }
+    .cmd-row { display: grid; grid-template-columns: 180px 1fr auto; gap: 16px; padding: 11px 16px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; align-items: start; transition: border-color 0.15s; }
+    .cmd-row:hover { border-color: rgba(246,153,63,0.3); }
+    .cmd-name { font-family: var(--font-mono); font-size: 13px; font-weight: 600; color: var(--accent); }
+    .cmd-desc { font-size: 13px; color: var(--text-muted); }
+    .cmd-tip { font-size: 11px; color: var(--green); font-style: italic; white-space: nowrap; }
+
+    /* ─── Tag inline ────────────────────────────────────────────────────── */
+    .tag { display: inline-block; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 10px; margin: 0 2px; }
+    .tag-orange { background: rgba(246,153,63,0.15); color: var(--accent); }
+    .tag-green { background: rgba(66,211,146,0.12); color: var(--green); }
+    .tag-blue { background: rgba(108,142,247,0.12); color: var(--blue); }
+    .tag-purple { background: rgba(192,132,252,0.12); color: var(--purple); }
+
+    /* ─── Migration table ───────────────────────────────────────────────── */
+    .migration { display: flex; flex-direction: column; gap: 12px; margin: 20px 0; }
+    .migration-row { display: grid; grid-template-columns: 1fr 40px 1fr; gap: 12px; align-items: center; }
+    .migration-col { background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; }
+    .migration-col.from { border-color: rgba(108,142,247,0.3); }
+    .migration-col.to { border-color: rgba(246,153,63,0.3); }
+    .migration-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
+    .migration-label.blue { color: var(--blue); }
+    .migration-label.orange { color: var(--accent); }
+    .migration-code { font-family: var(--font-mono); font-size: 12px; color: var(--text-muted); }
+    .migration-arrow { text-align: center; font-size: 20px; color: var(--text-dim); }
+
+    hr { border: none; border-top: 1px solid var(--border); margin: 40px 0; }
+    footer { text-align: center; padding: 40px; color: var(--text-dim); font-size: 13px; border-top: 1px solid var(--border); }
+    footer a { color: var(--accent); }
+
+    @media (max-width: 900px) {
+      nav { display: none; }
+      main { margin-left: 0; padding: 24px 20px 60px; }
+      .compare { grid-template-columns: 1fr; }
+      .cmd-row { grid-template-columns: 1fr; }
+      .migration-row { grid-template-columns: 1fr; }
+      .migration-arrow { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ─── Header ──────────────────────────────────────────────────────────── -->
+<header>
+  <a href="#" class="header-logo">
+    <div class="logo-icon">🤖</div>
+    Droid CLI
+  </a>
+  <a href="../index.html" class="header-nav-link">← Claude Code Guide</a>
+  <div class="header-badge">
+    <span class="badge badge-droid">Factory AI</span>
+    <span class="badge badge-rio">🇧🇷 Hackathon Rio</span>
+  </div>
+</header>
+
+<div class="layout">
+
+  <!-- ─── Sidebar ─────────────────────────────────────────────────────── -->
+  <nav id="sidebar">
+    <div class="nav-section-label">Guia / Guide</div>
+    <a href="#overview"><span class="nav-num">1</span> Visão Geral / Overview</a>
+    <a href="#install"><span class="nav-num">2</span> Instalação / Install</a>
+    <a href="#auth"><span class="nav-num">3</span> Autenticação / Auth</a>
+    <a href="#byok"><span class="nav-num">4</span> BYOK: OpenRouter</a>
+    <a href="#settings"><span class="nav-num">5</span> Settings Reference</a>
+    <a href="#commands"><span class="nav-num">6</span> Slash Commands</a>
+    <a href="#droids"><span class="nav-num">7</span> Droids (Subagentes)</a>
+    <a href="#missions"><span class="nav-num">8</span> Missions</a>
+    <a href="#skills"><span class="nav-num">9</span> Skills</a>
+    <a href="#import"><span class="nav-num">10</span> Import from Claude Code</a>
+    <div class="nav-section-label" style="margin-top:16px;">Quick Ref</div>
+    <a href="#hackathon-workflow">⚡ Workflow do Hackathon</a>
+  </nav>
+
+  <!-- ─── Main ─────────────────────────────────────────────────────────── -->
+  <main>
+
+    <!-- Hero -->
+    <div class="hero">
+      <div class="hero-tag">🤖 Factory AI — Droid CLI</div>
+      <h1>
+        Droid CLI
+        <span class="sub">Geração de Código com OpenRouter — Hackathon Rio 2025</span>
+      </h1>
+      <p>
+        Um agente de IA de terminal completo — pair programming, geração de repos inteiros, agentes autônomos e orquestração multi-agente. Usado no hackathon via OpenRouter para geração de código mais barata e rápida.
+      </p>
+      <div class="hero-meta">
+        <div class="hero-meta-item">⚡ <strong>Uso:</strong> Geração de código intensiva</div>
+        <div class="hero-meta-item">💰 <strong>Custo:</strong> Via OpenRouter (BYOK)</div>
+        <div class="hero-meta-item">🔧 <strong>Stack:</strong> Python + React + Vite</div>
+        <div class="hero-meta-item">📦 <strong>Docs:</strong> <a href="https://docs.factory.ai">docs.factory.ai</a></div>
+      </div>
+    </div>
+
+    <!-- ─────────────────────────────────────────────────────────────────
+         SECTION 1 — OVERVIEW
+    ─────────────────────────────────────────────────────────────────────── -->
+    <section id="overview">
+      <div class="section-header">
+        <div class="section-num">1</div>
+        <div>
+          <div class="section-title">Visão Geral / Overview</div>
+          <div class="section-subtitle">O que é o Droid e por que usá-lo no hackathon</div>
+        </div>
+      </div>
+
+      <p>
+        <strong>Droid</strong> é um agente de IA de terminal desenvolvido pela <a href="https://factory.ai">Factory AI</a>. Ele funciona tanto como parceiro de pair programming em tempo real quanto como agente autônomo para tarefas complexas — geração de repos inteiros, refatorações grandes, revisões de código e orquestração multi-agente via Missions.
+      </p>
+
+      <p>
+        No hackathon, ele complementa o Claude Code: use <strong>Droid + OpenRouter</strong> para tarefas de geração de código intensivas em tokens (scaffolding completo, escrever módulos inteiros, gerar testes em massa), aproveitando modelos mais baratos via OpenRouter. Use <strong>Claude Code</strong> para iteração e decisões arquiteturais.
+      </p>
+
+      <div class="compare">
+        <div class="compare-col highlight">
+          <div class="compare-label orange">🤖 Droid — Use para</div>
+          <ul>
+            <li>Gerar repos e módulos inteiros de uma vez</li>
+            <li>Pair programming com modelos baratos (OpenRouter)</li>
+            <li>Missions: orquestração multi-agente paralela</li>
+            <li>Tarefas autônomas longas sem supervisão constante</li>
+            <li>Code review + security review automatizados</li>
+            <li>Quando os $50 do Claude Code estiverem acabando</li>
+          </ul>
+        </div>
+        <div class="compare-col">
+          <div class="compare-label blue">⚡ Claude Code — Use para</div>
+          <ul>
+            <li>Iteração rápida e decisões arquiteturais</li>
+            <li>Fluxo Spec Doc (prompt → SPEC.md → código)</li>
+            <li>Skills do ecossistema (ECC, geoai, feynman)</li>
+            <li>Integração com MCP servers complexos</li>
+            <li>Quando precisar de Claude Sonnet/Opus especificamente</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="callout callout-tip">
+        <strong>💡 Regra do hackathon</strong>
+        Use o Droid com um modelo barato do OpenRouter (ex: DeepSeek ou Gemini) para gerar scaffolding e código boilerplate. Isso economiza seus créditos Claude Code para as iterações mais refinadas que precisam do Sonnet.
+      </div>
+    </section>
+
+    <hr>
+
+    <!-- ─────────────────────────────────────────────────────────────────
+         SECTION 2 — INSTALLATION
+    ─────────────────────────────────────────────────────────────────────── -->
+    <section id="install">
+      <div class="section-header">
+        <div class="section-num">2</div>
+        <div>
+          <div class="section-title">Instalação / Installation</div>
+          <div class="section-subtitle">Linux e Windows — primeiro uso</div>
+        </div>
+      </div>
+
+      <h3>Linux</h3>
+
+      <pre><code><span class="cmt"># Pré-requisito: instalar xdg-utils (Ubuntu/Debian)</span>
+sudo apt-get install -y xdg-utils
+
+<span class="cmt"># Método 1: Instalador oficial (recomendado)</span>
+curl -fsSL https://app.factory.ai/cli | sh
+
+<span class="cmt"># Método 2: Via npm (alternativa)</span>
+npm install -g droid
+
+<span class="cmt"># Verificar instalação</span>
+droid --version</code><div class="code-label">bash — Linux</div></pre>
+
+      <h3>Windows</h3>
+
+      <pre><code><span class="cmt"># Abra o PowerShell como Administrador e execute:</span>
+irm https://app.factory.ai/cli/windows | iex
+
+<span class="cmt"># Alternativa via npm (funciona sem admin):</span>
+npm install -g droid
+
+<span class="cmt"># Verificar</span>
+droid --version</code><div class="code-label">PowerShell — Windows</div></pre>
+
+      <div class="callout callout-warn">
+        <strong>⚠️ Erro de permissão no Windows</strong>
+        Se o PowerShell bloquear a execução, rode como Administrador: clique com botão direito → "Executar como administrador". Ou use o método npm que não requer privilégios elevados.
+      </div>
+
+      <h3>Primeiro Uso / First Run</h3>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <div class="step-title">Navegue até o workspace do projeto</div>
+            <div class="step-desc"><code>cd hackathon-rio/backend</code> — sempre rode o Droid de dentro do workspace, assim como o Claude Code.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <div class="step-title">Inicie o Droid</div>
+            <div class="step-desc"><code>droid</code> — abre a TUI interativa. Na primeira vez, você será redirecionado para login via browser.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <div class="step-title">Explore os atalhos</div>
+            <div class="step-desc">Pressione <code>?</code> ou <code>Ctrl+/</code> para ver todos os atalhos. Use <code>!</code> com input vazio para entrar em modo bash direto.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout-info">
+        <strong>🔑 Atalhos importantes do terminal</strong>
+        <code>Ctrl+N</code> — cicla entre modelos sem reiniciar · <code>Tab</code> — ajusta o nível de raciocínio · <code>!</code> — modo bash direto · <code>?</code> — help
+      </div>
+    </section>
+
+    <hr>
+
+    <!-- ─────────────────────────────────────────────────────────────────
+         SECTION 3 — AUTHENTICATION
+    ─────────────────────────────────────────────────────────────────────── -->
+    <section id="auth">
+      <div class="section-header">
+        <div class="section-num">3</div>
+        <div>
+          <div class="section-title">Autenticação / Authentication</div>
+          <div class="section-subtitle">Conta Factory (gratuita) + API key opcional</div>
+        </div>
+      </div>
+
+      <p>O Droid requer uma conta Factory gratuita para a primeira autenticação. Isso é separado da sua API key do OpenRouter.</p>
+
+      <h3>Login Interativo / Interactive Login</h3>
+
+      <pre><code><span class="cmt"># Dentro do Droid (slash command)</span>
+/login
+<span class="cmt"># → Abre o browser para autenticar com a conta Factory</span>
+
+<span class="cmt"># Ou diretamente no terminal antes de iniciar</span>
+droid login</code><div class="code-label">bash</div></pre>
+
+      <h3>API Key (para automação / CI) / API Key (for automation)</h3>
+
+      <pre><code><span class="cmt"># Gerar uma API key em: app.factory.ai/settings/api-keys</span>
+<span class="cmt"># Depois adicionar ao seu shell profile:</span>
+
+<span class="cmt"># Linux / macOS</span>
+<span class="kw">export</span> FACTORY_API_KEY=<span class="str">"fk-..."</span>
+echo <span class="str">'export FACTORY_API_KEY="fk-..."'</span> >> ~/.bashrc
+
+<span class="cmt"># Windows PowerShell</span>
+$env:FACTORY_API_KEY = <span class="str">"fk-..."</span>
+<span class="cmt"># Para persistir: adicionar ao perfil do PowerShell</span>
+[System.Environment]::SetEnvironmentVariable(<span class="str">"FACTORY_API_KEY"</span>, <span class="str">"fk-..."</span>, <span class="str">"User"</span>)</code><div class="code-label">shell</div></pre>
+
+      <div class="callout callout-tip">
+        <strong>✅ Para o hackathon</strong>
+        O login interativo via browser é suficiente. A FACTORY_API_KEY é necessária apenas para automação ou uso em scripts sem interface.
+      </div>
+    </section>
+
+    <hr>
+
+    <!-- ─────────────────────────────────────────────────────────────────
+         SECTION 4 — BYOK: OPENROUTER
+    ─────────────────────────────────────────────────────────────────────── -->
+    <section id="byok">
+      <div class="section-header">
+        <div class="section-num">4</div>
+        <div>
+          <div class="section-title">BYOK: Configurando OpenRouter</div>
+          <div class="section-subtitle">Bring Your Own Key — sua chave, sua API, seus modelos</div>
+        </div>
+      </div>
+
+      <p>
+        BYOK permite usar sua própria chave do OpenRouter no Droid. Sua chave fica <strong>apenas no seu computador</strong> — nunca é enviada para os servidores da Factory. Isso dá acesso a dezenas de modelos via uma única API.
+      </p>
+
+      <div class="callout callout-info">
+        <strong>🔒 Segurança</strong>
+        As chaves ficam em <code>~/.factory/settings.json</code> (Linux) ou <code>%USERPROFILE%\.factory\settings.json</code> (Windows). Use variáveis de ambiente via <code>${VAR_NAME}</code> para não expor a chave diretamente no arquivo.
+      </div>
+
+      <h3>Passo a Passo / Step by Step</h3>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <div class="step-title">Crie uma conta no OpenRouter</div>
+            <div class="step-desc">Acesse <a href="https://openrouter.ai">openrouter.ai</a>, crie uma conta e adicione créditos. Navegue para <strong>openrouter.ai/keys</strong> e crie uma API key.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <div class="step-title">Salve a chave como variável de ambiente</div>
+            <div class="step-desc">Recomendado para não expor a chave no arquivo de config:</div>
+          </div>
+        </div>
+      </div>
+
+      <pre><code><span class="cmt"># Linux / macOS</span>
+<span class="kw">export</span> OPENROUTER_API_KEY=<span class="str">"sk-or-v1-..."</span>
+echo <span class="str">'export OPENROUTER_API_KEY="sk-or-v1-..."'</span> >> ~/.bashrc
+
+<span class="cmt"># Windows PowerShell</span>
+[System.Environment]::SetEnvironmentVariable(<span class="str">"OPENROUTER_API_KEY"</span>, <span class="str">"sk-or-v1-..."</span>, <span class="str">"User"</span>)</code><div class="code-label">shell</div></pre>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <div class="step-title">Configure <code>~/.factory/settings.json</code></div>
+            <div class="step-desc">Copie o config completo abaixo em <code>~/.factory/settings.json</code>. Preencha o campo <code>apiKey</code> de cada modelo com sua chave do OpenRouter (deixe em branco e adicione depois). O modelo principal é o <strong>DeepSeek V4 Flash</strong>.</div>
+          </div>
+        </div>
+      </div>
+
+      <pre><code>{
+  <span class="key">"diffMode"</span>: <span class="str">"unified"</span>,
+  <span class="key">"cloudSessionSync"</span>: <span class="kw">false</span>,
+  <span class="key">"sessionDefaultSettings"</span>: {
+    <span class="key">"interactionMode"</span>: <span class="str">"auto"</span>,
+    <span class="key">"autonomyLevel"</span>: <span class="str">"high"</span>,
+    <span class="key">"model"</span>: <span class="str">"custom:DeepSeek-V4-Flash-0"</span>,
+    <span class="key">"autonomyMode"</span>: <span class="str">"auto-high"</span>,
+    <span class="key">"reasoningEffort"</span>: <span class="str">"none"</span>,
+    <span class="key">"specModeModel"</span>: <span class="str">"custom:DeepSeek-V4-Flash-0"</span>,
+    <span class="key">"specModeReasoningEffort"</span>: <span class="str">"none"</span>
+  },
+  <span class="key">"includeCoAuthoredByDroid"</span>: <span class="kw">false</span>,
+  <span class="key">"enableDroidShield"</span>: <span class="kw">true</span>,
+  <span class="key">"customModels"</span>: [
+    { <span class="cmt">/* ★ PRINCIPAL — rápido, barato, raciocínio extended */</span>
+      <span class="key">"model"</span>: <span class="str">"deepseek/deepseek-v4-flash"</span>,
+      <span class="key">"id"</span>: <span class="str">"custom:DeepSeek-V4-Flash-0"</span>,
+      <span class="key">"index"</span>: <span class="num">0</span>,
+      <span class="key">"baseUrl"</span>: <span class="str">"https://openrouter.ai/api/v1"</span>,
+      <span class="key">"apiKey"</span>: <span class="str">""</span>,
+      <span class="key">"displayName"</span>: <span class="str">"DeepSeek V4 Flash"</span>,
+      <span class="key">"maxOutputTokens"</span>: <span class="num">65356</span>,
+      <span class="key">"extraHeaders"</span>: { <span class="key">"reasoning_effort"</span>: <span class="str">"xhigh"</span>, <span class="key">"thinking"</span>: <span class="str">"enabled"</span> },
+      <span class="key">"provider"</span>: <span class="str">"generic-chat-completion-api"</span>
+    },
+    {
+      <span class="key">"model"</span>: <span class="str">"nvidia/nemotron-3-nano-30b-a3b"</span>,
+      <span class="key">"id"</span>: <span class="str">"custom:Nemotron-3-Nano-30B-1"</span>,
+      <span class="key">"index"</span>: <span class="num">1</span>,
+      <span class="key">"baseUrl"</span>: <span class="str">"https://openrouter.ai/api/v1"</span>,
+      <span class="key">"apiKey"</span>: <span class="str">""</span>,
+      <span class="key">"displayName"</span>: <span class="str">"NVIDIA Nemotron 3 Nano 30B"</span>,
+      <span class="key">"maxOutputTokens"</span>: <span class="num">32768</span>,
+      <span class="key">"provider"</span>: <span class="str">"generic-chat-completion-api"</span>
+    },
+    {
+      <span class="key">"model"</span>: <span class="str">"@preset/stepfun-step-3-5-flash"</span>,
+      <span class="key">"id"</span>: <span class="str">"custom:StepFun-Step-3-5-Flash-2"</span>,
+      <span class="key">"index"</span>: <span class="num">2</span>,
+      <span class="key">"baseUrl"</span>: <span class="str">"https://openrouter.ai/api/v1"</span>,
+      <span class="key">"apiKey"</span>: <span class="str">""</span>,
+      <span class="key">"displayName"</span>: <span class="str">"StepFun Step 3.5 Flash"</span>,
+      <span class="key">"maxOutputTokens"</span>: <span class="num">32768</span>,
+      <span class="key">"provider"</span>: <span class="str">"generic-chat-completion-api"</span>
+    },
+    { <span class="cmt">/* use apenas se necessário — caro */</span>
+      <span class="key">"model"</span>: <span class="str">"inclusionai/ring-2.6-1t"</span>,
+      <span class="key">"id"</span>: <span class="str">"custom:Ring-2-6-1T-3"</span>,
+      <span class="key">"index"</span>: <span class="num">3</span>,
+      <span class="key">"baseUrl"</span>: <span class="str">"https://openrouter.ai/api/v1"</span>,
+      <span class="key">"apiKey"</span>: <span class="str">""</span>,
+      <span class="key">"displayName"</span>: <span class="str">"InclusionAI Ring 2.6 1T"</span>,
+      <span class="key">"maxOutputTokens"</span>: <span class="num">32768</span>,
+      <span class="key">"provider"</span>: <span class="str">"generic-chat-completion-api"</span>
+    },
+    { <span class="cmt">/* muito barato — bom para alto volume */</span>
+      <span class="key">"model"</span>: <span class="str">"inclusionai/ling-2.6-flash"</span>,
+      <span class="key">"id"</span>: <span class="str">"custom:Ling-2-6-Flash-4"</span>,
+      <span class="key">"index"</span>: <span class="num">4</span>,
+      <span class="key">"baseUrl"</span>: <span class="str">"https://openrouter.ai/api/v1"</span>,
+      <span class="key">"apiKey"</span>: <span class="str">""</span>,
+      <span class="key">"displayName"</span>: <span class="str">"InclusionAI Ling 2.6 Flash"</span>,
+      <span class="key">"maxOutputTokens"</span>: <span class="num">32768</span>,
+      <span class="key">"provider"</span>: <span class="str">"generic-chat-completion-api"</span>
+    },
+    { <span class="cmt">/* pode ser caro — use com cuidado */</span>
+      <span class="key">"model"</span>: <span class="str">"@preset/openai-gpt-oss-120b"</span>,
+      <span class="key">"id"</span>: <span class="str">"custom:GPT-OSS-120B-5"</span>,
+      <span class="key">"index"</span>: <span class="num">5</span>,
+      <span class="key">"baseUrl"</span>: <span class="str">"https://openrouter.ai/api/v1"</span>,
+      <span class="key">"apiKey"</span>: <span class="str">""</span>,
+      <span class="key">"displayName"</span>: <span class="str">"OpenAI GPT OSS 120B"</span>,
+      <span class="key">"maxOutputTokens"</span>: <span class="num">65536</span>,
+      <span class="key">"provider"</span>: <span class="str">"generic-chat-completion-api"</span>
+    },
+    {
+      <span class="key">"model"</span>: <span class="str">"@preset/openai-gpt-oss-20b-nitro"</span>,
+      <span class="key">"id"</span>: <span class="str">"custom:GPT-OSS-20B-Nitro-6"</span>,
+      <span class="key">"index"</span>: <span class="num">6</span>,
+      <span class="key">"baseUrl"</span>: <span class="str">"https://openrouter.ai/api/v1"</span>,
+      <span class="key">"apiKey"</span>: <span class="str">""</span>,
+      <span class="key">"displayName"</span>: <span class="str">"OpenAI GPT OSS 20B Nitro"</span>,
+      <span class="key">"maxOutputTokens"</span>: <span class="num">32768</span>,
+      <span class="key">"provider"</span>: <span class="str">"generic-chat-completion-api"</span>
+    },
+    {
+      <span class="key">"model"</span>: <span class="str">"@preset/google-gemma-4-26b-a4b-it"</span>,
+      <span class="key">"id"</span>: <span class="str">"custom:Gemma-4-26B-7"</span>,
+      <span class="key">"index"</span>: <span class="num">7</span>,
+      <span class="key">"baseUrl"</span>: <span class="str">"https://openrouter.ai/api/v1"</span>,
+      <span class="key">"apiKey"</span>: <span class="str">""</span>,
+      <span class="key">"displayName"</span>: <span class="str">"Google Gemma 4 26B"</span>,
+      <span class="key">"maxOutputTokens"</span>: <span class="num">32768</span>,
+      <span class="key">"provider"</span>: <span class="str">"generic-chat-completion-api"</span>
+    }
+  ],
+  <span class="key">"enabledPlugins"</span>: { <span class="key">"core@factory-plugins"</span>: <span class="kw">true</span> },
+  <span class="key">"logoAnimation"</span>: <span class="str">"off"</span>,
+  <span class="key">"compactionTokenLimit"</span>: <span class="num">200000</span>,
+  <span class="key">"missionModelSettings"</span>: {
+    <span class="key">"validationWorkerModel"</span>: <span class="str">"custom:DeepSeek-V4-Flash-0"</span>,
+    <span class="key">"validationWorkerReasoningEffort"</span>: <span class="str">"none"</span>,
+    <span class="key">"skipScrutiny"</span>: <span class="kw">false</span>,
+    <span class="key">"workerModel"</span>: <span class="str">"custom:DeepSeek-V4-Flash-0"</span>,
+    <span class="key">"workerReasoningEffort"</span>: <span class="str">"none"</span>,
+    <span class="key">"skipUserTesting"</span>: <span class="kw">false</span>
+  },
+  <span class="key">"missionOrchestratorModel"</span>: <span class="str">"custom:DeepSeek-V4-Flash-0"</span>,
+  <span class="key">"missionOrchestratorReasoningEffort"</span>: <span class="str">"none"</span>,
+  <span class="key">"theme"</span>: <span class="str">"factory-dark"</span>,
+  <span class="key">"showThinkingInMainView"</span>: <span class="kw">true</span>,
+  <span class="key">"showTokenUsageIndicator"</span>: <span class="kw">true</span>,
+  <span class="key">"nerdFont"</span>: <span class="kw">true</span>,
+  <span class="key">"compactionModelMode"</span>: <span class="str">"current-model"</span>,
+  <span class="key">"toolResultDisplay"</span>: <span class="str">"expanded"</span>,
+  <span class="key">"ideAutoConnect"</span>: <span class="kw">false</span>,
+  <span class="key">"hasSeenMissionOnboarding"</span>: <span class="kw">true</span>
+}</code><div class="code-label">~/.factory/settings.json — copie e preencha apiKey</div></pre>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <div class="step-title">Reinicie o Droid e troque de modelo</div>
+            <div class="step-desc">Os modelos customizados aparecem em uma seção separada no seletor.</div>
+          </div>
+        </div>
+      </div>
+
+      <pre><code><span class="cmt"># Dentro do Droid:</span>
+/model
+<span class="cmt"># → Abre seletor — seus modelos OpenRouter aparecem em "Custom Models"</span>
+
+<span class="cmt"># Ou use Ctrl+N para ciclar entre modelos sem abrir o menu</span></code><div class="code-label">droid</div></pre>
+
+      <h3>Modelos Recomendados para o Hackathon</h3>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Modelo</th><th>ID / Preset</th><th>custom: ID</th><th>Melhor para</th><th>Custo</th></tr></thead>
+          <tbody>
+            <tr><td><strong>DeepSeek V4 Flash ★</strong></td><td><code>deepseek/deepseek-v4-flash</code></td><td><code>custom:DeepSeek-V4-Flash-0</code></td><td>Geração de código principal, scaffolding, raciocínio extended</td><td>💚 Muito barato</td></tr>
+            <tr><td><strong>NVIDIA Nemotron 3 Nano 30B</strong></td><td><code>nvidia/nemotron-3-nano-30b-a3b</code></td><td><code>custom:Nemotron-3-Nano-30B-1</code></td><td>Tarefas rápidas, código utilitário</td><td>💚 Barato</td></tr>
+            <tr><td><strong>StepFun Step 3.5 Flash</strong></td><td><code>@preset/stepfun-step-3-5-flash</code></td><td><code>custom:StepFun-Step-3-5-Flash-2</code></td><td>Raciocínio flash, tarefas gerais</td><td>💚 Barato</td></tr>
+            <tr><td><strong>InclusionAI Ring 2.6 1T</strong></td><td><code>inclusionai/ring-2.6-1t</code></td><td><code>custom:Ring-2-6-1T-3</code></td><td>Arquitetura complexa, raciocínio pesado (use com moderação)</td><td>🔴 Caro</td></tr>
+            <tr><td><strong>InclusionAI Ling 2.6 Flash</strong></td><td><code>inclusionai/ling-2.6-flash</code></td><td><code>custom:Ling-2-6-Flash-4</code></td><td>Alto volume, tarefas simples, pitch-research</td><td>💚 Muito barato</td></tr>
+            <tr><td><strong>OpenAI GPT OSS 120B</strong></td><td><code>@preset/openai-gpt-oss-120b</code></td><td><code>custom:GPT-OSS-120B-5</code></td><td>Repos completos, análise profunda (use com cuidado)</td><td>🔴 Caro</td></tr>
+            <tr><td><strong>OpenAI GPT OSS 20B Nitro</strong></td><td><code>@preset/openai-gpt-oss-20b-nitro</code></td><td><code>custom:GPT-OSS-20B-Nitro-6</code></td><td>Código rápido, iterações, alternativa ao principal</td><td>💛 Médio</td></tr>
+            <tr><td><strong>Google Gemma 4 26B</strong></td><td><code>@preset/google-gemma-4-26b-a4b-it</code></td><td><code>custom:Gemma-4-26B-7</code></td><td>Contexto longo, revisão de código</td><td>💛 Médio</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Config por Workspace / Per-Workspace Config</h3>
+      <p>Use <code>settings.local.json</code> para configs específicas de projeto sem afetar o global:</p>
+
+      <pre><code><span class="cmt"># backend/.factory/settings.local.json</span>
+<span class="cmt"># (adicione ao .gitignore — contém preferências locais)</span>
+{
+  <span class="key">"model"</span>: <span class="str">"custom:DeepSeek-V4-Flash-0"</span>,
+  <span class="key">"autonomyLevel"</span>: <span class="str">"medium"</span>
+}
+
+<span class="cmt"># pitch-research/.factory/settings.local.json</span>
+<span class="cmt"># usa Ling 2.6 Flash — muito barato para pesquisa de pitch</span>
+{
+  <span class="key">"model"</span>: <span class="str">"custom:Ling-2-6-Flash-4"</span>,
+  <span class="key">"reasoningEffort"</span>: <span class="str">"none"</span>
+}</code><div class="code-label">settings.local.json por workspace</div></pre>
+    </section>
+
+    <hr>
+
+    <!-- ─────────────────────────────────────────────────────────────────
+         SECTION 5 — SETTINGS REFERENCE
+    ─────────────────────────────────────────────────────────────────────── -->
+    <section id="settings">
+      <div class="section-header">
+        <div class="section-num">5</div>
+        <div>
+          <div class="section-title">Settings Reference</div>
+          <div class="section-subtitle">Chaves de configuração mais importantes do ~/.factory/settings.json</div>
+        </div>
+      </div>
+
+      <p>Arquivos de config: <code>~/.factory/settings.json</code> (global) → <code>.factory/settings.json</code> (projeto) → <code>.factory/settings.local.json</code> (local, no .gitignore). Cada nível sobrescreve o anterior.</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Chave / Key</th><th>Valores / Values</th><th>Descrição</th></tr></thead>
+          <tbody>
+            <tr><td><code>model</code></td><td>ID do modelo</td><td>Modelo padrão da sessão</td></tr>
+            <tr><td><code>reasoningEffort</code></td><td><code>off</code> · <code>low</code> · <code>medium</code> · <code>high</code></td><td>Nível de raciocínio (depende do modelo)</td></tr>
+            <tr><td><code>autonomyLevel</code></td><td><code>off</code> · <code>low</code> · <code>medium</code> · <code>high</code></td><td>Quanto o agente pode fazer sem pedir aprovação</td></tr>
+            <tr><td><code>sessionDefaultSettings.interactionMode</code></td><td><code>auto</code> · <code>spec</code></td><td><code>spec</code> = modo de planejamento antes de executar</td></tr>
+            <tr><td><code>commandAllowlist</code></td><td>Array de comandos</td><td>Comandos de baixo risco que não precisam de confirmação</td></tr>
+            <tr><td><code>commandDenylist</code></td><td>Array de comandos</td><td>Comandos destrutivos que sempre pedem confirmação</td></tr>
+            <tr><td><code>enableDroidShield</code></td><td><code>true</code> · <code>false</code></td><td>Scan de segredos e credenciais nos arquivos (padrão: true)</td></tr>
+            <tr><td><code>diffMode</code></td><td><code>github</code> · <code>unified</code></td><td>Formato de exibição de diffs</td></tr>
+            <tr><td><code>cloudSessionSync</code></td><td><code>true</code> · <code>false</code></td><td>Espelhar sessões no app web da Factory</td></tr>
+            <tr><td><code>completionSound</code></td><td><code>fx-ok01</code> · <code>bell</code> · <code>off</code></td><td>Som ao completar uma tarefa</td></tr>
+            <tr><td><code>customModels</code></td><td>Array de objetos</td><td>Configuração BYOK (ver Seção 4)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Config Recomendada para o Hackathon</h3>
+
+      <pre><code><span class="cmt">/* Config completo — ver Seção 4 para o settings.json com todos os modelos */</span>
+{
+  <span class="key">"model"</span>: <span class="str">"custom:DeepSeek-V4-Flash-0"</span>,
+  <span class="key">"reasoningEffort"</span>: <span class="str">"none"</span>,
+  <span class="key">"autonomyLevel"</span>: <span class="str">"high"</span>,
+  <span class="key">"diffMode"</span>: <span class="str">"unified"</span>,
+  <span class="key">"cloudSessionSync"</span>: <span class="kw">false</span>,
+  <span class="key">"enableDroidShield"</span>: <span class="kw">true</span>,
+  <span class="key">"compactionTokenLimit"</span>: <span class="num">200000</span>,
+  <span class="key">"commandDenylist"</span>: [<span class="str">"rm -rf"</span>, <span class="str">"git push --force"</span>],
+  <span class="key">"customModels"</span>: [ <span class="cmt">/* ver Seção 4 para lista completa com apiKey */</span> ]
+}</code><div class="code-label">~/.factory/settings.json — resumo hackathon</div></pre>
+    </section>
+
+    <hr>
+
+    <!-- ─────────────────────────────────────────────────────────────────
+         SECTION 6 — SLASH COMMANDS
+    ─────────────────────────────────────────────────────────────────────── -->
+    <section id="commands">
+      <div class="section-header">
+        <div class="section-num">6</div>
+        <div>
+          <div class="section-title">Slash Commands</div>
+          <div class="section-subtitle">Referência dos comandos mais úteis para o hackathon</div>
+        </div>
+      </div>
+
+      <div class="callout callout-info">
+        <strong>💡 Como acessar</strong>
+        Digite <code>/</code> no Droid para ver todos os comandos disponíveis. Use <code>/help</code> para descrições completas.
+      </div>
+
+      <h3>Sessão e Contexto / Session & Context</h3>
+      <div class="cmd-grid">
+        <div class="cmd-row">
+          <div class="cmd-name">/new</div>
+          <div class="cmd-desc">Inicia uma nova sessão limpa. Equivalente a <code>/clear</code>. Use quando o contexto ficar muito longo.</div>
+          <div class="cmd-tip">hackathon: entre workstreams</div>
+        </div>
+        <div class="cmd-row">
+          <div class="cmd-name">/context</div>
+          <div class="cmd-desc">Exibe o uso de tokens atual: quantos foram usados, quanto resta na janela de contexto. Use para monitorar custo antes de mandar prompts longos.</div>
+          <div class="cmd-tip">monitorar custo</div>
+        </div>
+        <div class="cmd-row">
+          <div class="cmd-name">/compress [prompt]</div>
+          <div class="cmd-desc">Arquiva a sessão atual com um resumo gerado por IA e abre um novo workspace comprimido. Preserva o essencial sem reiniciar do zero.</div>
+          <div class="cmd-tip">sessão longa</div>
+        </div>
+        <div class="cmd-row">
+          <div class="cmd-name">/rename</div>
+          <div class="cmd-desc">Muda o nome da sessão atual. Útil para organizar múltiplas sessões paralelas do time.</div>
+          <div class="cmd-tip">organização do time</div>
+        </div>
+        <div class="cmd-row">
+          <div class="cmd-name">/pin</div>
+          <div class="cmd-desc">Fixa uma mensagem importante no topo da sessão. Use para ancorarnão seus objetivos durante uma sessão longa.</div>
+          <div class="cmd-tip">âncora de objetivo</div>
+        </div>
+        <div class="cmd-row">
+          <div class="cmd-name">/share</div>
+          <div class="cmd-desc">Gera um link para compartilhar a sessão com outros membros do time. Eles podem revisar o histórico completo.</div>
+          <div class="cmd-tip">revisão do time</div>
+        </div>
+      </div>
+
+      <h3>Ambiente e Ferramentas / Environment & Tools</h3>
+      <div class="cmd-grid">
+        <div class="cmd-row">
+          <div class="cmd-name">/cwd &lt;path&gt;</div>
+          <div class="cmd-desc">Altera o diretório de trabalho da sessão ativa. Útil se você iniciou o Droid na pasta errada.</div>
+          <div class="cmd-tip">trocar workspace</div>
+        </div>
+        <div class="cmd-row">
+          <div class="cmd-name">/model</div>
+          <div class="cmd-desc">Troca o modelo de IA sem reiniciar a sessão. Seus modelos OpenRouter aparecem em "Custom Models". <code>Ctrl+N</code> faz o mesmo mais rápido.</div>
+          <div class="cmd-tip">trocar para DeepSeek/Gemini</div>
+        </div>
+        <div class="cmd-row">
+          <div class="cmd-name">/ide</div>
+          <div class="cmd-desc">Configura integrações com editores (VS Code, Cursor, JetBrains). Permite abrir arquivos no editor diretamente do terminal.</div>
+          <div class="cmd-tip">integração VS Code</div>
+        </div>
+        <div class="cmd-row">
+          <div class="cmd-name">/diagnostics</div>
+          <div class="cmd-desc">Identifica erros de configuração, problemas com BYOK, MCP servers offline, e outras issues. Primeiro passo ao debugar.</div>
+          <div class="cmd-tip">debug de config</div>
+        </div>
+        <div class="cmd-row">
+          <div class="cmd-name">/mcp</div>
+          <div class="cmd-desc">Abre o gerenciador de MCP servers. 40+ servidores pré-configurados disponíveis: Linear, GitHub, Notion, Sentry, Vercel e mais.</div>
+          <div class="cmd-tip">adicionar integrações</div>
+        </div>
+        <div class="cmd-row">
+          <div class="cmd-name">/plugins</div>
+          <div class="cmd-desc">Instala, remove e gerencia plugins do CLI. Estende as capacidades base do Droid com funcionalidades da comunidade.</div>
+          <div class="cmd-tip">estender o Droid</div>
+        </div>
+      </div>
+
+      <h3>Código e Revisão / Code & Review</h3>
+      <div class="cmd-grid">
+        <div class="cmd-row">
+          <div class="cmd-name">/review</div>
+          <div class="cmd-desc">Lança o fluxo de revisão de código com IA. Analisa diffs, PRs ou patches com feedback estruturado sobre correção, manutenibilidade e testes.</div>
+          <div class="cmd-tip">antes de commitar</div>
+        </div>
+        <div class="cmd-row">
+          <div class="cmd-name">/btw &lt;pergunta&gt;</div>
+          <div class="cmd-desc">Faz uma pergunta suplementar sem poluir a conversa principal. Ideal para checar um detalhe sem perder o fio da meada.</div>
+          <div class="cmd-tip">"btw, como chama essa lib?"</div>
+        </div>
+      </div>
+
+      <h3>Agentes e Automação / Agents & Automation</h3>
+      <div class="cmd-grid">
+        <div class="cmd-row">
+          <div class="cmd-name">/droids</div>
+          <div class="cmd-desc">Gerencia subagentes customizados. Crie, edite, importe do Claude Code, ou invoque droids especializados. Ver Seção 7.</div>
+          <div class="cmd-tip">subagentes especializados</div>
+        </div>
+        <div class="cmd-row">
+          <div class="cmd-name">/missions</div>
+          <div class="cmd-desc">Ativa o modo de orquestração multi-agente para projetos grandes. Planejar → Milestones → Execução paralela. Ver Seção 8.</div>
+          <div class="cmd-tip">geração de repo completo</div>
+        </div>
+        <div class="cmd-row">
+          <div class="cmd-name">/skills</div>
+          <div class="cmd-desc">Acessa rotinas de automação salvas. Use <code>/create-skill</code> para converter a sessão atual em uma skill reutilizável.</div>
+          <div class="cmd-tip">automação reutilizável</div>
+        </div>
+      </div>
+
+      <h3>Conta e Config / Account & Config</h3>
+      <div class="cmd-grid">
+        <div class="cmd-row">
+          <div class="cmd-name">/login</div>
+          <div class="cmd-desc">Autentica com sua conta Factory via browser. Execute se a sessão expirar ou ao usar um novo computador.</div>
+          <div class="cmd-tip">primeiro uso</div>
+        </div>
+        <div class="cmd-row">
+          <div class="cmd-name">/settings</div>
+          <div class="cmd-desc">Abre o menu de configurações interativo. Alternativa ao editar o JSON diretamente — mais seguro para iniciantes.</div>
+          <div class="cmd-tip">config sem editar JSON</div>
+        </div>
+      </div>
+    </section>
+
+    <hr>
+
+    <!-- ─────────────────────────────────────────────────────────────────
+         SECTION 7 — DROIDS
+    ─────────────────────────────────────────────────────────────────────── -->
+    <section id="droids">
+      <div class="section-header">
+        <div class="section-num">7</div>
+        <div>
+          <div class="section-title">Droids (Subagentes) / Custom Droids</div>
+          <div class="section-subtitle">Subagentes especializados com papel, modelo e ferramentas próprios</div>
+        </div>
+      </div>
+
+      <p>
+        Droids são subagentes reutilizáveis definidos como arquivos Markdown com frontmatter YAML. Cada droid tem seu próprio system prompt, modelo, e conjunto de ferramentas — permitindo delegar tarefas especializadas sem repetir instruções.
+      </p>
+
+      <div class="callout callout-info">
+        <strong>📁 Onde ficam os droids</strong>
+        <code>.factory/droids/</code> — escopo de projeto (compartilhado com o time via git) <br>
+        <code>~/.factory/droids/</code> — escopo pessoal (seguem você em todos os workspaces)
+      </div>
+
+      <h3>Formato do Arquivo / File Format</h3>
+
+      <pre><code>---
+name: backend-engineer
+description: FastAPI + SQLite specialist for the Rio safety dashboard
+model: inherit
+tools: ["Read", "Edit", "Create", "Execute", "LS", "Grep"]
+---
+
+You are a senior Python backend engineer specialized in FastAPI and data
+pipelines. You write clean, tested, type-annotated Python 3.12 code.
+
+## Rules
+- Always write Pytest tests for every endpoint you implement
+- Use type hints everywhere (Pydantic models for request/response)
+- Never expose PII in API responses
+- Prefer SQLite for MVP, document migration path to PostgreSQL
+- Comment in Portuguese, code in English
+
+## Stack
+FastAPI · SQLite · Pandas · GeoPandas · Pytest · Pydantic · Ruff · Black</code><div class="code-label">.factory/droids/backend-engineer.md</div></pre>
+
+      <h3>Categorias de Ferramentas / Tool Categories</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Categoria</th><th>Ferramentas Incluídas</th><th>Quando usar</th></tr></thead>
+          <tbody>
+            <tr><td><code>read-only</code></td><td>Read, LS, Grep, Glob</td><td>Análise segura sem modificar nada</td></tr>
+            <tr><td><code>edit</code></td><td>Create, Edit, ApplyPatch</td><td>Geração de código (sem executar)</td></tr>
+            <tr><td><code>execute</code></td><td>Execute</td><td>Rodar testes, build, scripts</td></tr>
+            <tr><td><code>web</code></td><td>WebSearch, FetchUrl</td><td>Pesquisa e documentação</td></tr>
+            <tr><td><code>mcp</code></td><td>Dinâmico (MCPs configurados)</td><td>Integrações externas</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Droids Prontos para o Hackathon / Ready-to-Use Hackathon Droids</h3>
+
+      <pre><code><span class="cmt">--- .factory/droids/data-scientist.md ---</span>
+---
+name: data-scientist
+description: Pandas + GeoPandas data analysis for crime occurrence data
+model: inherit
+tools: ["Read", "Edit", "Create", "Execute", "LS"]
+---
+
+Expert em análise de dados com Pandas e GeoPandas. Especializado em dados
+de ocorrências criminais com coordenadas geográficas para o Rio de Janeiro.
+
+Sempre: limpeza de dados antes da análise, estatísticas descritivas,
+visualizações salvas em docs/charts/, análise salva em docs/ANALYSIS.md.
+Nunca: expor dados individuais ou PII.</code><div class="code-label">.factory/droids/data-scientist.md</div></pre>
+
+      <pre><code><span class="cmt">--- .factory/droids/pitch-writer.md ---</span>
+---
+name: pitch-writer
+description: Pitch and presentation specialist for hackathon demo
+model: custom:Ling-2-6-Flash-4
+tools: ["Read", "Edit", "Create", "LS"]
+reasoningEffort: none
+---
+
+Especialista em criar pitches para público misto (técnico e não-técnico).
+Escreve em Português. Tom: claro, direto, impactante.
+
+Para cada entregável: PITCH.md (roteiro verbal), SLIDES.md (outline por slide),
+DEMO_SCRIPT.md (o que mostrar na tela + o que falar).</code><div class="code-label">.factory/droids/pitch-writer.md</div></pre>
+
+      <h3>Criando e Gerenciando / Creating and Managing</h3>
+
+      <pre><code><span class="cmt"># Abrir o gerenciador de droids</span>
+/droids
+
+<span class="cmt"># Atalhos no menu:</span>
+<span class="cmt"># C → Criar novo droid via wizard</span>
+<span class="cmt"># I → Importar do Claude Code (.claude/agents/)</span>
+<span class="cmt"># Enter → Editar droid existente</span>
+
+<span class="cmt"># Invocar um droid numa sessão:</span>
+<span class="str">"Use the backend-engineer droid to implement all API endpoints from SPEC.md."</span>
+<span class="str">"Use subagent data-scientist to analyze data/ocorrencias.csv."</span></code><div class="code-label">droid</div></pre>
+    </section>
+
+    <hr>
+
+    <!-- ─────────────────────────────────────────────────────────────────
+         SECTION 8 — MISSIONS
+    ─────────────────────────────────────────────────────────────────────── -->
+    <section id="missions">
+      <div class="section-header">
+        <div class="section-num">8</div>
+        <div>
+          <div class="section-title">Missions</div>
+          <div class="section-subtitle">Orquestração multi-agente para geração de projetos completos</div>
+        </div>
+      </div>
+
+      <p>
+        Missions são fluxos de trabalho estruturados para projetos grandes. Em vez de uma sessão linear, você colabora com o Droid para criar um plano com milestones, depois uma camada de orquestração distribui o trabalho entre múltiplos agentes em paralelo.
+      </p>
+
+      <div class="callout callout-warn">
+        <strong>🎯 O valor principal está no planejamento</strong>
+        A documentação da Factory enfatiza: "o maior valor encontrado nas Missions está na fase de planejamento." Um plano bem estruturado com milestones claros produz resultados muito melhores do que mergulhar direto na execução.
+      </div>
+
+      <h3>Como Funciona / How It Works</h3>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <div class="step-title">Iniciação</div>
+            <div class="step-desc">Execute <code>/missions</code> em qualquer sessão do Droid para entrar no modo Mission.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <div class="step-title">Planejamento colaborativo</div>
+            <div class="step-desc">O Droid faz perguntas clarificadoras, identifica constraints, e constrói um plano com você. Features são organizadas em milestones — cada um representa um checkpoint significativo.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <div class="step-title">Aprovação do plano</div>
+            <div class="step-desc">Você revisa o plano completo. Ajuste, adicione ou remova features antes de aprovar. <strong>Não aprove até estar satisfeito</strong> — mudanças no meio da execução são custosas.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <div class="step-title">Execução orquestrada</div>
+            <div class="step-desc">Feature workers executam cada feature (~1 run por feature). Validation workers revisam cada milestone. Você monitora, desbloqueia impedimentos e redireciona se necessário.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">5</div>
+          <div class="step-content">
+            <div class="step-title">Intervenção quando necessário</div>
+            <div class="step-desc">Pause o orquestrador para replanear, reatribuir tarefas travadas, ou ajustar o escopo. Você é o gerente de projeto — não o executor.</div>
+          </div>
+        </div>
+      </div>
+
+      <h3>Exemplo: Mission para o Hackathon</h3>
+
+      <pre><code><span class="cmt"># Inicie uma Mission com este prompt de kickoff:</span>
+
+Build a complete public safety analytics MVP for Rio de Janeiro.
+
+Tech stack: FastAPI + SQLite (backend), React + Vite + Leaflet (frontend).
+
+Features needed:
+1. CSV data ingestion pipeline (crime occurrence data with lat/lon)
+2. REST API with filtering by date, crime type, and neighborhood
+3. Statistical aggregation endpoints (by type, by neighborhood)
+4. Anomaly detection: flag neighborhoods >2 std devs above average
+5. React frontend with Leaflet heatmap + filter panel + stats chart
+6. Pytest test suite for all API endpoints
+
+Constraints:
+- Must work offline with local CSV files
+- No PII in any API response
+- MVP scope: get it working, not perfect
+- Target: 4 hours of execution time
+
+Create milestones: Data Layer → API → Anomaly Detection → Frontend → Tests</code><div class="code-label">mission kickoff prompt</div></pre>
+
+      <div class="cards">
+        <div class="card">
+          <div class="card-icon">🏗️</div>
+          <div class="card-title">Geração de repos inteiros</div>
+          <div class="card-desc">Scaffolding completo de um projeto full-stack — structure, models, API, frontend, tests — tudo de uma vez.</div>
+          <span class="card-tag card-tag-orange">Melhor uso</span>
+        </div>
+        <div class="card">
+          <div class="card-icon">🔄</div>
+          <div class="card-title">Modernização de código legado</div>
+          <div class="card-desc">Refatorações grandes preservando funcionalidade — distribui o trabalho por módulos em paralelo.</div>
+          <span class="card-tag card-tag-green">Paralelo</span>
+        </div>
+        <div class="card">
+          <div class="card-icon">🧪</div>
+          <div class="card-title">Geração massiva de testes</div>
+          <div class="card-desc">Cobertura completa de testes para um projeto existente — cada módulo em paralelo com validation workers.</div>
+          <span class="card-tag card-tag-blue">Alta cobertura</span>
+        </div>
+      </div>
+    </section>
+
+    <hr>
+
+    <!-- ─────────────────────────────────────────────────────────────────
+         SECTION 9 — SKILLS
+    ─────────────────────────────────────────────────────────────────────── -->
+    <section id="skills">
+      <div class="section-header">
+        <div class="section-num">9</div>
+        <div>
+          <div class="section-title">Skills</div>
+          <div class="section-subtitle">Capacidades reutilizáveis que o Droid invoca automaticamente</div>
+        </div>
+      </div>
+
+      <p>
+        Skills são capacidades pré-configuradas que empacotam instruções, expertise e ferramentas para tarefas repetíveis. Diferente dos comandos slash, skills são <strong>invocadas pelo modelo</strong> baseado no contexto — o Droid decide quando usá-las.
+      </p>
+
+      <h3>Skills Oficiais (Factory-AI/skills)</h3>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Skill</th><th>O Que Faz</th><th>Instalação</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><strong>code-review</strong></td>
+              <td>Review estruturado de diffs e PRs: correção, manutenibilidade, cobertura de testes</td>
+              <td><code>cp -r skills/code-review .factory/skills/code-review</code></td>
+            </tr>
+            <tr>
+              <td><strong>security-review</strong></td>
+              <td>Análise STRIDE de segurança — vulnerabilidades, exploitabilidade, geração de patches</td>
+              <td><code>cp -r skills/security-review ~/.factory/skills/security-review</code></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <pre><code><span class="cmt"># Instalar skills oficiais do repositório Factory-AI/skills</span>
+git clone https://github.com/Factory-AI/skills.git /tmp/factory-skills
+
+<span class="cmt"># Para o projeto (compartilhado via git)</span>
+mkdir -p .factory/skills
+cp -r /tmp/factory-skills/skills/code-review .factory/skills/
+cp -r /tmp/factory-skills/skills/security-review .factory/skills/
+
+<span class="cmt"># Global (todos os workspaces)</span>
+mkdir -p ~/.factory/skills
+cp -r /tmp/factory-skills/skills/security-review ~/.factory/skills/</code><div class="code-label">bash</div></pre>
+
+      <h3>Criando Skills da Sessão Atual / Creating Skills from Current Session</h3>
+
+      <pre><code><span class="cmt"># Após uma sessão produtiva, converta-a em skill reutilizável:</span>
+/create-skill
+<span class="cmt"># → Droid analisa a sessão e gera uma skill automaticamente</span>
+
+<span class="cmt"># Ou use /skills para gerenciar skills existentes:</span>
+/skills</code><div class="code-label">droid</div></pre>
+
+      <h3>Formato de uma Skill Customizada</h3>
+
+      <pre><code><span class="cmt">--- .factory/skills/analyze-crime-data/skill.md ---</span>
+---
+name: analyze-crime-data
+description: Analyze crime CSV data for Rio de Janeiro safety dashboard
+---
+
+Analyze the crime occurrence dataset:
+1. Load CSV with Pandas — show dtypes, missing values, date range
+2. Normalize crime_type strings (lowercase, strip whitespace)
+3. Calculate top 10 neighborhoods by incident count
+4. Generate monthly time series chart → docs/charts/monthly.png
+5. Flag anomalies (neighborhoods >2 std devs above 30-day average)
+6. Save full report → docs/ANALYSIS.md</code><div class="code-label">.factory/skills/analyze-crime-data/skill.md</div></pre>
+    </section>
+
+    <hr>
+
+    <!-- ─────────────────────────────────────────────────────────────────
+         SECTION 10 — IMPORT FROM CLAUDE CODE
+    ─────────────────────────────────────────────────────────────────────── -->
+    <section id="import">
+      <div class="section-header">
+        <div class="section-num">10</div>
+        <div>
+          <div class="section-title">Importando Configs do Claude Code</div>
+          <div class="section-subtitle">Guia completo de tradução — agentes, CLAUDE.md, commands e settings</div>
+        </div>
+      </div>
+
+      <p>
+        O Droid tem importação nativa de agentes do Claude Code. Para outros arquivos (CLAUDE.md, commands, settings), a tradução é manual mas direta. O objetivo é reutilizar o trabalho já feito no Claude Code sem reescrever tudo do zero.
+      </p>
+
+      <h2>10.1 Importação Nativa de Agentes / Native Agent Import</h2>
+      <p>
+        O único arquivo importado <strong>automaticamente</strong> pelo Droid é o formato de agentes do Claude Code (<code>.claude/agents/</code>). O processo converte agent → droid com mapeamento de modelo e ferramentas.
+      </p>
+
+      <pre><code><span class="cmt"># Dentro do Droid:</span>
+/droids
+<span class="cmt"># Pressione I para abrir o importador</span>
+<span class="cmt"># → Escaneia automaticamente:</span>
+<span class="cmt">#   Projeto:  .claude/agents/</span>
+<span class="cmt">#   Pessoal:  ~/.claude/agents/</span>
+<span class="cmt"># → Use Space para selecionar, A para todos, Enter para importar</span>
+<span class="cmt"># → Droids importados vão para ~/.factory/droids/ (pessoal)</span></code><div class="code-label">droid — importação nativa</div></pre>
+
+      <div class="callout callout-warn">
+        <strong>⚠️ Mapeamento de ferramentas</strong>
+        Ferramentas do Claude Code são mapeadas para equivalentes do Factory. Algumas podem gerar avisos de validação se não tiverem equivalente direto — revise os droids importados e substitua manualmente se necessário.<br>
+        Ex: Claude Code <code>Write</code> → Factory <code>Create</code> · Claude Code <code>Edit</code> → Factory <code>Edit</code>
+      </div>
+
+      <hr>
+
+      <h2>10.2 CLAUDE.md → AGENTS.md (Contexto do Projeto)</h2>
+      <p>
+        O Droid não lê <code>CLAUDE.md</code> automaticamente. A prática recomendada é criar um <code>AGENTS.md</code> na raiz do projeto — o Droid o lê antes de fazer alterações, servindo o mesmo propósito do CLAUDE.md.
+      </p>
+
+      <div class="migration">
+        <div class="migration-row">
+          <div class="migration-col from">
+            <div class="migration-label blue">Claude Code — CLAUDE.md</div>
+            <div class="migration-code">
+              # Project: Rio Safety Dashboard<br>
+              ## Context<br>
+              Painel de segurança pública...<br><br>
+              ## Stack<br>
+              FastAPI + SQLite + React...<br><br>
+              ## Rules<br>
+              - NUNCA expor PII<br>
+              - MVP primeiro
+            </div>
+          </div>
+          <div class="migration-arrow">→</div>
+          <div class="migration-col to">
+            <div class="migration-label orange">Droid — AGENTS.md</div>
+            <div class="migration-code">
+              # Rio Safety Dashboard — Agent Context<br><br>
+              ## Project<br>
+              Painel de segurança pública...<br><br>
+              ## Stack<br>
+              FastAPI + SQLite + React...<br><br>
+              ## Rules<br>
+              - NUNCA expor PII<br>
+              - MVP primeiro
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <pre><code><span class="cmt"># Criar AGENTS.md a partir do CLAUDE.md existente:</span>
+cp CLAUDE.md AGENTS.md
+<span class="cmt"># Edite para remover referências a skills do Claude Code</span>
+<span class="cmt"># e substituir por equivalentes do Droid</span></code><div class="code-label">bash</div></pre>
+
+      <hr>
+
+      <h2>10.3 .claude/commands/ → .factory/skills/</h2>
+      <p>
+        Skills (arquivos <code>.md</code> em <code>.claude/commands/</code>) do Claude Code podem ser convertidas em skills do Droid. A estrutura é semelhante — apenas o frontmatter muda levemente.
+      </p>
+
+      <div class="migration">
+        <div class="migration-row">
+          <div class="migration-col from">
+            <div class="migration-label blue">Claude Code — .claude/commands/analyze.md</div>
+            <div class="migration-code">
+              ---<br>
+              name: analyze-crime-data<br>
+              description: Analyze crime CSV dataset<br>
+              ---<br><br>
+              Analyze the dataset at data/...<br>
+              Generate summary statistics...
+            </div>
+          </div>
+          <div class="migration-arrow">→</div>
+          <div class="migration-col to">
+            <div class="migration-label orange">Droid — .factory/skills/analyze/skill.md</div>
+            <div class="migration-code">
+              ---<br>
+              name: analyze-crime-data<br>
+              description: Analyze crime CSV dataset<br>
+              ---<br><br>
+              Analyze the dataset at data/...<br>
+              Generate summary statistics...
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <pre><code><span class="cmt"># Script de migração em lote / Batch migration script</span>
+<span class="cmt"># Converte todos os commands do Claude Code em skills do Droid</span>
+
+mkdir -p .factory/skills
+
+<span class="kw">for</span> cmd_file <span class="kw">in</span> .claude/commands/*.md; do
+  name=$(basename <span class="str">"$cmd_file"</span> .md)
+  mkdir -p <span class="str">".factory/skills/$name"</span>
+  cp <span class="str">"$cmd_file"</span> <span class="str">".factory/skills/$name/skill.md"</span>
+  echo <span class="str">"Migrated: $name"</span>
+<span class="kw">done</span>
+
+echo <span class="str">"Done. Review each skill in .factory/skills/ for compatibility."</span></code><div class="code-label">bash — migração em lote</div></pre>
+
+      <hr>
+
+      <h2>10.4 .claude/settings.json → .factory/settings.json</h2>
+      <p>Tabela de mapeamento entre as configurações dos dois CLIs:</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Claude Code (.claude/settings.json)</th><th>Droid (.factory/settings.json)</th><th>Notas</th></tr></thead>
+          <tbody>
+            <tr><td><code>"model": "claude-sonnet-4-6"</code></td><td><code>"model": "claude-sonnet-4-6"</code></td><td>Mesma sintaxe</td></tr>
+            <tr><td><code>"permissions.allow": ["Bash(git *)"]</code></td><td><code>"commandAllowlist": ["git *"]</code></td><td>Formato diferente</td></tr>
+            <tr><td><code>"permissions.deny": ["Bash(rm -rf *)"]</code></td><td><code>"commandDenylist": ["rm -rf *"]</code></td><td>Formato diferente</td></tr>
+            <tr><td><code>"env": {"KEY": "VALUE"}</code></td><td>Variáveis de ambiente do shell</td><td>Droid usa <code>${VAR}</code> no JSON</td></tr>
+            <tr><td><code>mcpServers: {...}</code></td><td><code>/mcp</code> → UI de gerenciamento</td><td>Droid gerencia MCPs via UI</td></tr>
+            <tr><td><code>.claude/commands/*.md</code></td><td><code>.factory/skills/*/skill.md</code></td><td>Ver 10.3</td></tr>
+            <tr><td><code>.claude/agents/*.md</code></td><td><code>.factory/droids/*.md</code></td><td>Importação nativa via /droids</td></tr>
+            <tr><td><code>CLAUDE.md</code></td><td><code>AGENTS.md</code></td><td>Ver 10.2</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Checklist de Migração / Migration Checklist</h3>
+
+      <pre><code><span class="cmt"># 1. Criar AGENTS.md a partir do CLAUDE.md</span>
+cp CLAUDE.md AGENTS.md
+
+<span class="cmt"># 2. Criar .factory/settings.json com as configs migradas</span>
+mkdir -p .factory
+<span class="cmt"># → editar manualmente com os valores do .claude/settings.json</span>
+
+<span class="cmt"># 3. Migrar commands para skills</span>
+<span class="kw">for</span> f <span class="kw">in</span> .claude/commands/*.md; do
+  n=$(basename <span class="str">"$f"</span> .md)
+  mkdir -p <span class="str">".factory/skills/$n"</span>
+  cp <span class="str">"$f"</span> <span class="str">".factory/skills/$n/skill.md"</span>
+<span class="kw">done</span>
+
+<span class="cmt"># 4. Importar agentes do Claude Code via Droid</span>
+<span class="cmt"># → /droids → I → selecionar todos → Enter</span>
+
+<span class="cmt"># 5. Adicionar OPENROUTER_API_KEY ao ambiente</span>
+<span class="kw">export</span> OPENROUTER_API_KEY=<span class="str">"sk-or-v1-..."</span>
+
+<span class="cmt"># 6. Atualizar .factory/settings.json com customModels (ver Seção 4)</span>
+
+<span class="cmt"># 7. Verificar configuração</span>
+droid
+/diagnostics</code><div class="code-label">bash — checklist completo</div></pre>
+    </section>
+
+    <hr>
+
+    <!-- ─────────────────────────────────────────────────────────────────
+         QUICK REF — HACKATHON WORKFLOW
+    ─────────────────────────────────────────────────────────────────────── -->
+    <section id="hackathon-workflow">
+      <div class="section-header">
+        <div class="section-num">⚡</div>
+        <div>
+          <div class="section-title">Workflow do Hackathon</div>
+          <div class="section-subtitle">Quando e como usar o Droid no dia do hackathon</div>
+        </div>
+      </div>
+
+      <h3>Decisão: Droid vs Claude Code</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Tarefa</th><th>Use</th><th>Por quê</th></tr></thead>
+          <tbody>
+            <tr><td>Escrever o SPEC.md</td><td><span class="tag tag-blue">Claude Code</span></td><td>Iteração rápida com Sonnet</td></tr>
+            <tr><td>Gerar scaffold completo do projeto</td><td><span class="tag tag-orange">Droid + DeepSeek</span></td><td>Barato e rápido para código em massa</td></tr>
+            <tr><td>Implementar todos os endpoints da API</td><td><span class="tag tag-orange">Droid Mission</span></td><td>Multi-agente paralelo</td></tr>
+            <tr><td>Análise geoespacial (GeoPandas)</td><td><span class="tag tag-blue">Claude Code + geoai-skills</span></td><td>Skills especializadas disponíveis</td></tr>
+            <tr><td>Geração massiva de testes</td><td><span class="tag tag-orange">Droid + Qwen Coder</span></td><td>Coder especializado, barato</td></tr>
+            <tr><td>Code review antes do demo</td><td><span class="tag tag-orange">Droid /review</span></td><td>STRIDE security review incluso</td></tr>
+            <tr><td>Gerar pitch e slides</td><td><span class="tag tag-orange">Droid pitch-writer droid</span></td><td>Ling 2.6 Flash, custo muito baixo</td></tr>
+            <tr><td>Debug de bugs complexos</td><td><span class="tag tag-blue">Claude Code Sonnet</span></td><td>Melhor raciocínio para diagnóstico</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Comandos Rápidos do Dia / Day-of Quick Commands</h3>
+
+      <pre><code><span class="cmt"># Setup matinal (fazer uma vez antes do hackathon começar)</span>
+droid
+/settings     <span class="cmt">→ verificar modelo OpenRouter configurado</span>
+/diagnostics  <span class="cmt">→ confirmar que BYOK está funcionando</span>
+/model        <span class="cmt">→ selecionar DeepSeek V4 Flash (custom:DeepSeek-V4-Flash-0) como padrão</span>
+
+<span class="cmt"># Gerar o projeto completo via Mission</span>
+/missions
+<span class="cmt">→ colar o kickoff prompt com SPEC.md aprovado</span>
+<span class="cmt">→ revisar e aprovar o plano com milestones</span>
+<span class="cmt">→ monitorar execução, desbloquear impedimentos</span>
+
+<span class="cmt"># Quando o contexto ficar longo</span>
+/context      <span class="cmt">→ verificar uso de tokens</span>
+/compress     <span class="cmt">→ comprimir sessão com resumo IA</span>
+
+<span class="cmt"># Revisão final antes do demo</span>
+/review       <span class="cmt">→ code review do diff completo</span>
+<span class="cmt">"Use the security-review skill on the entire backend/"</span>
+
+<span class="cmt"># Gerar o pitch</span>
+<span class="cmt">"Use the pitch-writer droid to generate PITCH.md, SLIDES.md, DEMO_SCRIPT.md"</span>
+
+<span class="cmt"># Compartilhar sessão com o time</span>
+/share        <span class="cmt">→ link para o time revisar</span></code><div class="code-label">droid — dia do hackathon</div></pre>
+    </section>
+
+    <footer>
+      Guia criado para o <a href="https://lu.ma/3i0rkczm">Claude Impact Lab — Rio de Janeiro</a><br>
+      <a href="../index.html">← Voltar para o Guia Claude Code</a> ·
+      <a href="https://docs.factory.ai">docs.factory.ai</a> ·
+      <a href="https://docs.factory.ai/cli/byok/openrouter">BYOK OpenRouter Docs</a>
+    </footer>
+
+  </main>
+</div>
+
+<script>
+  const sections = document.querySelectorAll('section[id], .hero');
+  const navLinks = document.querySelectorAll('nav a');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(l => l.classList.remove('active'));
+        const active = document.querySelector(`nav a[href="#${entry.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+  sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>

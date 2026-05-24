@@ -1,0 +1,13 @@
+{
+  "model": "claude-sonnet-4-6",
+  "permissions": {
+    "allow": [
+      "Bash(git *)", "Bash(python *)", "Bash(pip *)",
+      "Bash(npm *)", "Bash(npx *)", "Bash(curl *)",
+      "Bash(mkdir *)", "Bash(make *)", "Bash(pytest *)",
+      "Bash(docker *)", "Bash(docker-compose *)", "Bash(uvicorn *)",
+      "Read(*)", "Write(*)", "Edit(*)"
+    ],
+    "deny": ["Bash(rm -rf *)"]
+  }
+}
