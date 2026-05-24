@@ -120,20 +120,24 @@ Claude gerando relatórios estruturados a partir dos dados processados. O relat�
 | **Relatório de Planejamento** | Reunião A | Onde entrar? Por quê esta área? Qual a operação sugerida? |
 | **Relatório de Avaliação** | Reunião B | A ação está sendo efetiva? Quem está alocado? Os índices estão caindo? |
 
-**Formato do output:**
-- Claude gera **Markdown** com estrutura semântica (seções, parágrafos linkados)
-- Markdown é convertido para **HTML interativo** (ver Pilar de Frontend)
-- Claude também gera **JSON estruturado** para o dashboard consumir diretamente
+**Geração via Claude Code Headless (backend):**
+- Trigger: automático quando o pipeline de dados finaliza
+- Passo 1 — relatórios individuais por área FM: `report_FM010.md` + `FM010_cards.json`
+- Passo 2 — relatório final consolidado: `final_report.md` + `final_report.json`
+- Frontend consome os arquivos gerados diretamente (sem REST API intermediária)
 
-**Fontes de entrada:**
-- Ocorrências: `df_ocorrencias_tratado.csv`
-- Inteligência textual: `relints/RI_*.docx` (8 RELINTs — áreas específicas do Rio)
-- Denúncias: `disk_denuncia.csv`
+**Formato do output por área:**
+- `.md` — narrativa estruturada com seções semânticas (para o HTML interativo)
+- `.json` — entidades + dados dos cards para o frontend consumir
+
+**Fontes de entrada do headless:**
+- `outputs/area_FM*.json` — saída estruturada do pipeline H3
+- `relints/RI_*.docx` — RELINTs das 8 áreas disponíveis
 
 **Decisões em aberto:**
-- [ ] Quais campos do `df_ocorrencias_tratado.csv` mapeiam para cada seção do relatório?
-- [ ] Como integrar RELINTs (texto livre) com dados tabulares no mesmo relatório?
-- [ ] Relatório de Avaliação precisa de dado de alocação — esse dado existe nos CSVs?
+- [ ] Quais campos do JSON do pipeline mapeiam para cada seção do relatório?
+- [ ] Como integrar RELINTs no contexto do headless — injetar como texto no prompt?
+- [ ] Relatório de Avaliação precisa de dado de alocação — esse campo existe nos CSVs?
 
 ---
 
@@ -204,17 +208,18 @@ Tooltips nos pontos do mapa mostram dados específicos
 - 3 cards principais (ex: Ocorrências, Tipo Principal, Horário de Pico)
 - 1 card de detalhes adicionais (entidades extras, nível de confiança)
 
-**Geração do relatório na demo:**
-- Relatórios já carregados (para a demo final — resposta imediata)
-- Botão "Gerar novo relatório" como exemplo ao vivo
-  - Claude gera o `.md` + JSON de entidades
-  - Sistema converte para HTML interativo linkado
-  - Dashboard integra automaticamente
+**Dois níveis de visualização:**
+1. **Relatório final** (`final_report.md` → HTML) — visão consolidada de todas as áreas, view principal da reunião
+2. **Drill-down por área** — ao clicar em um polígono ou seção do relatório final, carrega o `FM0XX.md` individual com detalhes daquela área
+
+**Geração na demo:**
+- Relatórios já gerados e carregados (resposta imediata durante a apresentação)
+- Botão "Gerar novo relatório" como exemplo ao vivo — dispara o pipeline + headless, frontend recarrega quando os arquivos ficam prontos
 
 **Decisões em aberto:**
 - [ ] Qual biblioteca de mapa? (Leaflet já mencionado na arquitetura anterior — manter?)
-- [ ] Como fazer o link semântico parágrafo → polígono no HTML gerado? (data attributes? IDs?)
-- [ ] O botão de gerar relatório usa Claude Code headless ou API direta?
+- [ ] Como fazer o link semântico parágrafo → polígono? (IDs no markdown gerado pelo Claude → data-attributes no HTML)
+- [ ] Como frontend detecta que os arquivos foram gerados? (polling de endpoint simples, ou SSE?)
 
 ---
 
@@ -228,22 +233,40 @@ Dados Brutos
   └── outros (câmeras, fatores urbanos, domínio territorial)
         │
         ▼
-  Ingestão + Normalização
-  (Pandas, GeoPandas, python-docx)
+  Pipeline Python (H3 + Correlação)        ← Pilar 1
+  (Pandas, GeoPandas, H3)
         │
         ▼
-  H3 Indexing + Score por Área FM      ← Pilar 1
+  outputs/
+  ├── area_FM010.json
+  ├── area_FM011.json
+  └── ...  (um JSON estruturado por área FM)
         │
-        ├──▶ Claude API
-        │      ├── Narrativa .md por área
-        │      └── JSON de entidades + cards    ← Pilar 3
+        ▼  [pipeline finaliza → dispara automaticamente]
         │
-        └──▶ Relatório Final (.md → HTML interativo)    ← Pilar 2
-                  │
-                  ▼
-            Frontend (React + Leaflet)
-              ├── Dashboard ao vivo (reunião)
-              └── Relatório clicável (estático + geração on-demand)
+  Claude Code Headless                     ← Pilares 2 + 3
+        │
+        ├── Passo 1: lê cada area_FM*.json
+        │            gera report_FM010.md + FM010_cards.json
+        │            gera report_FM011.md + FM011_cards.json
+        │            ...
+        │
+        └── Passo 2: lê todos os relatórios individuais
+                     gera final_report.md + final_report.json
+        │
+        ▼
+  reports/
+  ├── individual/
+  │   ├── FM010.md + FM010.json
+  │   ├── FM011.md + FM011.json
+  │   └── ...
+  └── final_report.md + final_report.json
+        │
+        ▼
+  Frontend (React + Leaflet)
+    ├── View principal: final_report.md → HTML interativo
+    │     └── clique em seção → destaca polígono no mapa + cards
+    └── Drill-down: clique em área específica → carrega FM0XX.md individual
 ```
 
 ---
