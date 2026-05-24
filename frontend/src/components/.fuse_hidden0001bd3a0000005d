@@ -44,11 +44,11 @@ function Sidebar({ occurrences, areasByFid, loading, reports, selectedFid, hover
       {/* Header */}
       <div style={{ padding: '12px 16px 10px', borderBottom: '1px solid var(--border)', flexShrink: 0 }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
-          <div className="h-cond-x" style={{ fontSize: 16, letterSpacing: 0.04 }}>
+          <div className="h-cond-x" style={{ fontSize: 14, letterSpacing: 0.04 }}>
             OCORRÊNCIAS CRÍTICAS
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <span className="mono" style={{ fontSize: 11, color: 'var(--text-2)', fontWeight: 700 }}>
+            <span className="mono" style={{ fontSize: 10, color: 'var(--text-2)', fontWeight: 700 }}>
               {loading ? '—/—' : `${visible.length}/${(occurrences || []).length}`}
             </span>
             <button onClick={onToggleChat} className="mono uc" style={{
@@ -68,7 +68,7 @@ function Sidebar({ occurrences, areasByFid, loading, reports, selectedFid, hover
             </button>
           </div>
         </div>
-        <div className="mono uc" style={{ fontSize: 10, color: 'var(--text-2)', letterSpacing: 0.12, marginTop: 4, fontWeight: 700 }}>
+        <div className="mono uc" style={{ fontSize: 9, color: 'var(--text-2)', letterSpacing: 0.14, marginTop: 4, fontWeight: 700 }}>
           {loading
             ? 'Carregando ciclo…'
             : selectedArea
@@ -81,7 +81,7 @@ function Sidebar({ occurrences, areasByFid, loading, reports, selectedFid, hover
       <div style={{ display: 'flex', borderBottom: '1px solid var(--border)', flexShrink: 0 }}>
         {filterTabs.map((z, i) => (
           <button key={z} onClick={() => setFilter(z)} disabled={loading} className="mono uc" style={{
-            flex: 1, padding: '9px 0', fontSize: 10, letterSpacing: 0.08, fontWeight: 800,
+            flex: 1, padding: '8px 0', fontSize: 9, letterSpacing: 0.08, fontWeight: 800,
             background: filter === z ? 'var(--brand-tint)' : 'var(--surface)',
             color: loading ? 'var(--text-3)' : filter === z ? 'var(--brand)' : 'var(--text-2)',
             border: 'none', borderRight: i < filterTabs.length - 1 ? '1px solid var(--border)' : 'none',

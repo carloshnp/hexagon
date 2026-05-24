@@ -317,14 +317,16 @@ const dataStore = {
       ]);
       const data = mapRegionReport(regionReport);
       data.detail = {
-        occurrence_types:   regionDetail.occurrence_types   || [],
-        hourly_histogram:   regionDetail.hourly_histogram   || [],
-        score_components:   regionDetail.score_components   || [],
-        camera_count:       regionDetail.region?.camera_count       || 0,
-        occurrence_count:   regionDetail.region?.occurrence_count   || 0,
-        denuncia_count:     regionDetail.region?.denuncia_count     || 0,
+        occurrence_types:    regionDetail.occurrence_types    || [],
+        hourly_histogram:    regionDetail.hourly_histogram    || [],
+        score_components:    regionDetail.score_components    || [],
+        camera_count:        regionDetail.region?.camera_count        || 0,
+        occurrence_count:    regionDetail.region?.occurrence_count    || 0,
+        denuncia_count:      regionDetail.region?.denuncia_count      || 0,
         critical_area_count: regionDetail.region?.critical_area_count || 0,
-        provenance:         regionDetail.provenance         || [],
+        urban_factor_count:  regionDetail.region?.urban_factor_count  || 0,
+        data_quality:        regionDetail.region?.data_quality        || {},
+        provenance:          regionDetail.provenance                  || [],
       };
       this.state.reports = { ...this.state.reports, [fid]: { status: 'ready', data } };
       this.notify();

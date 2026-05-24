@@ -109,80 +109,85 @@ function DetailCard({ m, accent, last }) {
         <span className="mono uc" style={{ fontSize: 9.5, color: 'var(--brand)', letterSpacing: 0.14, fontWeight: 800 }}>
           {m.label}
         </span>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-          {m.simulated && <SimuladoBadge />}
-          <span className="mono" style={{ fontSize: 9, color: 'var(--ink-2)', padding: '1px 5px', border: '1px solid var(--border-pp)', background: 'var(--paper-2)' }}>{m.timeLabel || 'PERÍODO'}</span>
-        </div>
+        <span className="mono" style={{ fontSize: 9, color: 'var(--ink-2)', padding: '1px 5px', border: '1px solid var(--border-pp)', background: 'var(--paper-2)' }}>
+          {m.timeLabel || 'PERÍODO'}
+        </span>
       </div>
       <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
         <span className="h-cond-x" style={{ fontSize: 36, lineHeight: 0.95, letterSpacing: 0.02, color: 'var(--brand)' }}>
           {m.value}
         </span>
         {m.unit && <span className="mono" style={{ fontSize: 12, color: 'var(--ink-2)' }}>{m.unit}</span>}
-        <span style={{ flex: 1 }} />
-        <DeltaPaper value={m.delta} inverted={m.inverted} />
       </div>
-      <div style={{ display: 'flex', alignItems: 'flex-end', gap: 10 }}>
-        <Sparkline data={m.spark} color={accent} width={148} height={32} />
-        <div className="mono" style={{ fontSize: 9, color: 'var(--ink-2)', lineHeight: 1.4 }}>
-          <div>min {Math.min(...m.spark)}</div>
-          <div>max {Math.max(...m.spark)}</div>
+      {m.spark ? (
+        <>
+          <div style={{ display: 'flex', alignItems: 'flex-end', gap: 10 }}>
+            <Sparkline data={m.spark} color={accent} width={148} height={32} />
+            <div className="mono" style={{ fontSize: 9, color: 'var(--ink-2)', lineHeight: 1.4 }}>
+              <div>min {Math.min(...m.spark)}</div>
+              <div>max {Math.max(...m.spark)}</div>
+            </div>
+          </div>
+          <div className="mono" style={{ display: 'flex', justifyContent: 'space-between', fontSize: 8.5, color: 'var(--ink-2)', marginTop: -4 }}>
+            <span>00:00</span><span>06:00</span><span>12:00</span><span>18:00</span><span>agora</span>
+          </div>
+        </>
+      ) : m.contribution != null && (
+        <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: 4 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+            <span className="mono uc" style={{ fontSize: 8.5, color: 'var(--ink-2)', fontWeight: 700 }}>Contribuição no score</span>
+            <span className="mono" style={{ fontSize: 10, color: 'var(--brand)', fontWeight: 800 }}>
+              {m.contribution.toFixed(0)}<span style={{ color: 'var(--ink-2)', fontWeight: 400 }}>/{m.weightPct}pt</span>
+            </span>
+          </div>
+          <div style={{ height: 6, background: 'var(--paper-2)', border: '1px solid var(--border-pp)' }}>
+            <div style={{ width: `${m.weightPct > 0 ? Math.min(100, (m.contribution / m.weightPct) * 100) : 0}%`, height: '100%', background: accent }} />
+          </div>
         </div>
-      </div>
-      <div className="mono" style={{ display: 'flex', justifyContent: 'space-between', fontSize: 8.5, color: 'var(--ink-2)', marginTop: -4 }}>
-        <span>00:00</span><span>06:00</span><span>12:00</span><span>18:00</span><span>agora</span>
-      </div>
+      )}
     </div>
   );
 }
 
 function buildMetrics(area, detail) {
-  const seed = area.fid * 17 + 5;
-  const sp = (s, base, amp) => {
-    const out = []; let v = s;
-    for (let i = 0; i < 24; i++) {
-      v = (v * 9301 + 49297) % 233280;
-      out.push(Math.max(0, Math.round(base + Math.sin(i * 0.6 + s * 0.3) * amp * 0.6 + (v / 233280 - 0.5) * amp * 0.8)));
-    }
-    return out;
-  };
-
+  const comp = key => detail?.score_components?.find(c => c.key === key);
   const hourlyData = detail?.hourly_histogram?.length === 24
     ? detail.hourly_histogram.map(h => h.count)
     : null;
-  const realOccurrences = detail?.occurrence_count ?? null;
-  const realCameras     = detail?.camera_count ?? null;
+  const loading = !detail;
 
   return [
     {
-      label: 'Ocorrências (período)',
-      value: realOccurrences != null ? realOccurrences : Math.round(area.occurrence_count / 6),
-      unit: '', delta: area.score_delta,
-      spark: hourlyData || sp(seed, 40 + area.score / 3, 20 + area.score / 5),
-      simulated: realOccurrences == null,
+      label: 'Ocorrências',
+      value: loading ? '…' : (detail.occurrence_count ?? area.occurrence_count).toLocaleString('pt-BR'),
+      spark: hourlyData,
+      contribution: comp('ocorrencias')?.contribution,
+      weightPct: 40,
       timeLabel: 'NO PERÍODO',
     },
     {
-      label: 'Tempo médio resposta',
-      value: (4 + area.score / 14).toFixed(1), unit: 'min',
-      delta: area.score_delta > 0 ? +0.4 : -0.3,
-      spark: sp(seed + 11, 6 + area.score / 18, 3),
-      inverted: true, simulated: true, timeLabel: 'SIMULADO',
-    },
-    {
-      label: 'Câmeras Ativas',
-      value: realCameras != null ? realCameras : Math.round(6 + area.score / 8),
-      unit: '', delta: Math.sign(area.score_delta),
-      spark: sp(seed + 19, 10, 4),
-      simulated: realCameras == null,
+      label: 'Denúncias',
+      value: loading ? '…' : (detail.denuncia_count ?? '—').toLocaleString('pt-BR'),
+      spark: null,
+      contribution: comp('denuncias')?.contribution,
+      weightPct: 25,
       timeLabel: 'NO PERÍODO',
     },
     {
-      label: 'Reincidência (7d)',
-      value: Math.round(20 + area.score / 3), unit: '%',
-      delta: area.score_delta,
-      spark: sp(seed + 31, 25, 10),
-      inverted: true, simulated: true, timeLabel: 'SIMULADO',
+      label: 'Câmeras Monitoradas',
+      value: loading ? '…' : (detail.camera_count ?? '—').toLocaleString('pt-BR'),
+      spark: null,
+      contribution: comp('cameras_inv')?.contribution,
+      weightPct: 15,
+      timeLabel: 'NO PERÍODO',
+    },
+    {
+      label: 'Fatores Urbanos',
+      value: loading ? '…' : (comp('fatores')?.raw_count ?? detail.urban_factor_count ?? '—').toLocaleString('pt-BR'),
+      spark: null,
+      contribution: comp('fatores')?.contribution,
+      weightPct: 20,
+      timeLabel: 'NO PERÍODO',
     },
   ];
 }
@@ -200,7 +205,7 @@ function ReportView({ area, accent, report }) {
 function ReportSkeleton() {
   return (
     <div style={{ display: 'grid', gridTemplateColumns: 'minmax(220px, 1fr) minmax(220px, 1.05fr) minmax(180px, 0.85fr) minmax(240px, 1.05fr) minmax(280px, 1.3fr)', background: 'var(--paper)', minHeight: 178 }}>
-      {['Área','Ocorrências','Score','Efetividade','Tendência'].map((lbl, i) => (
+      {['Área','Ocorrências','Score','Composição','Indicadores'].map((lbl, i) => (
         <div key={lbl} style={{
           padding: '12px 16px 14px', borderRight: i < 4 ? '1px solid var(--border-pp)' : 'none',
           background: 'var(--paper)', display: 'flex', flexDirection: 'column', gap: 10,
@@ -248,8 +253,8 @@ function ReportContent({ area, accent, report }) {
       <ReportCard label="Área"        last={false}><ReportArea area={area} /></ReportCard>
       <ReportCard label="Ocorrências" last={false}><ReportOccurrences area={area} report={report} /></ReportCard>
       <ReportCard label="Score"       last={false}><ReportScore area={area} /></ReportCard>
-      <ReportCard label="Efetividade" last={false}><ReportEffectiveness area={area} report={report} /></ReportCard>
-      <ReportCard label="Tendência"   last={true} ><ReportTrend area={area} accent={accent} /></ReportCard>
+      <ReportCard label="Composição"  last={false}><ReportScoreComponents report={report} /></ReportCard>
+      <ReportCard label="Indicadores" last={true} ><ReportIndicators area={area} report={report} /></ReportCard>
     </div>
   );
 }
@@ -387,108 +392,81 @@ function ReportScore({ area }) {
   );
 }
 
-function ReportEffectiveness({ area, report }) {
-  const eff = Math.round(58 + (100 - area.score) * 0.3);
-  const responseAvg = +(4 + area.score / 14).toFixed(1);
-  const respPct = Math.min(100, (responseAvg / 8) * 100);
-  const respOver = responseAvg > 8;
-  const resources = Math.round(6 + area.score / 8);
-  const cameras = report?.detail?.camera_count ?? Math.round(resources * 4.2);
+function ReportScoreComponents({ report }) {
+  const components = report?.detail?.score_components || [];
+  const COMP_LABELS = {
+    ocorrencias:  'Ocorrências (ISP-RJ)',
+    denuncias:    'Disk Denúncia',
+    fatores:      'Fatores urbanos',
+    cameras_inv:  'Câmeras (inv.)',
+  };
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-        <span className="h-cond-x" style={{ fontSize: 28, color: 'var(--brand)' }}>{eff}</span>
-        <span className="mono" style={{ fontSize: 11, color: 'var(--ink-2)', fontWeight: 700 }}>%</span>
-        <span className="mono uc" style={{ fontSize: 9, color: 'var(--ink-2)', fontWeight: 700, marginLeft: 4 }}>ações concluídas</span>
-        <span style={{ flex: 1 }} />
-        <SimuladoBadge />
+      <div style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}>
+        <span className="h-cond" style={{ fontSize: 14, color: 'var(--brand)', fontWeight: 800 }}>MCDA</span>
+        <span className="mono uc" style={{ fontSize: 9, color: 'var(--ink-2)', fontWeight: 700 }}>4 componentes</span>
       </div>
-      <div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 3 }}>
-          <span className="mono uc" style={{ fontSize: 9, color: 'var(--ink-2)', fontWeight: 700, letterSpacing: 0.1 }}>
-            Tempo médio resposta
-          </span>
-          <span className="mono" style={{ fontSize: 10, color: 'var(--ink)', fontWeight: 700 }}>
-            {responseAvg}<span style={{ color: 'var(--ink-2)' }}>/8min</span>
-          </span>
-        </div>
-        <div style={{ position: 'relative', height: 8, background: 'var(--paper-2)', border: '1px solid var(--border-pp)' }}>
-          <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: `${Math.min(100, respPct)}%`,
-                        background: respOver ? '#D0021B' : '#007A4D' }} />
-          <div style={{ position: 'absolute', left: '100%', top: -2, bottom: -2, width: 2, background: 'var(--ink)', transform: 'translateX(-2px)' }} />
-          <span className="mono" style={{ position: 'absolute', right: -2, top: -14, fontSize: 8.5, color: 'var(--ink-2)', fontWeight: 700, letterSpacing: 0.06 }}>META</span>
-        </div>
-      </div>
-      <div style={{ display: 'flex', gap: 12, marginTop: 'auto' }}>
-        <Cell label="Recursos" value={resources} big />
-        <Sep />
-        <Cell label="Patrulhas" value={Math.max(2, Math.round(resources * 0.6))} big />
-        <Sep />
-        <Cell label="Câmeras" value={cameras} big />
-      </div>
+      {components.length > 0 ? components.map(c => {
+        const maxPts = Math.round(c.weight * 100);
+        const pct    = maxPts > 0 ? Math.min(1, c.contribution / maxPts) : 0;
+        const barColor = pct >= 0.8 ? '#D0021B' : pct >= 0.5 ? '#F5A623' : '#007A4D';
+        return (
+          <div key={c.key}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 3 }}>
+              <span style={{ fontSize: 10, color: 'var(--ink)' }}>{COMP_LABELS[c.key] || c.label}</span>
+              <span className="mono" style={{ fontSize: 10, color: barColor, fontWeight: 800 }}>
+                {c.contribution.toFixed(0)}<span style={{ color: 'var(--ink-2)', fontWeight: 400 }}>/{maxPts}pt</span>
+              </span>
+            </div>
+            <div style={{ height: 5, background: 'var(--paper-2)', border: '1px solid var(--border-pp)' }}>
+              <div style={{ width: `${pct * 100}%`, height: '100%', background: barColor }} />
+            </div>
+          </div>
+        );
+      }) : (
+        <>
+          <Shimmer width="100%" height={14} />
+          <Shimmer width="100%" height={14} />
+          <Shimmer width="100%" height={14} />
+          <Shimmer width="100%" height={14} />
+        </>
+      )}
     </div>
   );
 }
 
-function ReportTrend({ area, accent }) {
-  const W = 280, H = 70;
-  const data = _BB.useMemo(() => {
-    const out = []; let s = area.fid * 13 + 7;
-    const base = 40 + area.score / 2;
-    for (let i = 0; i < 7; i++) {
-      s = (s * 9301 + 49297) % 233280;
-      out.push(Math.max(2, Math.round(base + Math.sin(i * 0.9) * 8 + (s / 233280 - 0.5) * 10)));
-    }
-    return out;
-  }, [area.fid]);
-  const max = Math.max(...data), min = Math.min(...data);
-  const range = (max - min) || 1;
-  const dx = W / (data.length - 1);
-  const pts = data.map((v, i) => [i * dx, H - 4 - ((v - min) / range) * (H - 18)]);
-  const path = 'M' + pts.map(p => p.map(n => n.toFixed(1)).join(',')).join(' L');
-  const area2 = path + ` L${pts[pts.length-1][0].toFixed(1)},${H} L0,${H} Z`;
-  const days = ['Seg','Ter','Qua','Qui','Sex','Sáb','Dom'];
-  const infl = area.score >= 60 ? [{ day: 4, label: 'Reforço 19h' }] : [{ day: 3, label: 'Pico observado' }];
+function ReportIndicators({ area, report }) {
+  const detail = report?.detail;
+  const dq     = detail?.data_quality || {};
+  const DQ_COLOR = q => q === 'real' ? '#007A4D' : '#F5A623';
+  const DQ_BG    = q => q === 'real' ? 'rgba(0,122,77,0.10)' : 'rgba(245,166,35,0.10)';
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-      <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
-        <span className="h-cond-x" style={{ fontSize: 18, color: 'var(--brand)' }}>7 DIAS</span>
-        <span className="mono uc" style={{ fontSize: 9.5, color: 'var(--ink-2)', fontWeight: 700 }}>ocor./dia</span>
-        <span style={{ flex: 1 }} />
-        <SimuladoBadge />
-        <span className="mono" style={{ fontSize: 10, color: 'var(--ink-2)' }}>
-          min {min} · <span style={{ color: 'var(--ink)', fontWeight: 700 }}>max {max}</span>
-        </span>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px 20px' }}>
+        <Cell label="Ocorrências" value={detail ? (detail.occurrence_count || 0).toLocaleString('pt-BR') : '—'} big />
+        <Cell label="Denúncias"   value={detail ? (detail.denuncia_count   || 0).toLocaleString('pt-BR') : '—'} big />
+        <Cell label="Câmeras"     value={detail ? (detail.camera_count     || 0).toLocaleString('pt-BR') : '—'} big />
+        <Cell label="Áreas críticas" value={detail ? (detail.critical_area_count || 0).toLocaleString('pt-BR') : '—'} big />
       </div>
-      <svg width={W} height={H + 16} style={{ display: 'block' }}>
-        {[0.25, 0.5, 0.75].map(t => (
-          <line key={t} x1={0} y1={H * t + 4} x2={W} y2={H * t + 4} stroke="#E6ECF3" strokeWidth={0.6} strokeDasharray="2 3" />
-        ))}
-        <path d={area2} fill={accent} fillOpacity={0.16} />
-        <path d={path} fill="none" stroke={accent} strokeWidth={1.6} strokeLinejoin="round" />
-        {infl.map((inf, i) => {
-          const [px, py] = pts[inf.day];
-          const labelLeft = inf.day > 4;
-          return (
-            <g key={i}>
-              <line x1={px} y1={py} x2={px} y2={H + 1} stroke={accent} strokeWidth={0.8} strokeDasharray="2 2" />
-              <circle cx={px} cy={py} r={3.4} fill="#fff" stroke={accent} strokeWidth={1.8} />
-              <rect x={labelLeft ? px - 88 : px + 6} y={py - 10} width={82} height={14} fill="var(--brand)" />
-              <text x={labelLeft ? px - 84 : px + 10} y={py} fontSize={9} fontFamily="JetBrains Mono"
-                    fill="#fff" letterSpacing={0.04} fontWeight={700} dominantBaseline="middle">
-                {inf.label}
-              </text>
-            </g>
-          );
-        })}
-        {days.map((d, i) => (
-          <text key={d} x={i * dx} y={H + 14} fontSize={9} fontFamily="JetBrains Mono"
-                fill={i === days.length - 1 ? 'var(--ink)' : 'var(--ink-2)'}
-                textAnchor={i === 0 ? 'start' : i === days.length - 1 ? 'end' : 'middle'}
-                fontWeight={i === days.length - 1 ? 700 : 500}>{d}</text>
-        ))}
-      </svg>
+      {Object.keys(dq).length > 0 && (
+        <div>
+          <div className="mono uc" style={{ fontSize: 8.5, color: 'var(--ink-2)', fontWeight: 700, marginBottom: 5, letterSpacing: 0.1 }}>
+            Qualidade dos dados
+          </div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
+            {Object.entries(dq).map(([k, v]) => (
+              <span key={k} className="mono" style={{
+                fontSize: 9, padding: '2px 7px',
+                background: DQ_BG(v), border: `1px solid ${DQ_COLOR(v)}44`,
+                color: DQ_COLOR(v), fontWeight: 700,
+              }}>
+                {k} · {v}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
