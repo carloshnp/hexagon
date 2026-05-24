@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<title>CIVITAS · Public Safety Operations</title>
+<meta name="viewport" content="width=1440" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Nunito:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    /* Prefeitura do Rio — institutional palette (light scheme) */
+    --brand:        #004A8F;
+    --brand-2:      #0066CC;
+    --brand-3:      #2D86E8;
+    --brand-tint:   #E8F1FB;
+    --civic-green:  #007A4D;
+    --alert:        #F5A623;
+    --crit:         #D0021B;
+
+    --bg:        #F4F7FB;        /* app background */
+    --bg-2:      #EBF1F8;        /* subtle alt */
+    --surface:   #FFFFFF;        /* primary surface */
+    --surface-2: #E8F1FB;        /* selected tint */
+    --surface-3: #DCE6F2;        /* deeper tint */
+    --paper:     #FFFFFF;
+    --paper-2:   #F4F7FB;
+
+    --border:    #D6E0EC;
+    --border-2:  #BFD0E3;
+    --border-pp: #D6E0EC;
+
+    --accent:    #0066CC;
+    --accent-2:  #2D86E8;
+    --safe:      #007A4D;
+    --warn:      #F5A623;
+
+    --text:      #0E1A2E;
+    --text-2:    #44597A;
+    --text-3:    #8FA3BE;
+    --ink:       #0E1A2E;
+    --ink-2:     #44597A;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: 'Inter', 'Nunito', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  body { min-width: 1440px; }
+  /* type system — readable widths, no condensed */
+  .h-cond   { font-family: 'Inter', sans-serif; font-weight: 700; letter-spacing: 0; }
+  .h-cond-x { font-family: 'Inter', sans-serif; font-weight: 800; letter-spacing: 0.01em; text-transform: uppercase; }
+  .mono { font-family: 'JetBrains Mono', monospace; font-variant-numeric: tabular-nums; }
+  .num { font-variant-numeric: tabular-nums; }
+  .uc { text-transform: uppercase; letter-spacing: 0.08em; }
+  /* utility */
+  .scroll::-webkit-scrollbar { width: 8px; height: 8px; }
+  .scroll::-webkit-scrollbar-thumb { background: #C9D7E6; border-radius: 4px; }
+  .scroll::-webkit-scrollbar-track { background: transparent; }
+  button { font-family: inherit; cursor: pointer; }
+  /* selection */
+  ::selection { background: var(--accent); color: white; }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50%      { opacity: 0.35; }
+  }
+  @keyframes fly-pulse {
+    0%   { transform: scale(0.6); opacity: 0; }
+    30%  { transform: scale(1.4); opacity: 1; }
+    60%  { transform: scale(1);   opacity: 0.9; }
+    100% { transform: scale(1);   opacity: 1; }
+  }
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+  @keyframes shimmer {
+    0%   { background-position: -200% 0; }
+    100% { background-position:  200% 0; }
+  }
+  .shimmer {
+    background-image: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.7) 50%, transparent 100%);
+    background-size: 200% 100%;
+    background-repeat: no-repeat;
+    animation: shimmer 1.4s ease-in-out infinite;
+  }
+  .shimmer-on-blue {
+    background-image: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.2) 50%, transparent 100%);
+  }
+  @keyframes border-pulse {
+    0%, 100% { box-shadow: inset 0 0 0 1px var(--brand-2), 0 0 0 0 rgba(0,102,204,0.4); }
+    50%      { box-shadow: inset 0 0 0 1px var(--brand-2), 0 0 0 4px rgba(0,102,204,0.0); }
+  }
+
+  /* risk swatches reused everywhere */
+  .risk-dot { width: 8px; height: 8px; display: inline-block; }
+  .risk-bar { height: 3px; display: inline-block; }
+
+  /* shared focus ring */
+  .focus-ring:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  /* score threshold slider in ranking strip */
+  input[type="range"].score-slider {
+    -webkit-appearance: none; appearance: none;
+    height: 4px;
+    background: linear-gradient(to right, #22C55E 0%, #EAB308 42%, #EF4444 100%);
+    border-radius: 2px; outline: none; border: none; cursor: pointer; padding: 0; margin: 0;
+  }
+  input[type="range"].score-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 14px; height: 14px; border-radius: 50%;
+    background: var(--thumb-color, #004A8F);
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 1.5px var(--thumb-color, #004A8F);
+    cursor: pointer; transition: background 120ms, box-shadow 120ms;
+  }
+  input[type="range"].score-slider::-moz-range-track {
+    height: 4px;
+    background: linear-gradient(to right, #22C55E 0%, #EAB308 42%, #EF4444 100%);
+    border: none; border-radius: 2px;
+  }
+  input[type="range"].score-slider::-moz-range-thumb {
+    width: 14px; height: 14px; border-radius: 50%;
+    background: var(--thumb-color, #004A8F);
+    border: 2px solid #fff; cursor: pointer;
+  }
+</style>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel" src="store/data.jsx"></script>
+<script type="text/babel" src="components/primitives.jsx"></script>
+<script type="text/babel" src="components/map.jsx"></script>
+<script type="text/babel" src="components/bars.jsx"></script>
+<script type="text/babel" src="components/sidebar.jsx"></script>
+<script type="text/babel" src="components/bottom.jsx"></script>
+<script type="text/babel" src="app.jsx"></script>
+</body>
+</html>
