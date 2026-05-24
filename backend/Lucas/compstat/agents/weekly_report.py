@@ -7,16 +7,17 @@ from __future__ import annotations
 
 import datetime as dt
 
-from .. import config, data_source, region_scoring
-from . import provider
+from .. import config, data_source, operations, region_scoring
+from . import operation_draft, provider
 
 _SYSTEM = (
-    "Você é o relator da reunião semanal CompStat de segurança pública do Rio. "
-    "Escreva em português para gestores municipais, de forma executiva e "
-    "acionável. Use SOMENTE os dados fornecidos; não invente números nem scores. "
-    "Para cada região priorizada, justifique com base nos componentes do score e "
-    "no órgão responsável. PROIBIDO reconhecimento facial, biometria, placa, "
-    "perfilamento ou ações criminalizantes. Aponte limitações dos dados."
+    "Você é o relator da reunião semanal CompStat MUNICIPAL do Rio (prefeito/Casa Civil). "
+    "Enquadre pelos 4 pilares do CompStat (inteligência → deployment → táticas → follow-up). "
+    "Escreva em português, executivo e acionável. Use SOMENTE os dados fornecidos; não "
+    "invente números nem scores. Para cada região priorizada, justifique pelos componentes "
+    "do score e pelo órgão MUNICIPAL responsável (FM como força de emprego). PROIBIDO "
+    "reconhecimento facial, biometria, placa, perfilamento ou ação criminalizante. "
+    "Aponte limitações dos dados."
 )
 
 _SCHEMA = {
@@ -85,11 +86,20 @@ def build_weekly_report(days: int | None) -> dict:
         for r in ranked_regions[:3]
     ]
 
+    draft = operation_draft.narrate(
+        operations.operation_draft(days, operations.DEFAULT_TOTAL_AGENTS)
+    )
+    allocation = [{"region_id": a["region_id"], "region_name": a["region_name"],
+                   "agents": a["agents"], "n_hotspots": a["n_hotspots"],
+                   "rationale": a.get("rationale")}
+                  for a in draft["allocations"]]
     context = {
         "time_window_days": days,
         "data_mode": config.DATA_MODE,
         "ranked_regions": ranked_regions,
         "agency_matrix": _agency_matrix(regions, scores),
+        "operation_allocation": allocation,
+        "total_agents": draft["total_agents"],
     }
     fallback = {
         "summary": det_summary,
@@ -123,6 +133,9 @@ def build_weekly_report(days: int | None) -> dict:
         "ranked_regions": ranked_regions,
         "strategic_priorities": enriched.get("strategic_priorities") or det_priorities,
         "agency_matrix": context["agency_matrix"],
+        "operation_allocation": allocation,
+        "operation_summary": draft.get("summary"),
+        "total_agents": draft["total_agents"],
         "map_references": [r["region_id"] for r in ranked_regions],
         "provenance": [{
             "source": "CompStat Rio (Lucas)",

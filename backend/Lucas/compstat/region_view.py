@@ -86,7 +86,7 @@ def map_layers(reg: dict, days: int | None) -> dict:
     critical = data_source.h3_cells_by_region(days).get(fid, [])
     return {
         "polygon": reg["geometry"] or {},
-        "occurrences": _points_from_gdf(occ, ["delito", "desc_delito", "data", "hora"]),
+        "occurrences": _points_from_gdf(occ, ["delito", "modalidade", "data", "hora"]),
         "denuncias": _points_from_gdf(den, ["classe", "tipo", "bairro", "hora"]),
         "cameras": _points_from_gdf(cam, []),
         "urban_factors": _points_from_gdf(fat, ["tipo_ocorrencia_descricao"]),
@@ -98,7 +98,7 @@ def occurrence_types(reg: dict, days: int | None, top: int = 12) -> list[dict]:
     fid = reg["fid"]
     occ = data_source.occurrences(days, fid)
     if occ is not None and len(occ):
-        col = "desc_delito" if "desc_delito" in occ.columns else "delito"
+        col = "modalidade" if "modalidade" in occ.columns else "delito"
         counts = occ[col].dropna().value_counts().head(top)
     else:
         den = data_source.denuncias(days, fid)
@@ -149,6 +149,8 @@ def build_region_detail(region_id: str, preset: str | None) -> dict | None:
     days = config.window_to_days(preset)
     scores = region_scoring.compute_region_scores(days)
     sc = scores[reg["fid"]]
+    from . import diagnosis  # import tardio (evita ciclo)
+    diag = diagnosis.region_diagnosis(region_id, days)
     return {
         "region": region_properties(reg, sc, days),
         "time_window": time_window(preset),
@@ -158,6 +160,8 @@ def build_region_detail(region_id: str, preset: str | None) -> dict | None:
         "hourly_histogram": hourly_histogram(reg, days),
         "occurrence_groups": [],      # preenchido pelo relatório (lazy, Passo 4)
         "regional_report": None,      # idem
-        "recommended_actions": [],
+        "recommended_actions": diag["recommended_actions"],
+        "bingo": diag["bingo"],
+        "decision_trace": diag["decision_trace"],
         "provenance": provenance(reg, sc, days),
     }

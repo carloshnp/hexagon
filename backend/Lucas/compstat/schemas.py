@@ -98,6 +98,8 @@ class RegionDetail(BaseModel):
     occurrence_groups: list[dict[str, Any]] = []     # preenchido pelo relatório (lazy)
     regional_report: Optional[dict[str, Any]] = None  # preenchido pelo relatório (lazy)
     recommended_actions: list[dict[str, Any]] = []
+    bingo: Optional[dict[str, Any]] = None            # overlay espaço-temporal (hotspots)
+    decision_trace: Optional[dict[str, Any]] = None   # evidências consideradas/descartadas
     provenance: list[Provenance] = []
 
 
@@ -129,6 +131,10 @@ class RegionReport(BaseModel):
     occurrences: list[OccurrenceGroupReport] = []
     uncertainties: list[str] = []
     guardrails: list[str] = []
+    recommended_actions: list[dict[str, Any]] = []   # enriquecido pelo UrbanFactorActionAgent
+    camera_coverage: Optional[dict[str, Any]] = None  # CameraCoverageAgent
+    decision_trace: Optional[dict[str, Any]] = None   # MapRegionOrchestratorAgent
+    bingo: Optional[dict[str, Any]] = None
     provenance: list[Provenance] = []
     generated_by: str = "RegionalRiskNarrativeAgent"
     llm_mode: str = "fake"            # anthropic | fake
@@ -152,6 +158,9 @@ class WeeklyReport(BaseModel):
     ranked_regions: list[RankedRegion] = []
     strategic_priorities: list[str] = []
     agency_matrix: list[dict[str, Any]] = []
+    operation_allocation: list[dict[str, Any]] = []
+    operation_summary: Optional[str] = None        # narrativa do OperationDraftAgent
+    total_agents: Optional[int] = None
     map_references: list[str] = []
     provenance: list[Provenance] = []
     generated_by: str = "StrategicWeeklyReportAgent"

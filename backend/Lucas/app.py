@@ -20,7 +20,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from compstat import config, perri_bridge  # noqa: E402,F401  (perri_bridge ajusta sys.path)
-from compstat.routers import map_router, reports_router  # noqa: E402
+from compstat.routers import map_router, operations_router, reports_router  # noqa: E402
 
 app = FastAPI(
     title="CompStat Rio — Mapa Estratégico (frente Lucas)",
@@ -49,6 +49,7 @@ def root():
         "endpoints": [
             "/map/regions",
             "/map/regions/{region_id}",
+            "/operations/draft",
             "/reports/weekly-strategic",
             "/reports/regions/{region_id}",
             "/reports/chat",
@@ -61,6 +62,7 @@ def root():
 
 app.include_router(map_router.router)
 app.include_router(reports_router.router)
+app.include_router(operations_router.router)
 
 # Routers do Perri (mesmo servidor). Dependem do submódulo de dados (modo live).
 try:
